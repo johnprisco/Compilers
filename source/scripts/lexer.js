@@ -18,3 +18,4 @@ var TSC;
     })();
     TSC.Lexer = Lexer;
 })(TSC || (TSC = {}));
+//# sourceMappingURL=lexer.js.map

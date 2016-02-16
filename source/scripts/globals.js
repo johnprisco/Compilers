@@ -27,3 +27,4 @@ var tokenIndex = 0;
 var currentToken = "";
 var errorCount = 0;
 var EOF = "$";
+//# sourceMappingURL=globals.js.map
