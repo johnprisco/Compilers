@@ -1,7 +1,10 @@
 var TSC;
 (function (TSC) {
     var Token = (function () {
-        function Token() {
+        function Token(type, string, line) {
+            this.type = type;
+            this.string = string;
+            this.line = line;
         }
         return Token;
     })();

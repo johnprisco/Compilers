@@ -1,5 +1,7 @@
 var _Lexer = TSC.Lexer;
+var _Tokens = [];
 // Token Types
+// TODO: probably forgot a couple...
 var LEFT_BRACE = '{';
 var RIGHT_BRACE = '}';
 var LEFT_PAREN = '(';
