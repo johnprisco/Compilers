@@ -23,6 +23,8 @@ var QUOTE = '"';
 var PLUS = '+';
 var END_OF_PROGRAM = '$';
 var IDENTIFIER = 'identifier';
+var _Keywords = ['while', 'if', 'int', 'string', 'boolean', 'print', 'true', 'false'];
+var _Punctuation = ['{', '}', '(', ')', '=', '!=', '==', '+', '"'];
 // Global variables
 var tokens = "";
 var tokenIndex = 0;

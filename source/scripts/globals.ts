@@ -25,6 +25,9 @@ const PLUS             = '+';
 const END_OF_PROGRAM   = '$';
 const IDENTIFIER       = 'identifier';
 
+const _Keywords = ['while', 'if', 'int', 'string', 'boolean', 'print', 'true', 'false'];
+const _Punctuation = ['{', '}', '(', ')', '=', '!=', '==', '+', '"'];
+
 // Global variables
     var tokens = "";
     var tokenIndex = 0;
