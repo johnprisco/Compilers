@@ -1,32 +1,42 @@
 /* lexer.ts  */
+/// <reference path="token.ts"/>
 
 module TSC {
 	export class Lexer {
 		public static lex() {
             var keywordStrings = ['while', 'print', 'if', 'int', 'string', 'boolean', 'true', 'false'];
-            var symbolStrings = ['{', '}', '(', ')', '=', '!=', '==', '"', '$',];
+            var symbolStrings = ['{', '}', '(', ')', '=', '!=', '==', '"', '$', '+'];
             var lexingString = false;
 
             // Grab the "raw" source code.
             var sourceCode = (<HTMLInputElement>document.getElementById("taSourceCode")).value;
             // Trim the leading and trailing spaces.
             sourceCode = TSC.Utils.trim(sourceCode);
+
+            // Helpful compilers will correct some mistakes
+            // Checking to make sure the program ends with a $
+            // TODO: Make sure we include this in the log
+            if (sourceCode[sourceCode.length - 1] != '$') {
+                console.log("Appending an End of Program character");
+                sourceCode += '$';
+            }
+
             // Create array of source split by new lines
             var sourceByLines: Array<string> = sourceCode.split('\n');
 
             // This is the regex that makes it simpler to determine tokens
             // /S is pretty helpful; just have to define whats longer than one character
-            // and try to catch strings as a single unit, so white space isn't stripped
-            var matchRegex: RegExp = /[a-z]+|[1-9]|(==)|(!=)|(\S)/g;
+            // and try to catch strings as a single unit, so spaces aren't stripped
+            var matchRegex: RegExp = /[a-z]+|[1-9]|(==)|(!=)|"[^"]*"|(\S)/g;
             var identifierRegex: RegExp = /^[a-z]+$/;
             var digitRegex: RegExp = /0|(^[1-9]([0-9])*)$/;
+            var stringRegex: RegExp = /^"[a-z\s]*"$/;
 
             // Trim the leading and trailing white space from the split source code
             for (var i = 0; i < sourceByLines.length; i++) {
                 sourceByLines[i] = TSC.Utils.trim(sourceByLines[i]);
             }
 
-            console.log(sourceByLines);
 
             // Loop through the code line by line, splitting it based on the characters entered.
             // This will make it easier to create tokens
@@ -34,7 +44,8 @@ module TSC {
                 //console.log(i + ": " + sourceByLines[i]);
                 var matched = sourceByLines[i].match(matchRegex);
                 // Debugging statements, checking if results are as expected.
-                console.log("Iteration #" + i + ": " + matched);
+                console.log("Iteration #" + i);
+                console.log(matched);
 
                 if (!(matched === null)) {
 
@@ -102,17 +113,30 @@ module TSC {
                                     console.log("making a punctuation token");
                                     var token = Token.makeNewToken(_Punctuation[symbolIndex].type, _Punctuation[symbolIndex].value, i + 1);
 
-                                    // If we're making a quote token, we have to set the lexing string flag
-                                    // so we make character tokens instead of ID tokens
-                                    if (token.type === QUOTE.type) {
-                                        lexingString = !lexingString;
+                                    if ((token.type === QUOTE.type) && (lexingString === false)) {
+                                        // TODO: This is an error. Can't have new lines in quotes
+                                        return _Tokens;
                                     }
+                                    else if ((token.type === QUOTE.type) && (lexingString === true)) {
+                                        _Tokens.push(token);
+                                        lexingString = !lexingString;
+                                        console.log("Made token: " + token.value);
 
-                                    _Tokens.push(token);
-                                    console.log("Made token: " + token.value);
+                                    }
+                                    else {
+                                        _Tokens.push(token);
 
+                                    }
                                 }
                             }
+                        }
+
+                        // Actually last, handling strings
+                        else if (stringRegex.test(currentToken)) {
+                            // currentToken === "testing space"
+                            lexingString = !lexingString;
+                            this.tokenizeString(currentToken, i + 1);
+                            lexingString = !lexingString;
                         }
 
                         else {
@@ -129,5 +153,32 @@ module TSC {
             console.log(_Tokens);
             return _Tokens;
 		}
+
+        public static tokenizeString(str: string, line: number) {
+            for (var i = 0; i < str.length; i++) {
+
+                // Strings are made up of three things...
+                // Quotes...
+                if (str[i] === '"') {
+                    var token = TSC.Token.makeNewToken(QUOTE.type, str[i], line);
+                    _Tokens.push(token);
+                    console.log("Made token: " + token.value);
+                }
+
+                // Spaces...
+                else if (str[i] === ' ') {
+                    var token = TSC.Token.makeNewToken(SPACE.type, str[i], line);
+                    _Tokens.push(token);
+                    console.log("Made token: " + token.value);
+                }
+
+                // and/or characters...
+                else {
+                    var token = Token.makeNewToken(CHARACTER.type, str[i], line);
+                    _Tokens.push(token);
+                    console.log("Made token: " + token.value);
+                }
+            }
+        }
     }
 }
