@@ -1,27 +1,26 @@
-module TSC {
-    export class Parser {
-        public static parse() {
+var TSC;
+(function (TSC) {
+    var Parser = (function () {
+        function Parser() {
+        }
+        Parser.parse = function () {
             _CurrentToken = _Tokens[_TokenIndex];
             this.parseProgram();
-        }
-
-        public static parseProgram() {
+        };
+        Parser.parseProgram = function () {
             console.log("Parsing program");
             this.parseBlock();
             this.match(END_OF_PROGRAM.type);
-        }
-
-        public static parseBlock() {
+        };
+        Parser.parseBlock = function () {
             console.log("Parsing block");
             this.match(LEFT_BRACE.type);
             this.parseStatementList();
             this.match(RIGHT_BRACE.type);
-        }
-
-        public static parseStatementList() {
+        };
+        Parser.parseStatementList = function () {
             // checking for: print, identifier, int, boolean, string, {, 'while', 'if'
             console.log("Parsing statement list");
-
             if (_CurrentToken.type === PRINT.type ||
                 _CurrentToken.type === IDENTIFIER.type ||
                 _CurrentToken.type === INT.type ||
@@ -29,17 +28,14 @@ module TSC {
                 _CurrentToken.type === STRING.type ||
                 _CurrentToken.type === LEFT_BRACE.type ||
                 _CurrentToken.type === WHILE.type ||
-                _CurrentToken.type === IF.type
-            ) {
+                _CurrentToken.type === IF.type) {
                 this.parseStatement();
-                this.parseStatementList()
+                this.parseStatementList();
             }
             // otherwise, do nothing
-        }
-
-        public static parseStatement() {
+        };
+        Parser.parseStatement = function () {
             console.log("Parsing statement");
-
             switch (_CurrentToken.type) {
                 case PRINT.type:
                     this.parsePrintStatement();
@@ -59,28 +55,22 @@ module TSC {
                 default:
                     this.parseBlock();
             }
-        }
-
-        public static parsePrintStatement() {
+        };
+        Parser.parsePrintStatement = function () {
             console.log("Parsing print statement");
-
             this.match(PRINT.type);
             this.match(LEFT_PAREN.type);
             this.parseExpr();
             this.match(RIGHT_PAREN.type);
-        }
-
-        public static parseAssignmentStatement() {
+        };
+        Parser.parseAssignmentStatement = function () {
             console.log("Parsing assignment statement");
-
             this.parseId();
             this.match(ASSIGNMENT.type);
             this.parseExpr();
-        }
-
-        public static parseVarDecl() {
+        };
+        Parser.parseVarDecl = function () {
             console.log("Parsing var decl");
-
             switch (_CurrentToken.type) {
                 case STRING.type:
                     this.match(STRING.type);
@@ -95,29 +85,22 @@ module TSC {
                     this.parseId();
                     break;
                 default:
-                    // TODO: Log some kind of error
             }
-        }
-
-        public static parseWhileStatement() {
+        };
+        Parser.parseWhileStatement = function () {
             console.log("Parsing while statement");
-
             this.match(WHILE.type);
             this.parseBooleanExpr();
             this.parseBlock();
-        }
-
-        public static parseIfStatement() {
+        };
+        Parser.parseIfStatement = function () {
             console.log("Parsing if statement");
-
             this.match(IF.type);
             this.parseBooleanExpr();
             this.parseBlock();
-        }
-
-        public static parseExpr() {
+        };
+        Parser.parseExpr = function () {
             console.log("Parsing expr");
-
             switch (_CurrentToken.type) {
                 // IntExpr
                 case DIGIT.type:
@@ -136,14 +119,10 @@ module TSC {
                     this.parseId();
                     break;
                 default:
-                    // TODO: Log an error message
-
             }
-        }
-
-        public static parseIntExpr() {
+        };
+        Parser.parseIntExpr = function () {
             console.log("Parsing int expr");
-
             if (_CurrentToken.type === DIGIT.type) {
                 this.match(DIGIT.type);
                 if (_CurrentToken.type === PLUS.type) {
@@ -151,63 +130,55 @@ module TSC {
                     this.parseExpr();
                 }
             }
-        }
-
-        public static parseStringExpr() {
+        };
+        Parser.parseStringExpr = function () {
             console.log("Parsing string expr");
-
             this.match(QUOTE.type);
             this.parseCharList();
             this.match(QUOTE.type);
-        }
-
-        public static parseBooleanExpr() {
+        };
+        Parser.parseBooleanExpr = function () {
             console.log("Parsing boolean expr");
-
             if (_CurrentToken.type === TRUE.type) {
                 this.match(TRUE.type);
-            } else if (_CurrentToken.type === FALSE.type) {
+            }
+            else if (_CurrentToken.type === FALSE.type) {
                 this.match(FALSE.type);
-            } else {
+            }
+            else {
                 this.match(LEFT_PAREN.type);
                 this.parseExpr();
-
             }
-        }
-
-        public static parseId() {
+        };
+        Parser.parseId = function () {
             console.log("Parsing id");
-
             this.match(IDENTIFIER.type);
-        }
-
-        public static parseCharList() {
+        };
+        Parser.parseCharList = function () {
             console.log("Parsing char list");
-
             if (_CurrentToken.type === CHARACTER.type) {
                 this.match(CHARACTER.type);
                 this.parseCharList();
-            } else if (_CurrentToken.type === SPACE.type) {
+            }
+            else if (_CurrentToken.type === SPACE.type) {
                 this.match(SPACE.type);
                 this.parseCharList();
             }
             // otherwise, do nothing
-        }
-
-        public static match(type) {
+        };
+        Parser.match = function (type) {
             if (_CurrentToken.type === type) {
                 console.log('success in matching type ' + type);
-                // this is some kind of success
-            } else {
-                console.log('broke in matching type ' + type);
-
-                // TODO: Log an error and exit
             }
-
+            else {
+                console.log('broke in matching type ' + type);
+            }
             if (_TokenIndex < _Tokens.length) {
                 _CurrentToken = _Tokens[_TokenIndex + 1];
                 _TokenIndex++;
             }
-        }
-    }
-}
+        };
+        return Parser;
+    })();
+    TSC.Parser = Parser;
+})(TSC || (TSC = {}));
