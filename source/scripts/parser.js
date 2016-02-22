@@ -98,6 +98,13 @@ var TSC;
             }
         };
         Parser.parseIntExpr = function () {
+            if (_CurrentToken.type === DIGIT.type) {
+                this.match(DIGIT.type);
+                if (_CurrentToken.type === PLUS.type) {
+                    this.match(PLUS.type);
+                    this.parseExpr();
+                }
+            }
         };
         Parser.parseStringExpr = function () {
             this.match(QUOTE.type);
@@ -110,6 +117,15 @@ var TSC;
             this.match(IDENTIFIER.type);
         };
         Parser.parseCharList = function () {
+            if (_CurrentToken.type === CHARACTER.type) {
+                this.match(CHARACTER.type);
+                this.parseCharList();
+            }
+            else if (_CurrentToken.type === SPACE.type) {
+                this.match(SPACE.type);
+                this.parseCharList();
+            }
+            // otherwise, do nothing
         };
         Parser.match = function (type) {
         };

@@ -110,7 +110,13 @@ module TSC {
         }
 
         public static parseIntExpr() {
-
+            if (_CurrentToken.type === DIGIT.type) {
+                this.match(DIGIT.type);
+                if (_CurrentToken.type === PLUS.type) {
+                    this.match(PLUS.type);
+                    this.parseExpr();
+                }
+            }
         }
 
         public static parseStringExpr() {
@@ -128,7 +134,14 @@ module TSC {
         }
 
         public static parseCharList() {
-
+            if (_CurrentToken.type === CHARACTER.type) {
+                this.match(CHARACTER.type);
+                this.parseCharList();
+            } else if (_CurrentToken.type === SPACE.type) {
+                this.match(SPACE.type);
+                this.parseCharList();
+            }
+            // otherwise, do nothing
         }
 
         public static match(type) {
