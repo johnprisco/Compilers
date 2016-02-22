@@ -1,5 +1,6 @@
 var _Lexer = TSC.Lexer;
 var _Tokens = [];
+var _CurrentToken: TSC.Token = null;
 
 // Token Types
 const LEFT_BRACE       = {type: 'LEFT_BRACE', value: '{'};
