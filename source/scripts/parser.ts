@@ -56,27 +56,57 @@ module TSC {
         }
 
         public static parsePrintStatement() {
-
+            this.match(PRINT.type);
+            this.match(LEFT_PAREN.type);
+            this.parseExpr();
+            this.match(RIGHT_PAREN.type);
         }
 
         public static parseAssignmentStatement() {
-
+            this.parseId();
+            this.match(ASSIGNMENT.type);
+            this.parseExpr();
         }
 
         public static parseVarDecl() {
-
+            // TODO:  need to first match int, string, or boolean
+            this.parseId();
         }
 
         public static parseWhileStatement() {
-
+            this.match(WHILE.type);
+            this.parseBooleanExpr();
+            this.parseBlock();
         }
 
         public static parseIfStatement() {
-
+            this.match(IF.type);
+            this.parseBooleanExpr();
+            this.parseBlock();
         }
 
         public static parseExpr() {
+            switch (_CurrentToken.type) {
+                // IntExpr
+                case DIGIT.type:
+                    this.parseIntExpr();
+                    break;
+                // StringExpr
+                case QUOTE.type:
+                    this.parseStringExpr();
+                    break;
+                // BooleanExpr
+                case LEFT_PAREN.type || TRUE.type || FALSE.type:
+                    this.parseBooleanExpr();
+                    break;
+                // Id
+                case IDENTIFIER.type:
+                    this.parseId();
+                    break;
+                default:
+                    // TODO: Error message
 
+            }
         }
 
         public static parseIntExpr() {
@@ -84,7 +114,9 @@ module TSC {
         }
 
         public static parseStringExpr() {
-
+            this.match(QUOTE.type);
+            this.parseCharList();
+            this.match(QUOTE.type);
         }
 
         public static parseBooleanExpr() {
@@ -92,7 +124,7 @@ module TSC {
         }
 
         public static parseId() {
-
+            this.match(IDENTIFIER.type);
         }
 
         public static parseCharList() {

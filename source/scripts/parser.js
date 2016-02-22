@@ -52,24 +52,62 @@ var TSC;
             }
         };
         Parser.parsePrintStatement = function () {
+            this.match(PRINT.type);
+            this.match(LEFT_PAREN.type);
+            this.parseExpr();
+            this.match(RIGHT_PAREN.type);
         };
         Parser.parseAssignmentStatement = function () {
+            this.parseId();
+            this.match(ASSIGNMENT.type);
+            this.parseExpr();
         };
         Parser.parseVarDecl = function () {
+            // TODO:  need to first match int, string, or boolean
+            this.parseId();
         };
         Parser.parseWhileStatement = function () {
+            this.match(WHILE.type);
+            this.parseBooleanExpr();
+            this.parseBlock();
         };
         Parser.parseIfStatement = function () {
+            this.match(IF.type);
+            this.parseBooleanExpr();
+            this.parseBlock();
         };
         Parser.parseExpr = function () {
+            switch (_CurrentToken.type) {
+                // IntExpr
+                case DIGIT.type:
+                    this.parseIntExpr();
+                    break;
+                // StringExpr
+                case QUOTE.type:
+                    this.parseStringExpr();
+                    break;
+                // BooleanExpr
+                case LEFT_PAREN.type || TRUE.type || FALSE.type:
+                    this.parseBooleanExpr();
+                    break;
+                // Id
+                case IDENTIFIER.type:
+                    this.parseId();
+                    break;
+                default:
+            }
         };
         Parser.parseIntExpr = function () {
         };
         Parser.parseStringExpr = function () {
+            this.match(QUOTE.type);
+            this.parseCharList();
+            this.match(QUOTE.type);
         };
         Parser.parseBooleanExpr = function () {
         };
         Parser.parseId = function () {
+            this.match(IDENTIFIER.type);
         };
         Parser.parseCharList = function () {
         };
