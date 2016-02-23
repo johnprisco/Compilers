@@ -1,12 +1,14 @@
 module TSC {
     export class Parser {
         public static parse() {
+            _Logger.logMessage("Beginning Parsing.");
             _CurrentToken = _Tokens[_TokenIndex];
             this.parseProgram();
         }
 
         public static parseProgram() {
             console.log("Parsing program");
+            _Logger.logMessage("Parsing program.");
             this.parseBlock();
             this.match(END_OF_PROGRAM.type);
         }
@@ -20,7 +22,6 @@ module TSC {
 
         public static parseStatementList() {
             // checking for: print, identifier, int, boolean, string, {, 'while', 'if'
-            console.log("Parsing statement list");
 
             if (_CurrentToken.type === PRINT.type ||
                 _CurrentToken.type === IDENTIFIER.type ||
@@ -38,7 +39,6 @@ module TSC {
         }
 
         public static parseStatement() {
-            console.log("Parsing statement");
 
             switch (_CurrentToken.type) {
                 case PRINT.type:
@@ -62,7 +62,6 @@ module TSC {
         }
 
         public static parsePrintStatement() {
-            console.log("Parsing print statement");
 
             this.match(PRINT.type);
             this.match(LEFT_PAREN.type);
@@ -71,16 +70,12 @@ module TSC {
         }
 
         public static parseAssignmentStatement() {
-            console.log("Parsing assignment statement");
-
             this.parseId();
             this.match(ASSIGNMENT.type);
             this.parseExpr();
         }
 
         public static parseVarDecl() {
-            console.log("Parsing var decl");
-
             switch (_CurrentToken.type) {
                 case STRING.type:
                     this.match(STRING.type);
@@ -100,24 +95,18 @@ module TSC {
         }
 
         public static parseWhileStatement() {
-            console.log("Parsing while statement");
-
             this.match(WHILE.type);
             this.parseBooleanExpr();
             this.parseBlock();
         }
 
         public static parseIfStatement() {
-            console.log("Parsing if statement");
-
             this.match(IF.type);
             this.parseBooleanExpr();
             this.parseBlock();
         }
 
         public static parseExpr() {
-            console.log("Parsing expr");
-
             switch (_CurrentToken.type) {
                 // IntExpr
                 case DIGIT.type:
@@ -142,8 +131,6 @@ module TSC {
         }
 
         public static parseIntExpr() {
-            console.log("Parsing int expr");
-
             if (_CurrentToken.type === DIGIT.type) {
                 this.match(DIGIT.type);
                 if (_CurrentToken.type === PLUS.type) {
@@ -154,16 +141,12 @@ module TSC {
         }
 
         public static parseStringExpr() {
-            console.log("Parsing string expr");
-
             this.match(QUOTE.type);
             this.parseCharList();
             this.match(QUOTE.type);
         }
 
         public static parseBooleanExpr() {
-            console.log("Parsing boolean expr");
-
             if (_CurrentToken.type === TRUE.type) {
                 this.match(TRUE.type);
             } else if (_CurrentToken.type === FALSE.type) {
@@ -176,14 +159,10 @@ module TSC {
         }
 
         public static parseId() {
-            console.log("Parsing id");
-
             this.match(IDENTIFIER.type);
         }
 
         public static parseCharList() {
-            console.log("Parsing char list");
-
             if (_CurrentToken.type === CHARACTER.type) {
                 this.match(CHARACTER.type);
                 this.parseCharList();
@@ -196,12 +175,10 @@ module TSC {
 
         public static match(type) {
             if (_CurrentToken.type === type) {
-                console.log('success in matching type ' + type);
-                // this is some kind of success
+                _Logger.logMessage("Successfully matched " + type + " token.");
             } else {
-                console.log('broke in matching type ' + type);
-
-                // TODO: Log an error and exit
+                _Logger.logError("Expected " + type + ", found " + _CurrentToken.type, _CurrentToken.line, 'Parser');
+                throw new Error("Error in Parse. Ending execution.");
             }
 
             if (_TokenIndex < _Tokens.length) {

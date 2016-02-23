@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="dist/styles/bootstrap.min.css">
 </head>
 <body onload="init();">
-    <div id="divButtonBar" style="margin:4px;">
+    <div id="divButtonBar" style="margin:15px;">
         <nav class="navbar navbar-default">
             <div class="container-fluid">
                 <div class="navbar-header">
@@ -39,33 +39,36 @@
     <script type="text/javascript" src="dist/scripts/utils.js"></script>	
     <script type="text/javascript" src="dist/scripts/lexer.js"></script>
     <script type="text/javascript" src="dist/scripts/parser.js"></script>
+    <script type="text/javascript" src="dist/scripts/logger.js"></script>
     <script type="text/javascript" src="dist/scripts/token.js"></script>
 	<script type="text/javascript" src="dist/scripts/globals.js"></script>
     <script type="text/javascript">
-		 function init() {
-	        // Clear the message box.
-	        document.getElementById("log-output").value = "";
-	        // Set the initial values for our globals.
+    
+    function compile() {
+        // Reset globals
+        _Tokens = [];
+        _CurrentToken = null;
+        _TokenIndex = 0;
+        document.getElementById("log-output").value = "";
+
+        // This is executed as a result of the user pressing the
+        // "compile" button between the two text areas, above.
+        // Note the <input> element's event handler: onclick="btnCompile_click();
+        // Grab the tokens from the lexer . . .
+        _Lexer.lex();
+        // . . . and parse!
+//        if (_LexError === false) {
+//            _Logger.logMessage("Lexical analysis successful.");
+//            _Parser.parse();
+//        }
+
+        _Logger.logMessage("Lexical analysis successful.");
+
+        while (_TokenIndex < _Tokens.length) {
+            _Parser.parse();
         }
-    
-	    function compile() {
-	        // This is executed as a result of the user pressing the 
-	        // "compile" button between the two text areas, above.  
-	        // Note the <input> element's event handler: onclick="btnCompile_click();
-	        init();
-	        putMessage("Compilation Started");
-	        // Grab the tokens from the lexer . . .
-	        tokens = _Lexer.lex();
-	        putMessage("Lex returned [" + tokens + "]");
-	        // . . . and parse!
-            if (_LexError === false) {
-                _Parser.parse();
-            }
-	    }
-    
-	    function putMessage(msg) {
-	        document.getElementById("log-output").value += msg + "\n";
-	    }
+    }
+
     </script>
 </body>
 </html>

@@ -4,11 +4,13 @@ var TSC;
         function Parser() {
         }
         Parser.parse = function () {
+            _Logger.logMessage("Beginning Parsing.");
             _CurrentToken = _Tokens[_TokenIndex];
             this.parseProgram();
         };
         Parser.parseProgram = function () {
             console.log("Parsing program");
+            _Logger.logMessage("Parsing program.");
             this.parseBlock();
             this.match(END_OF_PROGRAM.type);
         };
@@ -20,7 +22,6 @@ var TSC;
         };
         Parser.parseStatementList = function () {
             // checking for: print, identifier, int, boolean, string, {, 'while', 'if'
-            console.log("Parsing statement list");
             if (_CurrentToken.type === PRINT.type ||
                 _CurrentToken.type === IDENTIFIER.type ||
                 _CurrentToken.type === INT.type ||
@@ -35,7 +36,6 @@ var TSC;
             // otherwise, do nothing
         };
         Parser.parseStatement = function () {
-            console.log("Parsing statement");
             switch (_CurrentToken.type) {
                 case PRINT.type:
                     this.parsePrintStatement();
@@ -57,20 +57,17 @@ var TSC;
             }
         };
         Parser.parsePrintStatement = function () {
-            console.log("Parsing print statement");
             this.match(PRINT.type);
             this.match(LEFT_PAREN.type);
             this.parseExpr();
             this.match(RIGHT_PAREN.type);
         };
         Parser.parseAssignmentStatement = function () {
-            console.log("Parsing assignment statement");
             this.parseId();
             this.match(ASSIGNMENT.type);
             this.parseExpr();
         };
         Parser.parseVarDecl = function () {
-            console.log("Parsing var decl");
             switch (_CurrentToken.type) {
                 case STRING.type:
                     this.match(STRING.type);
@@ -88,19 +85,16 @@ var TSC;
             }
         };
         Parser.parseWhileStatement = function () {
-            console.log("Parsing while statement");
             this.match(WHILE.type);
             this.parseBooleanExpr();
             this.parseBlock();
         };
         Parser.parseIfStatement = function () {
-            console.log("Parsing if statement");
             this.match(IF.type);
             this.parseBooleanExpr();
             this.parseBlock();
         };
         Parser.parseExpr = function () {
-            console.log("Parsing expr");
             switch (_CurrentToken.type) {
                 // IntExpr
                 case DIGIT.type:
@@ -122,7 +116,6 @@ var TSC;
             }
         };
         Parser.parseIntExpr = function () {
-            console.log("Parsing int expr");
             if (_CurrentToken.type === DIGIT.type) {
                 this.match(DIGIT.type);
                 if (_CurrentToken.type === PLUS.type) {
@@ -132,13 +125,11 @@ var TSC;
             }
         };
         Parser.parseStringExpr = function () {
-            console.log("Parsing string expr");
             this.match(QUOTE.type);
             this.parseCharList();
             this.match(QUOTE.type);
         };
         Parser.parseBooleanExpr = function () {
-            console.log("Parsing boolean expr");
             if (_CurrentToken.type === TRUE.type) {
                 this.match(TRUE.type);
             }
@@ -151,11 +142,9 @@ var TSC;
             }
         };
         Parser.parseId = function () {
-            console.log("Parsing id");
             this.match(IDENTIFIER.type);
         };
         Parser.parseCharList = function () {
-            console.log("Parsing char list");
             if (_CurrentToken.type === CHARACTER.type) {
                 this.match(CHARACTER.type);
                 this.parseCharList();
@@ -168,10 +157,11 @@ var TSC;
         };
         Parser.match = function (type) {
             if (_CurrentToken.type === type) {
-                console.log('success in matching type ' + type);
+                _Logger.logMessage("Successfully matched " + type + " token.");
             }
             else {
-                console.log('broke in matching type ' + type);
+                _Logger.logError("Expected " + type + ", found " + _CurrentToken.type, _CurrentToken.line, 'Parser');
+                throw new Error("Error in Parse. Ending execution.");
             }
             if (_TokenIndex < _Tokens.length) {
                 _CurrentToken = _Tokens[_TokenIndex + 1];

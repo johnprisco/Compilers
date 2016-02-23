@@ -1,5 +1,6 @@
 var _Lexer = TSC.Lexer;
 var _Parser = TSC.Parser;
+var _Logger = TSC.Logger;
 var _Tokens = [];
 var _CurrentToken = null;
 var _TokenIndex = 0;
