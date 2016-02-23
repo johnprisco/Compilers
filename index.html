@@ -1,32 +1,37 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-    <title>PrisComplier</title>
+    <title>Compiler</title>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
     <link rel="stylesheet" type="text/css" href="dist/styles/compiler.css" />
     <link rel="stylesheet" href="dist/styles/bootstrap.min.css">
 </head>
 <body onload="init();">
-    <h1>Project Zero Compiler</h1>
-    <hr>
-    <p>. . . <em>a simple parser for a simple grammar</em>:</p>
-
-	 <pre>
-G ::== E
-E ::== D O E | D
-D ::== 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 
-O ::== + | -
-	 </pre>
-
-    <div style="text-align:center;">
-        <input type="button" id="btnCompile" value="Compile" onclick="btnCompile_click();"/>
+    <div id="divButtonBar" style="margin:4px;">
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <span>Prisc<strong>OS</strong> Compiler</span>
+                    <button type="button" class="btn btn-primary navbar-btn"
+                            style="margin-left: 5px;"
+                            onclick="compile();">
+                        Compile
+                    </button>
+                </div>
+            </div>
+        </nav>
     </div>
-
-    <div>
-        <div class="source">
-            <textarea id="taSourceCode"></textarea>
-            <textarea id="taOutput"></textarea>
-        </div>        
+    <div class="container-fluid">
+        <div class="row">
+            <div class="source-code-container col-sm-6">
+                <h3 style="padding-left: 10px;">Source Code</h3>
+                <textarea id="source-code" style="resize: none;"></textarea>
+            </div>
+            <div class="log-output-container col-sm-6">
+                <h3 style="padding-left: 10px;">Log</h3>
+                <textarea id="log-output" style="resize: none;" readonly></textarea>
+            </div>
+        </div>
     </div>
 
     <!-- Client-side code down here, per the YSlow advice. 
@@ -39,15 +44,11 @@ O ::== + | -
     <script type="text/javascript">
 		 function init() {
 	        // Clear the message box.
-	        document.getElementById("taOutput").value = "";
+	        document.getElementById("log-output").value = "";
 	        // Set the initial values for our globals.
-	        tokens = "";
-	        tokenIndex = 0;
-	        currentToken = ' ';
-	        errorCount = 0;        
-	    }
+        }
     
-	    function btnCompile_click() {        
+	    function compile() {
 	        // This is executed as a result of the user pressing the 
 	        // "compile" button between the two text areas, above.  
 	        // Note the <input> element's event handler: onclick="btnCompile_click();
@@ -57,11 +58,13 @@ O ::== + | -
 	        tokens = _Lexer.lex();
 	        putMessage("Lex returned [" + tokens + "]");
 	        // . . . and parse!
-            _Parser.parse();
+            if (_LexError === false) {
+                _Parser.parse();
+            }
 	    }
     
 	    function putMessage(msg) {
-	        document.getElementById("taOutput").value += msg + "\n";
+	        document.getElementById("log-output").value += msg + "\n";
 	    }
     </script>
 </body>
