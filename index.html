@@ -44,6 +44,9 @@
                     </tr>
                 </table>
             </div>
+            <div class="test-programs col-sm-6">
+                <h3 style="padding-left: 10px;">Test Programs</h3>
+            </div>
         </div>
     </div>
 
@@ -63,7 +66,7 @@
         _CurrentToken = null;
         _TokenIndex = 0;
         document.getElementById("log-output").value = "";
-
+        this.clearTokensTable();
         // This is executed as a result of the user pressing the
         // "compile" button between the two text areas, above.
         // Note the <input> element's event handler: onclick="btnCompile_click();
@@ -79,6 +82,19 @@
 
         while (_TokenIndex < _Tokens.length) {
             _Parser.parse();
+        }
+    }
+
+    function clearTokensTable() {
+        var table = document.getElementById('tokens-table');
+        var length = table.rows.length;
+
+        if (length > 1) {
+            // Remove rows from the bottom up
+            // Otherwise, they'll be removed out of order or some will be skipped
+            for (var i = length - 1; i > 0; i--) {
+                table.deleteRow(i);
+            }
         }
     }
 
