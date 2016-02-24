@@ -144,7 +144,7 @@ module TSC {
                 }
             }
 
-            console.log(_Tokens);
+            _Logger.logTokens();
             return _Tokens;
 		}
 
