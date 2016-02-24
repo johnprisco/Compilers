@@ -120,7 +120,7 @@ var TSC;
                     }
                 }
             }
-            console.log(_Tokens);
+            _Logger.logTokens();
             return _Tokens;
         };
         Lexer.tokenizeString = function (str, line) {

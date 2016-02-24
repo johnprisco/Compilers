@@ -6,7 +6,7 @@
     <link rel="stylesheet" type="text/css" href="dist/styles/compiler.css" />
     <link rel="stylesheet" href="dist/styles/bootstrap.min.css">
 </head>
-<body onload="init();">
+<body>
     <div id="divButtonBar" style="margin:15px;">
         <nav class="navbar navbar-default">
             <div class="container-fluid">
@@ -32,6 +32,22 @@
                 <textarea id="log-output" style="resize: none;" readonly></textarea>
             </div>
         </div>
+        <div class="row">
+            <div style="overflow: scroll; height: 300px;" class="tokens col-sm-6">
+                <h3 style="padding-left: 10px;">Tokens</h3>
+                <table id="tokens-table" style="width: 100%;"
+                       class="table table-condensed table-hover table-bordered">
+                    <tr>
+                        <th>Type</th>
+                        <th>Value</th>
+                        <th>Line Number</th>
+                    </tr>
+                </table>
+            </div>
+            <div class="test-programs col-sm-6">
+                <h3 style="padding-left: 10px;">Test Programs</h3>
+            </div>
+        </div>
     </div>
 
     <!-- Client-side code down here, per the YSlow advice. 
@@ -50,7 +66,7 @@
         _CurrentToken = null;
         _TokenIndex = 0;
         document.getElementById("log-output").value = "";
-
+        this.clearTokensTable();
         // This is executed as a result of the user pressing the
         // "compile" button between the two text areas, above.
         // Note the <input> element's event handler: onclick="btnCompile_click();
@@ -66,6 +82,19 @@
 
         while (_TokenIndex < _Tokens.length) {
             _Parser.parse();
+        }
+    }
+
+    function clearTokensTable() {
+        var table = document.getElementById('tokens-table');
+        var length = table.rows.length;
+
+        if (length > 1) {
+            // Remove rows from the bottom up
+            // Otherwise, they'll be removed out of order or some will be skipped
+            for (var i = length - 1; i > 0; i--) {
+                table.deleteRow(i);
+            }
         }
     }
 
