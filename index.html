@@ -17,7 +17,7 @@
                             onclick="compile();">
                         Compile
                     </button>
-                    <button id="verbose-button" type="button" class="btn btn-danger navbar-btn"
+                    <button id="verbose-button" type="button" class="btn btn-success navbar-btn"
                             style="margin-left: 5px;"
                             onclick="setVerbose();">
                         Verbose Mode
@@ -112,7 +112,7 @@
         this.clearTokensTable();
 
         if (document.getElementById("source-code").value === '') {
-            _Logger.logIgnoringVerboseMode("Try putting some code in there!")
+            _Logger.logIgnoringVerboseMode("Try putting some code in there!");
             return;
         }
 
@@ -128,6 +128,7 @@
             _Parser.parse();
             _Logger.logIgnoringVerboseMode("Completed parsing program.");
         }
+
     }
 
     function clearTokensTable() {

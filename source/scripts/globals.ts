@@ -4,7 +4,7 @@ var _Logger = TSC.Logger;
 var _Tokens = [];
 var _CurrentToken: TSC.Token = null;
 var _TokenIndex: number = 0;
-var _VerboseMode: boolean = false;
+var _VerboseMode: boolean = true;
 
 // Token Types
 const LEFT_BRACE       = {type: 'LEFT_BRACE', value: '{'};
@@ -33,10 +33,3 @@ const IDENTIFIER       = {type: 'IDENTIFIER', value: ''};
 const _Keywords = [PRINT, WHILE, IF, INT, STRING, BOOLEAN, TRUE, FALSE];
 const _Punctuation = [LEFT_BRACE, RIGHT_BRACE, LEFT_PAREN, RIGHT_PAREN,
                       ASSIGNMENT, EQUAL, NOT_EQUAL, QUOTE, PLUS, END_OF_PROGRAM];
-
-// Global variables
-    var tokens = "";
-    var tokenIndex = 0;
-    var currentToken = "";
-    var errorCount = 0;
-    var EOF = "$";
