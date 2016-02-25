@@ -150,7 +150,26 @@
     }
 
     function everything() {
-        document.getElementById('source-code').value = '';
+        var everything = "{\n" +
+            "  string a\n" +
+            "  int b\n" +
+            "  a = \"test\"\n" +
+            "  b = 2\n" +
+            "  if (b == 2) {\n" +
+            "    print(a)\n" +
+            "  }\n" +
+            "  while (b != 3) {\n" +
+            "    string c\n" +
+            "    c = \"testing grammar\"\n" +
+            "    print(c)\n" +
+            "    b = 3\n" +
+            "}\n" +
+            "  if false {\n" +
+            "    print(\"false\")\n" +
+            "  }\n" +
+        "} $";
+
+        document.getElementById('source-code').value = everything;
         compile();
     }
 
@@ -168,6 +187,11 @@
         document.getElementById('source-code').value = '{\n  int a\n  a == 5 + 1\n  print(a)\n} $';
         compile();
     }
+
+
+
+
+
 
     </script>
 </body>
