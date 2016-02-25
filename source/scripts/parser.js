@@ -8,7 +8,7 @@ var TSC;
             this.parseProgram();
         };
         Parser.parseProgram = function () {
-            _Logger.logMessage("Parsing program.");
+            _Logger.logIgnoringVerboseMode("Parsing program.");
             this.parseBlock();
             this.match(END_OF_PROGRAM.type);
         };

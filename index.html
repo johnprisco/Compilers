@@ -112,7 +112,7 @@
         this.clearTokensTable();
 
         if (document.getElementById("source-code").value === '') {
-            _Logger.logMessage("Try putting some code in there!");
+            _Logger.logIgnoringVerboseMode("Try putting some code in there!")
             return;
         }
 
@@ -126,6 +126,7 @@
         // Not very useful in Project One, but possibly in the future?
         while (_TokenIndex < _Tokens.length) {
             _Parser.parse();
+            _Logger.logIgnoringVerboseMode("Completed parsing program.");
         }
     }
 
