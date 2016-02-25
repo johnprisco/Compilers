@@ -97,15 +97,9 @@
     <script type="text/javascript">
 
     function setVerbose() {
-        if (_VerboseMode) {
-            document.getElementById('verbose-button').classList.remove("btn-success");
-            document.getElementById('verbose-button').classList.add("btn-danger");
-
-        } else {
-            document.getElementById('verbose-button').classList.add("btn-success");
-            document.getElementById('verbose-button').classList.remove("btn-danger");
-        }
-
+        // If its on, turn it off and vice verse.
+        document.getElementById('verbose-button').classList.toggle("btn-success");
+        document.getElementById('verbose-button').classList.toggle("btn-danger");
         _VerboseMode = !_VerboseMode;
     }
 
