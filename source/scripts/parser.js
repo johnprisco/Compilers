@@ -81,6 +81,8 @@ var TSC;
                     this.parseId();
                     break;
                 default:
+                    _Logger.logError("We should never have gotten to this point.", _CurrentToken.line, 'Parser');
+                    throw new Error("Something broke in parser.");
             }
         };
         Parser.parseWhileStatement = function () {
@@ -114,6 +116,8 @@ var TSC;
                     this.parseId();
                     break;
                 default:
+                    _Logger.logError("We should never have gotten to this point.", _CurrentToken.line, 'Parser');
+                    throw new Error("Something broke in parser.");
             }
         };
         Parser.parseIntExpr = function () {

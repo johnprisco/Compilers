@@ -89,7 +89,8 @@ module TSC {
                     this.parseId();
                     break;
                 default:
-                    // TODO: Log some kind of error
+                    _Logger.logError("We should never have gotten to this point.", _CurrentToken.line, 'Parser')
+                    throw new Error("Something broke in parser.");
             }
         }
 
@@ -126,8 +127,8 @@ module TSC {
                     this.parseId();
                     break;
                 default:
-                    // TODO: Log an error message
-
+                    _Logger.logError("We should never have gotten to this point.", _CurrentToken.line, 'Parser')
+                    throw new Error("Something broke in parser.");
             }
         }
 
