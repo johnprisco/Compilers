@@ -60,7 +60,6 @@ module TSC {
 
                             for (var keywordIndex = 0; keywordIndex < _Keywords.length; keywordIndex++) {
                                 if (currentToken === _Keywords[keywordIndex].value) {
-                                    console.log("Making a keyword token");
                                     // i + 1 to get the line number; lines don't start at zero
                                     var token = Token.makeNewToken(_Keywords[keywordIndex].type, _Keywords[keywordIndex].value, i + 1);
                                     _Tokens.push(token);
@@ -87,11 +86,8 @@ module TSC {
 
                         // Test if they're digits
                         else if (digitRegex.test(currentToken)) {
-                            console.log("Digit Test passed");
-
                             // String of digits. Makes Digits tokens out of them.
                             for (var digitIndex = 0; digitIndex < currentToken.length; digitIndex++) {
-                                console.log("Making a digit token.");
                                 var token = Token.makeNewToken('DIGIT', currentToken[digitIndex], i + 1);
                                 _Tokens.push(token);
                                 _Logger.logMessage("Created " + token.value + " token.");
@@ -101,11 +97,8 @@ module TSC {
 
                         // Lastly, check for symbols: punctuation or operators
                         else if (symbolStrings.indexOf(currentToken) > -1) {
-                            console.log("Punctuation Test passed");
-
                             for (var symbolIndex = 0; symbolIndex < _Punctuation.length; symbolIndex++) {
                                 if (currentToken === _Punctuation[symbolIndex].value) {
-                                    console.log("making a punctuation token");
                                     var token = Token.makeNewToken(_Punctuation[symbolIndex].type, _Punctuation[symbolIndex].value, i + 1);
 
                                     if ((token.type === QUOTE.type) && (lexingString === false)) {

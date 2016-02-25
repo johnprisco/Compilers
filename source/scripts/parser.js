@@ -4,18 +4,15 @@ var TSC;
         function Parser() {
         }
         Parser.parse = function () {
-            _Logger.logMessage("Beginning Parsing.");
             _CurrentToken = _Tokens[_TokenIndex];
             this.parseProgram();
         };
         Parser.parseProgram = function () {
-            console.log("Parsing program");
             _Logger.logMessage("Parsing program.");
             this.parseBlock();
             this.match(END_OF_PROGRAM.type);
         };
         Parser.parseBlock = function () {
-            console.log("Parsing block");
             this.match(LEFT_BRACE.type);
             this.parseStatementList();
             this.match(RIGHT_BRACE.type);

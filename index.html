@@ -48,9 +48,34 @@
             </div>
             <div class="test-programs col-sm-6">
                 <h3 style="padding-left: 10px;">Test Programs</h3>
+                <div style="overflow:scroll; height:300px;">
+                    <table id="programs-table" style="width: 100%;" class="table borderless">
+                        <tr>
+                            <td><button type="button" class="btn btn-primary" onclick="nestedWhile();">Nested While</button></td>
+                            <td style="vertical-align: middle;">Tests a valid program in the grammar.</td>
+                        </tr>
+                        <tr>
+                            <td><button type="button" class="btn btn-primary" onclick="everything();">Basic Program</button></td>
+                            <td style="vertical-align: middle;">Tests the most basic program the language can consist of.</td>
+                        </tr>
+                        <tr>
+                            <td><button type="button" class="btn btn-primary" onclick="everything();">Entire Grammar</button></td>
+                            <td style="vertical-align: middle;">Tests the entire grammar in one program.</td>
+                        </tr>
+                        <tr>
+                            <td><button type="button" class="btn btn-warning" onclick="missingEoP();">Missing $$$</button></td>
+                            <td style="vertical-align: middle;">Tests a program without an End of Program character.</td>
+                        </tr>
+                        <tr>
+                            <td><button type="button" class="btn btn-danger" onclick="invalidSymbol();">Invalid Symbol</button></td>
+                            <td style="vertical-align: middle;">Tests a program with an invalid character.</td>
+                        </tr>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
+    <div id="footer" style="height:100px;"></div>
 
     <!-- Client-side code down here, per the YSlow advice. 
          (http://developer.yahoo.com/performance/rules.html#js_bottom) -->
@@ -75,10 +100,6 @@
         // Grab the tokens from the lexer . . .
         _Lexer.lex();
         // . . . and parse!
-//        if (_LexError === false) {
-//            _Logger.logMessage("Lexical analysis successful.");
-//            _Parser.parse();
-//        }
 
         _Logger.logMessage("Lexical analysis successful.");
 
@@ -98,6 +119,26 @@
                 table.deleteRow(i);
             }
         }
+    }
+
+    function missingEoP() {
+
+    }
+
+    function nestedWhile() {
+
+    }
+
+    function invalidSymbol() {
+
+    }
+
+    function everything() {
+
+    }
+
+    function basicProgram() {
+
     }
 
     </script>

@@ -1,8 +1,13 @@
 #log-output, #source-code {
-	width: 100%;
-	height: 300px;
-}
+     width: 100%;
+     height: 300px;
+ }
 
 #source-code {
-	font-family: monospace;
+    font-family: monospace;
+}
+
+.borderless tbody tr td, .borderless tbody tr th, .borderless thead tr th {
+    border: none !important;
+
 }

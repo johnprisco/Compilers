@@ -1,20 +1,17 @@
 module TSC {
     export class Parser {
         public static parse() {
-            _Logger.logMessage("Beginning Parsing.");
             _CurrentToken = _Tokens[_TokenIndex];
             this.parseProgram();
         }
 
         public static parseProgram() {
-            console.log("Parsing program");
             _Logger.logMessage("Parsing program.");
             this.parseBlock();
             this.match(END_OF_PROGRAM.type);
         }
 
         public static parseBlock() {
-            console.log("Parsing block");
             this.match(LEFT_BRACE.type);
             this.parseStatementList();
             this.match(RIGHT_BRACE.type);
@@ -154,7 +151,6 @@ module TSC {
             } else {
                 this.match(LEFT_PAREN.type);
                 this.parseExpr();
-
             }
         }
 

@@ -50,7 +50,6 @@ var TSC;
                         if (keywordStrings.indexOf(currentToken) > -1) {
                             for (var keywordIndex = 0; keywordIndex < _Keywords.length; keywordIndex++) {
                                 if (currentToken === _Keywords[keywordIndex].value) {
-                                    console.log("Making a keyword token");
                                     // i + 1 to get the line number; lines don't start at zero
                                     var token = TSC.Token.makeNewToken(_Keywords[keywordIndex].type, _Keywords[keywordIndex].value, i + 1);
                                     _Tokens.push(token);
@@ -73,20 +72,16 @@ var TSC;
                             }
                         }
                         else if (digitRegex.test(currentToken)) {
-                            console.log("Digit Test passed");
                             // String of digits. Makes Digits tokens out of them.
                             for (var digitIndex = 0; digitIndex < currentToken.length; digitIndex++) {
-                                console.log("Making a digit token.");
                                 var token = TSC.Token.makeNewToken('DIGIT', currentToken[digitIndex], i + 1);
                                 _Tokens.push(token);
                                 _Logger.logMessage("Created " + token.value + " token.");
                             }
                         }
                         else if (symbolStrings.indexOf(currentToken) > -1) {
-                            console.log("Punctuation Test passed");
                             for (var symbolIndex = 0; symbolIndex < _Punctuation.length; symbolIndex++) {
                                 if (currentToken === _Punctuation[symbolIndex].value) {
-                                    console.log("making a punctuation token");
                                     var token = TSC.Token.makeNewToken(_Punctuation[symbolIndex].type, _Punctuation[symbolIndex].value, i + 1);
                                     if ((token.type === QUOTE.type) && (lexingString === false)) {
                                         // This is an error. Can't have new lines in quotes
