@@ -86,7 +86,7 @@ var TSC;
                                     if ((token.type === QUOTE.type) && (lexingString === false)) {
                                         // This is an error. Can't have new lines in quotes
                                         _Logger.logError('New line characters not valid in strings.', i + 1, 'Lexer');
-                                        return _Tokens;
+                                        throw new Error("New line characters not allowed in strings. Ending execution.");
                                     }
                                     else if ((token.type === QUOTE.type) && (lexingString === true)) {
                                         _Tokens.push(token);

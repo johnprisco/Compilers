@@ -140,6 +140,16 @@ var TSC;
             else {
                 this.match(LEFT_PAREN.type);
                 this.parseExpr();
+                if (_CurrentToken.type === EQUAL.type) {
+                    this.match(EQUAL.type);
+                    this.parseExpr();
+                    this.match(RIGHT_PAREN.type);
+                }
+                else if (_CurrentToken.type === NOT_EQUAL.type) {
+                    this.match(NOT_EQUAL.type);
+                    this.parseExpr();
+                    this.match(RIGHT_PAREN.type);
+                }
             }
         };
         Parser.parseId = function () {

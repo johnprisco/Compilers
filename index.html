@@ -102,15 +102,20 @@
         _TokenIndex = 0;
         document.getElementById("log-output").value = "";
         this.clearTokensTable();
-        // This is executed as a result of the user pressing the
-        // "compile" button between the two text areas, above.
-        // Note the <input> element's event handler: onclick="btnCompile_click();
+
+        if (document.getElementById("source-code").value === '') {
+            _Logger.logMessage("Try putting some code in there!");
+            return;
+        }
+
         // Grab the tokens from the lexer . . .
         _Lexer.lex();
         // . . . and parse!
 
         _Logger.logMessage("Lexical analysis successful.");
 
+        // This will allow us to parse multiple programs.
+        // Not very useful in Project One, but possibly in the future?
         while (_TokenIndex < _Tokens.length) {
             _Parser.parse();
         }
@@ -140,7 +145,7 @@
     }
 
     function invalidSymbol() {
-        document.getElementById('source-code').value = '';
+        document.getElementById('source-code').value = '{ \n  int a \n  a = 2 \n  print(a - 2) \n} $';
         compile();
     }
 
@@ -155,12 +160,12 @@
     }
 
     function newLineString() {
-        document.getElementById('source-code').value = '';
+        document.getElementById('source-code').value = '{\n  string a\n  a = \"str\ning\"\n  print(a)\n} $';
         compile();
     }
 
     function unexpectedToken() {
-        document.getElementById('source-code').value = '';
+        document.getElementById('source-code').value = '{\n  int a\n  a == 5 + 1\n  print(a)\n} $';
         compile();
     }
 
