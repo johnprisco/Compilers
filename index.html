@@ -17,6 +17,11 @@
                             onclick="compile();">
                         Compile
                     </button>
+                    <button id="verbose-button" type="button" class="btn btn-danger navbar-btn"
+                            style="margin-left: 5px;"
+                            onclick="setVerbose();">
+                        Verbose Mode
+                    </button>
                 </div>
             </div>
         </nav>
@@ -90,7 +95,20 @@
     <script type="text/javascript" src="dist/scripts/token.js"></script>
 	<script type="text/javascript" src="dist/scripts/globals.js"></script>
     <script type="text/javascript">
-    
+
+    function setVerbose() {
+        if (_VerboseMode) {
+            document.getElementById('verbose-button').classList.remove("btn-success");
+            document.getElementById('verbose-button').classList.add("btn-danger");
+
+        } else {
+            document.getElementById('verbose-button').classList.add("btn-success");
+            document.getElementById('verbose-button').classList.remove("btn-danger");
+        }
+
+        _VerboseMode = !_VerboseMode;
+    }
+
     function compile() {
         // Reset globals
         _Tokens = [];
