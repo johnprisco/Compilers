@@ -4,18 +4,15 @@ var TSC;
         function Parser() {
         }
         Parser.parse = function () {
-            _Logger.logMessage("Beginning Parsing.");
             _CurrentToken = _Tokens[_TokenIndex];
             this.parseProgram();
         };
         Parser.parseProgram = function () {
-            console.log("Parsing program");
             _Logger.logMessage("Parsing program.");
             this.parseBlock();
             this.match(END_OF_PROGRAM.type);
         };
         Parser.parseBlock = function () {
-            console.log("Parsing block");
             this.match(LEFT_BRACE.type);
             this.parseStatementList();
             this.match(RIGHT_BRACE.type);
@@ -43,7 +40,9 @@ var TSC;
                 case IDENTIFIER.type:
                     this.parseAssignmentStatement();
                     break;
-                case STRING.type || INT.type || BOOLEAN.type:
+                case STRING.type:
+                case INT.type:
+                case BOOLEAN.type:
                     this.parseVarDecl();
                     break;
                 case WHILE.type:
@@ -82,6 +81,8 @@ var TSC;
                     this.parseId();
                     break;
                 default:
+                    _Logger.logError("We should never have gotten to this point.", _CurrentToken.line, 'Parser');
+                    throw new Error("Something broke in parser.");
             }
         };
         Parser.parseWhileStatement = function () {
@@ -105,7 +106,9 @@ var TSC;
                     this.parseStringExpr();
                     break;
                 // BooleanExpr
-                case LEFT_PAREN.type || TRUE.type || FALSE.type:
+                case LEFT_PAREN.type:
+                case TRUE.type:
+                case FALSE.type:
                     this.parseBooleanExpr();
                     break;
                 // Id
@@ -113,6 +116,8 @@ var TSC;
                     this.parseId();
                     break;
                 default:
+                    _Logger.logError("We should never have gotten to this point.", _CurrentToken.line, 'Parser');
+                    throw new Error("Something broke in parser.");
             }
         };
         Parser.parseIntExpr = function () {
@@ -139,6 +144,16 @@ var TSC;
             else {
                 this.match(LEFT_PAREN.type);
                 this.parseExpr();
+                if (_CurrentToken.type === EQUAL.type) {
+                    this.match(EQUAL.type);
+                    this.parseExpr();
+                    this.match(RIGHT_PAREN.type);
+                }
+                else if (_CurrentToken.type === NOT_EQUAL.type) {
+                    this.match(NOT_EQUAL.type);
+                    this.parseExpr();
+                    this.match(RIGHT_PAREN.type);
+                }
             }
         };
         Parser.parseId = function () {
