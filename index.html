@@ -55,10 +55,6 @@
                             <td style="vertical-align: middle;">Tests the most basic program the language can consist of.</td>
                         </tr>
                         <tr>
-                            <td><button type="button" class="btn btn-primary" onclick="nestedWhile();">Nested While</button></td>
-                            <td style="vertical-align: middle;">Tests a valid program in the grammar.</td>
-                        </tr>
-                        <tr>
                             <td><button type="button" class="btn btn-primary" onclick="everything();">Entire Grammar</button></td>
                             <td style="vertical-align: middle;">Tests the entire grammar in one program.</td>
                         </tr>
@@ -139,11 +135,6 @@
         compile();
     }
 
-    function nestedWhile() {
-        document.getElementById('source-code').value = '';
-        compile();
-    }
-
     function invalidSymbol() {
         document.getElementById('source-code').value = '{ \n  int a \n  a = 2 \n  print(a - 2) \n} $';
         compile();
@@ -187,12 +178,6 @@
         document.getElementById('source-code').value = '{\n  int a\n  a == 5 + 1\n  print(a)\n} $';
         compile();
     }
-
-
-
-
-
-
     </script>
 </body>
 </html>

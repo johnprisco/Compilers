@@ -1,0 +1,3 @@
+Project One Testing Results
+
+When writing up the test cases for this project, I looked at the grammar to try and cover all of my bases. I started small, by writing the simplest project the grammar supports '{}$' and then tried to write a program that encompassed the entire grammar. This helped me catch a couple errors I had with parsing boolean expressions and if statements. In this project, there was only one case that I could determine a warning would be appropriate, and that was when the user left out an End of Program symbol. I also included programs for three errors: invalid symbols, new lines in strings, and just code that doesn't adhere to the grammar. 
