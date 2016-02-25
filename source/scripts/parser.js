@@ -40,7 +40,9 @@ var TSC;
                 case IDENTIFIER.type:
                     this.parseAssignmentStatement();
                     break;
-                case STRING.type || INT.type || BOOLEAN.type:
+                case STRING.type:
+                case INT.type:
+                case BOOLEAN.type:
                     this.parseVarDecl();
                     break;
                 case WHILE.type:
@@ -102,7 +104,9 @@ var TSC;
                     this.parseStringExpr();
                     break;
                 // BooleanExpr
-                case LEFT_PAREN.type || TRUE.type || FALSE.type:
+                case LEFT_PAREN.type:
+                case TRUE.type:
+                case FALSE.type:
                     this.parseBooleanExpr();
                     break;
                 // Id

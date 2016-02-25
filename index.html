@@ -55,7 +55,7 @@
                             <td style="vertical-align: middle;">Tests a valid program in the grammar.</td>
                         </tr>
                         <tr>
-                            <td><button type="button" class="btn btn-primary" onclick="everything();">Basic Program</button></td>
+                            <td><button type="button" class="btn btn-primary" onclick="basicProgram();">Basic Program</button></td>
                             <td style="vertical-align: middle;">Tests the most basic program the language can consist of.</td>
                         </tr>
                         <tr>
@@ -69,6 +69,14 @@
                         <tr>
                             <td><button type="button" class="btn btn-danger" onclick="invalidSymbol();">Invalid Symbol</button></td>
                             <td style="vertical-align: middle;">Tests a program with an invalid character.</td>
+                        </tr>
+                        <tr>
+                            <td><button type="button" class="btn btn-danger" onclick="newLineString();">\n in String</button></td>
+                            <td style="vertical-align: middle;">Tests a program with a new line in a string.</td>
+                        </tr>
+                        <tr>
+                            <td><button type="button" class="btn btn-danger" onclick="unexpectedToken();">Unexpected Token</button></td>
+                            <td style="vertical-align: middle;">Tests a program that doesn't conform to the grammar.</td>
                         </tr>
                     </table>
                 </div>
@@ -122,23 +130,38 @@
     }
 
     function missingEoP() {
-
+        document.getElementById('source-code').value = '{ \n  int a \n  a = 2 \n  print(a) \n} ';
+        compile();
     }
 
     function nestedWhile() {
-
+        document.getElementById('source-code').value = '';
+        compile();
     }
 
     function invalidSymbol() {
-
+        document.getElementById('source-code').value = '';
+        compile();
     }
 
     function everything() {
-
+        document.getElementById('source-code').value = '';
+        compile();
     }
 
     function basicProgram() {
+        document.getElementById('source-code').value = '{}$';
+        compile();
+    }
 
+    function newLineString() {
+        document.getElementById('source-code').value = '';
+        compile();
+    }
+
+    function unexpectedToken() {
+        document.getElementById('source-code').value = '';
+        compile();
     }
 
     </script>
