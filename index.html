@@ -17,6 +17,11 @@
                             onclick="compile();">
                         Compile
                     </button>
+                    <button id="verbose-button" type="button" class="btn btn-danger navbar-btn"
+                            style="margin-left: 5px;"
+                            onclick="setVerbose();">
+                        Verbose Mode
+                    </button>
                 </div>
             </div>
         </nav>
@@ -90,7 +95,14 @@
     <script type="text/javascript" src="dist/scripts/token.js"></script>
 	<script type="text/javascript" src="dist/scripts/globals.js"></script>
     <script type="text/javascript">
-    
+
+    function setVerbose() {
+        // If its on, turn it off and vice verse.
+        document.getElementById('verbose-button').classList.toggle("btn-success");
+        document.getElementById('verbose-button').classList.toggle("btn-danger");
+        _VerboseMode = !_VerboseMode;
+    }
+
     function compile() {
         // Reset globals
         _Tokens = [];
@@ -100,7 +112,7 @@
         this.clearTokensTable();
 
         if (document.getElementById("source-code").value === '') {
-            _Logger.logMessage("Try putting some code in there!");
+            _Logger.logIgnoringVerboseMode("Try putting some code in there!")
             return;
         }
 
@@ -114,6 +126,7 @@
         // Not very useful in Project One, but possibly in the future?
         while (_TokenIndex < _Tokens.length) {
             _Parser.parse();
+            _Logger.logIgnoringVerboseMode("Completed parsing program.");
         }
     }
 

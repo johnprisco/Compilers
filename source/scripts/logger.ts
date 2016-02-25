@@ -2,8 +2,11 @@ module TSC {
     export class Logger {
 
         public static logMessage(message: string) {
-            var log = <HTMLTextAreaElement> document.getElementById("log-output");
-            log.value += message + "\n";
+            // Only log messages if we're in Verbose Mode
+            if (_VerboseMode) {
+                var log = <HTMLTextAreaElement> document.getElementById("log-output");
+                log.value += message + "\n"
+            }
         }
 
         public static logWarning(message: string) {
@@ -29,7 +32,12 @@ module TSC {
                 value.innerHTML = _Tokens[i].value;
                 line.innerHTML = _Tokens[i].line;
             }
+        }
 
+        // Sometimes we need to log something even if we're in verbose mode.
+        public static logIgnoringVerboseMode(message: string) {
+            var log = <HTMLTextAreaElement> document.getElementById("log-output");
+            log.value += message + "\n";
         }
     }
 }

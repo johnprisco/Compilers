@@ -4,8 +4,11 @@ var TSC;
         function Logger() {
         }
         Logger.logMessage = function (message) {
-            var log = document.getElementById("log-output");
-            log.value += message + "\n";
+            // Only log messages if we're in Verbose Mode
+            if (_VerboseMode) {
+                var log = document.getElementById("log-output");
+                log.value += message + "\n";
+            }
         };
         Logger.logWarning = function (message) {
             var log = document.getElementById("log-output");
@@ -27,6 +30,11 @@ var TSC;
                 value.innerHTML = _Tokens[i].value;
                 line.innerHTML = _Tokens[i].line;
             }
+        };
+        // Sometimes we need to log something even if we're in verbose mode.
+        Logger.logIgnoringVerboseMode = function (message) {
+            var log = document.getElementById("log-output");
+            log.value += message + "\n";
         };
         return Logger;
     })();
