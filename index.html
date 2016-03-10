@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-    <title>Compiler</title>
+    <title>PriscOS Compiler</title>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
     <link rel="stylesheet" type="text/css" href="dist/styles/compiler.css" />
     <link rel="stylesheet" href="dist/styles/bootstrap.min.css">
@@ -14,12 +14,12 @@
                     <span>Prisc<strong>OS</strong> Compiler</span>
                     <button type="button" class="btn btn-primary navbar-btn"
                             style="margin-left: 5px;"
-                            onclick="compile();">
+                            onclick="TSC.Utils.compile();">
                         Compile
                     </button>
                     <button id="verbose-button" type="button" class="btn btn-success navbar-btn"
                             style="margin-left: 5px;"
-                            onclick="setVerbose();">
+                            onclick="TSC.Utils.setVerbose();">
                         Verbose Mode
                     </button>
                 </div>
@@ -56,27 +56,27 @@
                 <div style="overflow:scroll; height:300px;">
                     <table id="programs-table" style="width: 100%;" class="table borderless">
                         <tr>
-                            <td><button type="button" class="btn btn-primary" onclick="basicProgram();">Basic Program</button></td>
+                            <td><button type="button" class="btn btn-primary" onclick="TSC.Utils.basicProgram();">Basic Program</button></td>
                             <td style="vertical-align: middle;">Tests the most basic program the language can consist of.</td>
                         </tr>
                         <tr>
-                            <td><button type="button" class="btn btn-primary" onclick="everything();">Entire Grammar</button></td>
+                            <td><button type="button" class="btn btn-primary" onclick="TSC.Utils.everything();">Entire Grammar</button></td>
                             <td style="vertical-align: middle;">Tests the entire grammar in one program.</td>
                         </tr>
                         <tr>
-                            <td><button type="button" class="btn btn-warning" onclick="missingEoP();">Missing $</button></td>
+                            <td><button type="button" class="btn btn-warning" onclick="TSC.Utils.missingEoP();">Missing $</button></td>
                             <td style="vertical-align: middle;">Tests a program without an End of Program character.</td>
                         </tr>
                         <tr>
-                            <td><button type="button" class="btn btn-danger" onclick="invalidSymbol();">Invalid Symbol</button></td>
+                            <td><button type="button" class="btn btn-danger" onclick="TSC.Utils.invalidSymbol();">Invalid Symbol</button></td>
                             <td style="vertical-align: middle;">Tests a program with an invalid character.</td>
                         </tr>
                         <tr>
-                            <td><button type="button" class="btn btn-danger" onclick="newLineString();">\n in String</button></td>
+                            <td><button type="button" class="btn btn-danger" onclick="TSC.Utils.newLineString();">\n in String</button></td>
                             <td style="vertical-align: middle;">Tests a program with a new line in a string.</td>
                         </tr>
                         <tr>
-                            <td><button type="button" class="btn btn-danger" onclick="unexpectedToken();">Unexpected Token</button></td>
+                            <td><button type="button" class="btn btn-danger" onclick="TSC.Utils.unexpectedToken();">Unexpected Token</button></td>
                             <td style="vertical-align: middle;">Tests a program that doesn't conform to the grammar.</td>
                         </tr>
                     </table>
@@ -94,104 +94,5 @@
     <script type="text/javascript" src="dist/scripts/logger.js"></script>
     <script type="text/javascript" src="dist/scripts/token.js"></script>
 	<script type="text/javascript" src="dist/scripts/globals.js"></script>
-    <script type="text/javascript">
-
-    function setVerbose() {
-        // If its on, turn it off and vice verse.
-        document.getElementById('verbose-button').classList.toggle("btn-success");
-        document.getElementById('verbose-button').classList.toggle("btn-danger");
-        _VerboseMode = !_VerboseMode;
-    }
-
-    function compile() {
-        // Reset globals
-        _Tokens = [];
-        _CurrentToken = null;
-        _TokenIndex = 0;
-        document.getElementById("log-output").value = "";
-        this.clearTokensTable();
-
-        if (document.getElementById("source-code").value === '') {
-            _Logger.logIgnoringVerboseMode("Try putting some code in there!");
-            return;
-        }
-
-        // Grab the tokens from the lexer . . .
-        _Lexer.lex();
-        // . . . and parse!
-
-        _Logger.logMessage("Lexical analysis successful.");
-
-        // This will allow us to parse multiple programs.
-        // Not very useful in Project One, but possibly in the future?
-        while (_TokenIndex < _Tokens.length) {
-            _Parser.parse();
-            _Logger.logIgnoringVerboseMode("Completed parsing program.");
-        }
-
-    }
-
-    function clearTokensTable() {
-        var table = document.getElementById('tokens-table');
-        var length = table.rows.length;
-
-        if (length > 1) {
-            // Remove rows from the bottom up
-            // Otherwise, they'll be removed out of order or some will be skipped
-            for (var i = length - 1; i > 0; i--) {
-                table.deleteRow(i);
-            }
-        }
-    }
-
-    function missingEoP() {
-        document.getElementById('source-code').value = '{ \n  int a \n  a = 2 \n  print(a) \n} ';
-        compile();
-    }
-
-    function invalidSymbol() {
-        document.getElementById('source-code').value = '{ \n  int a \n  a = 2 \n  print(a - 2) \n} $';
-        compile();
-    }
-
-    function everything() {
-        var everything = "{\n" +
-            "  string a\n" +
-            "  int b\n" +
-            "  a = \"test\"\n" +
-            "  b = 2\n" +
-            "  if (b == 2) {\n" +
-            "    print(a)\n" +
-            "  }\n" +
-            "  while (b != 3) {\n" +
-            "    string c\n" +
-            "    c = \"testing grammar\"\n" +
-            "    print(c)\n" +
-            "    b = 3\n" +
-            "}\n" +
-            "  if false {\n" +
-            "    print(\"false\")\n" +
-            "  }\n" +
-        "} $";
-
-        document.getElementById('source-code').value = everything;
-        compile();
-    }
-
-    function basicProgram() {
-        document.getElementById('source-code').value = '{}$';
-        compile();
-    }
-
-    function newLineString() {
-        document.getElementById('source-code').value = '{\n  string a\n  a = \"str\ning\"\n  print(a)\n} $';
-        compile();
-    }
-
-    function unexpectedToken() {
-        document.getElementById('source-code').value = '{\n  int a\n  a == 5 + 1\n  print(a)\n} $';
-        compile();
-    }
-    </script>
 </body>
 </html>
