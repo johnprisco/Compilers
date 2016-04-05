@@ -12,12 +12,10 @@ module TSC {
         constructor() {
             this.type = "";
             this.value = "";
-            this.children = null;
+            this.children = [];
             this.parent = null;
             this.lineNumber = 0;
             this.isLeafNode = false;
         }
-
-
     }
 }

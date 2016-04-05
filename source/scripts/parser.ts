@@ -2,16 +2,19 @@ module TSC {
     export class Parser {
         public static parse() {
             _CurrentToken = _Tokens[_TokenIndex];
+            _CST = new Tree();
             this.parseProgram();
         }
 
         public static parseProgram() {
             _Logger.logIgnoringVerboseMode("Parsing program.");
+            _CST.addBranchNode("PROGRAM");
             this.parseBlock();
             this.match(END_OF_PROGRAM.type);
         }
 
         public static parseBlock() {
+            _CST.addBranchNode("BLOCK");
             this.match(LEFT_BRACE.type);
             this.parseStatementList();
             this.match(RIGHT_BRACE.type);
@@ -19,7 +22,7 @@ module TSC {
 
         public static parseStatementList() {
             // checking for: print, identifier, int, boolean, string, {, 'while', 'if'
-
+            _CST.addBranchNode("STATEMENT LIST");
             if (_CurrentToken.type === PRINT.type ||
                 _CurrentToken.type === IDENTIFIER.type ||
                 _CurrentToken.type === INT.type ||
@@ -36,7 +39,7 @@ module TSC {
         }
 
         public static parseStatement() {
-
+            _CST.addBranchNode("STATEMENT");
             switch (_CurrentToken.type) {
                 case PRINT.type:
                     this.parsePrintStatement();
@@ -61,7 +64,7 @@ module TSC {
         }
 
         public static parsePrintStatement() {
-
+            _CST.addBranchNode("PRINT STATEMENT");
             this.match(PRINT.type);
             this.match(LEFT_PAREN.type);
             this.parseExpr();
@@ -69,12 +72,14 @@ module TSC {
         }
 
         public static parseAssignmentStatement() {
+            _CST.addBranchNode("ASSIGNMENT STATEMENT");
             this.parseId();
             this.match(ASSIGNMENT.type);
             this.parseExpr();
         }
 
         public static parseVarDecl() {
+            _CST.addBranchNode("VAR DECL");
             switch (_CurrentToken.type) {
                 case STRING.type:
                     this.match(STRING.type);
@@ -95,18 +100,21 @@ module TSC {
         }
 
         public static parseWhileStatement() {
+            _CST.addBranchNode("WHILE STATEMENT");
             this.match(WHILE.type);
             this.parseBooleanExpr();
             this.parseBlock();
         }
 
         public static parseIfStatement() {
+            _CST.addBranchNode("IF STATEMENT");
             this.match(IF.type);
             this.parseBooleanExpr();
             this.parseBlock();
         }
 
         public static parseExpr() {
+            _CST.addBranchNode("EXPR");
             switch (_CurrentToken.type) {
                 // IntExpr
                 case DIGIT.type:
@@ -133,6 +141,7 @@ module TSC {
         }
 
         public static parseIntExpr() {
+            _CST.addBranchNode("INT EXPR");
             if (_CurrentToken.type === DIGIT.type) {
                 this.match(DIGIT.type);
                 if (_CurrentToken.type === PLUS.type) {
@@ -143,12 +152,14 @@ module TSC {
         }
 
         public static parseStringExpr() {
+            _CST.addBranchNode("STRING EXPR");
             this.match(QUOTE.type);
             this.parseCharList();
             this.match(QUOTE.type);
         }
 
         public static parseBooleanExpr() {
+            _CST.addBranchNode("BOOLEAN EXPR");
             if (_CurrentToken.type === TRUE.type) {
                 this.match(TRUE.type);
             } else if (_CurrentToken.type === FALSE.type) {
@@ -170,10 +181,12 @@ module TSC {
         }
 
         public static parseId() {
+            _CST.addBranchNode("IDENTIFIER");
             this.match(IDENTIFIER.type);
         }
 
         public static parseCharList() {
+            _CST.addBranchNode("CHAR LIST");
             if (_CurrentToken.type === CHARACTER.type) {
                 this.match(CHARACTER.type);
                 this.parseCharList();
@@ -186,6 +199,7 @@ module TSC {
 
         public static match(type) {
             if (_CurrentToken.type === type) {
+                _CST.addLeafNode(_CurrentToken);
                 _Logger.logMessage("Successfully matched " + type + " token.");
             } else {
                 _Logger.logError("Expected " + type + ", found " + _CurrentToken.type, _CurrentToken.line, 'Parser');

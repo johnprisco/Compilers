@@ -5,20 +5,24 @@ var TSC;
         }
         Parser.parse = function () {
             _CurrentToken = _Tokens[_TokenIndex];
+            _CST = new TSC.Tree();
             this.parseProgram();
         };
         Parser.parseProgram = function () {
             _Logger.logIgnoringVerboseMode("Parsing program.");
+            _CST.addBranchNode("PROGRAM");
             this.parseBlock();
             this.match(END_OF_PROGRAM.type);
         };
         Parser.parseBlock = function () {
+            _CST.addBranchNode("BLOCK");
             this.match(LEFT_BRACE.type);
             this.parseStatementList();
             this.match(RIGHT_BRACE.type);
         };
         Parser.parseStatementList = function () {
             // checking for: print, identifier, int, boolean, string, {, 'while', 'if'
+            _CST.addBranchNode("STATEMENT LIST");
             if (_CurrentToken.type === PRINT.type ||
                 _CurrentToken.type === IDENTIFIER.type ||
                 _CurrentToken.type === INT.type ||
@@ -33,6 +37,7 @@ var TSC;
             // otherwise, do nothing
         };
         Parser.parseStatement = function () {
+            _CST.addBranchNode("STATEMENT");
             switch (_CurrentToken.type) {
                 case PRINT.type:
                     this.parsePrintStatement();
@@ -56,17 +61,20 @@ var TSC;
             }
         };
         Parser.parsePrintStatement = function () {
+            _CST.addBranchNode("PRINT STATEMENT");
             this.match(PRINT.type);
             this.match(LEFT_PAREN.type);
             this.parseExpr();
             this.match(RIGHT_PAREN.type);
         };
         Parser.parseAssignmentStatement = function () {
+            _CST.addBranchNode("ASSIGNMENT STATEMENT");
             this.parseId();
             this.match(ASSIGNMENT.type);
             this.parseExpr();
         };
         Parser.parseVarDecl = function () {
+            _CST.addBranchNode("VAR DECL");
             switch (_CurrentToken.type) {
                 case STRING.type:
                     this.match(STRING.type);
@@ -86,16 +94,19 @@ var TSC;
             }
         };
         Parser.parseWhileStatement = function () {
+            _CST.addBranchNode("WHILE STATEMENT");
             this.match(WHILE.type);
             this.parseBooleanExpr();
             this.parseBlock();
         };
         Parser.parseIfStatement = function () {
+            _CST.addBranchNode("IF STATEMENT");
             this.match(IF.type);
             this.parseBooleanExpr();
             this.parseBlock();
         };
         Parser.parseExpr = function () {
+            _CST.addBranchNode("EXPR");
             switch (_CurrentToken.type) {
                 // IntExpr
                 case DIGIT.type:
@@ -121,6 +132,7 @@ var TSC;
             }
         };
         Parser.parseIntExpr = function () {
+            _CST.addBranchNode("INT EXPR");
             if (_CurrentToken.type === DIGIT.type) {
                 this.match(DIGIT.type);
                 if (_CurrentToken.type === PLUS.type) {
@@ -130,11 +142,13 @@ var TSC;
             }
         };
         Parser.parseStringExpr = function () {
+            _CST.addBranchNode("STRING EXPR");
             this.match(QUOTE.type);
             this.parseCharList();
             this.match(QUOTE.type);
         };
         Parser.parseBooleanExpr = function () {
+            _CST.addBranchNode("BOOLEAN EXPR");
             if (_CurrentToken.type === TRUE.type) {
                 this.match(TRUE.type);
             }
@@ -157,9 +171,11 @@ var TSC;
             }
         };
         Parser.parseId = function () {
+            _CST.addBranchNode("IDENTIFIER");
             this.match(IDENTIFIER.type);
         };
         Parser.parseCharList = function () {
+            _CST.addBranchNode("CHAR LIST");
             if (_CurrentToken.type === CHARACTER.type) {
                 this.match(CHARACTER.type);
                 this.parseCharList();
@@ -172,6 +188,7 @@ var TSC;
         };
         Parser.match = function (type) {
             if (_CurrentToken.type === type) {
+                _CST.addLeafNode(_CurrentToken);
                 _Logger.logMessage("Successfully matched " + type + " token.");
             }
             else {
