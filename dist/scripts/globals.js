@@ -5,6 +5,7 @@ var _Tokens = [];
 var _CurrentToken = null;
 var _TokenIndex = 0;
 var _VerboseMode = true;
+var _CST = null;
 // Token Types
 var LEFT_BRACE = { type: 'LEFT_BRACE', value: '{' };
 var RIGHT_BRACE = { type: 'RIGHT_BRACE', value: '}' };
