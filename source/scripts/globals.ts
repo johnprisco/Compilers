@@ -5,6 +5,7 @@ var _Tokens = [];
 var _CurrentToken: TSC.Token = null;
 var _TokenIndex: number = 0;
 var _VerboseMode: boolean = true;
+var _CST: TSC.ConcreteSyntaxTree = null;
 
 // Token Types
 const LEFT_BRACE       = {type: 'LEFT_BRACE', value: '{'};
