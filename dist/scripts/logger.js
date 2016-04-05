@@ -31,6 +31,10 @@ var TSC;
                 line.innerHTML = _Tokens[i].line;
             }
         };
+        Logger.logCST = function () {
+            var log = document.getElementById('cst-output');
+            log.value = _CST.toString();
+        };
         // Sometimes we need to log something even if we're in verbose mode.
         Logger.logIgnoringVerboseMode = function (message) {
             var log = document.getElementById("log-output");

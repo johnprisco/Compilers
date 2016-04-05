@@ -68,13 +68,13 @@ module TSC {
                 if (!node.children || node.children.length === 0)
                 {
                     // ... note the leaf node.
-                    traversalResult += "[" + node.type + "]";
+                    traversalResult += "[ " + node.value + " ]";
                     traversalResult += "\n";
                 }
                 else
                 {
                     // There are children, so note these interior/branch nodes and ...
-                    traversalResult += "<" + node.type + "> \n";
+                    traversalResult += "< " + node.type + " > \n";
                     // .. recursively expand them.
                     for (var i = 0; i < node.children.length; i++)
                     {

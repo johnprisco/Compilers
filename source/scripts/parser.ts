@@ -11,6 +11,7 @@ module TSC {
             _CST.addBranchNode("PROGRAM");
             this.parseBlock();
             this.match(END_OF_PROGRAM.type);
+            _CST.endChildren();
         }
 
         public static parseBlock() {
@@ -18,6 +19,8 @@ module TSC {
             this.match(LEFT_BRACE.type);
             this.parseStatementList();
             this.match(RIGHT_BRACE.type);
+            _CST.endChildren();
+
         }
 
         public static parseStatementList() {
@@ -35,6 +38,8 @@ module TSC {
                 this.parseStatement();
                 this.parseStatementList()
             }
+            _CST.endChildren();
+
             // otherwise, do nothing
         }
 
@@ -61,6 +66,7 @@ module TSC {
                 default:
                     this.parseBlock();
             }
+            _CST.endChildren();
         }
 
         public static parsePrintStatement() {
@@ -69,6 +75,8 @@ module TSC {
             this.match(LEFT_PAREN.type);
             this.parseExpr();
             this.match(RIGHT_PAREN.type);
+            _CST.endChildren();
+
         }
 
         public static parseAssignmentStatement() {
@@ -76,6 +84,8 @@ module TSC {
             this.parseId();
             this.match(ASSIGNMENT.type);
             this.parseExpr();
+            _CST.endChildren();
+
         }
 
         public static parseVarDecl() {
@@ -97,6 +107,8 @@ module TSC {
                     _Logger.logError("We should never have gotten to this point.", _CurrentToken.line, 'Parser')
                     throw new Error("Something broke in parser.");
             }
+            _CST.endChildren();
+
         }
 
         public static parseWhileStatement() {
@@ -104,6 +116,7 @@ module TSC {
             this.match(WHILE.type);
             this.parseBooleanExpr();
             this.parseBlock();
+            _CST.endChildren();
         }
 
         public static parseIfStatement() {
@@ -111,6 +124,7 @@ module TSC {
             this.match(IF.type);
             this.parseBooleanExpr();
             this.parseBlock();
+            _CST.endChildren();
         }
 
         public static parseExpr() {
@@ -138,6 +152,7 @@ module TSC {
                     _Logger.logError("We should never have gotten to this point.", _CurrentToken.line, 'Parser')
                     throw new Error("Something broke in parser.");
             }
+            _CST.endChildren();
         }
 
         public static parseIntExpr() {
@@ -149,6 +164,7 @@ module TSC {
                     this.parseExpr();
                 }
             }
+            _CST.endChildren();
         }
 
         public static parseStringExpr() {
@@ -156,6 +172,7 @@ module TSC {
             this.match(QUOTE.type);
             this.parseCharList();
             this.match(QUOTE.type);
+            _CST.endChildren();
         }
 
         public static parseBooleanExpr() {
@@ -178,11 +195,13 @@ module TSC {
                     this.match(RIGHT_PAREN.type);
                 }
             }
+            _CST.endChildren();
         }
 
         public static parseId() {
             _CST.addBranchNode("IDENTIFIER");
             this.match(IDENTIFIER.type);
+            _CST.endChildren();
         }
 
         public static parseCharList() {
@@ -195,6 +214,8 @@ module TSC {
                 this.parseCharList();
             }
             // otherwise, do nothing
+            _CST.endChildren();
+
         }
 
         public static match(type) {

@@ -34,6 +34,11 @@ module TSC {
             }
         }
 
+        public static logCST() {
+            var log = <HTMLTextAreaElement> document.getElementById('cst-output');
+            log.value = _CST.toString();
+        }
+
         // Sometimes we need to log something even if we're in verbose mode.
         public static logIgnoringVerboseMode(message: string) {
             var log = <HTMLTextAreaElement> document.getElementById("log-output");

@@ -67,6 +67,7 @@ var TSC;
                 _Parser.parse();
                 _Logger.logIgnoringVerboseMode("Completed parsing program.");
             }
+            _Logger.logCST();
         };
         Utils.clearTokensTable = function () {
             var table = document.getElementById('tokens-table');

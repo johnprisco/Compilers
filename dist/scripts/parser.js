@@ -13,12 +13,14 @@ var TSC;
             _CST.addBranchNode("PROGRAM");
             this.parseBlock();
             this.match(END_OF_PROGRAM.type);
+            _CST.endChildren();
         };
         Parser.parseBlock = function () {
             _CST.addBranchNode("BLOCK");
             this.match(LEFT_BRACE.type);
             this.parseStatementList();
             this.match(RIGHT_BRACE.type);
+            _CST.endChildren();
         };
         Parser.parseStatementList = function () {
             // checking for: print, identifier, int, boolean, string, {, 'while', 'if'
@@ -34,6 +36,7 @@ var TSC;
                 this.parseStatement();
                 this.parseStatementList();
             }
+            _CST.endChildren();
             // otherwise, do nothing
         };
         Parser.parseStatement = function () {
@@ -59,6 +62,7 @@ var TSC;
                 default:
                     this.parseBlock();
             }
+            _CST.endChildren();
         };
         Parser.parsePrintStatement = function () {
             _CST.addBranchNode("PRINT STATEMENT");
@@ -66,12 +70,14 @@ var TSC;
             this.match(LEFT_PAREN.type);
             this.parseExpr();
             this.match(RIGHT_PAREN.type);
+            _CST.endChildren();
         };
         Parser.parseAssignmentStatement = function () {
             _CST.addBranchNode("ASSIGNMENT STATEMENT");
             this.parseId();
             this.match(ASSIGNMENT.type);
             this.parseExpr();
+            _CST.endChildren();
         };
         Parser.parseVarDecl = function () {
             _CST.addBranchNode("VAR DECL");
@@ -92,18 +98,21 @@ var TSC;
                     _Logger.logError("We should never have gotten to this point.", _CurrentToken.line, 'Parser');
                     throw new Error("Something broke in parser.");
             }
+            _CST.endChildren();
         };
         Parser.parseWhileStatement = function () {
             _CST.addBranchNode("WHILE STATEMENT");
             this.match(WHILE.type);
             this.parseBooleanExpr();
             this.parseBlock();
+            _CST.endChildren();
         };
         Parser.parseIfStatement = function () {
             _CST.addBranchNode("IF STATEMENT");
             this.match(IF.type);
             this.parseBooleanExpr();
             this.parseBlock();
+            _CST.endChildren();
         };
         Parser.parseExpr = function () {
             _CST.addBranchNode("EXPR");
@@ -130,6 +139,7 @@ var TSC;
                     _Logger.logError("We should never have gotten to this point.", _CurrentToken.line, 'Parser');
                     throw new Error("Something broke in parser.");
             }
+            _CST.endChildren();
         };
         Parser.parseIntExpr = function () {
             _CST.addBranchNode("INT EXPR");
@@ -140,12 +150,14 @@ var TSC;
                     this.parseExpr();
                 }
             }
+            _CST.endChildren();
         };
         Parser.parseStringExpr = function () {
             _CST.addBranchNode("STRING EXPR");
             this.match(QUOTE.type);
             this.parseCharList();
             this.match(QUOTE.type);
+            _CST.endChildren();
         };
         Parser.parseBooleanExpr = function () {
             _CST.addBranchNode("BOOLEAN EXPR");
@@ -169,10 +181,12 @@ var TSC;
                     this.match(RIGHT_PAREN.type);
                 }
             }
+            _CST.endChildren();
         };
         Parser.parseId = function () {
             _CST.addBranchNode("IDENTIFIER");
             this.match(IDENTIFIER.type);
+            _CST.endChildren();
         };
         Parser.parseCharList = function () {
             _CST.addBranchNode("CHAR LIST");
@@ -185,6 +199,7 @@ var TSC;
                 this.parseCharList();
             }
             // otherwise, do nothing
+            _CST.endChildren();
         };
         Parser.match = function (type) {
             if (_CurrentToken.type === type) {
