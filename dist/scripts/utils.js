@@ -11,13 +11,13 @@ var TSC;
         Utils.trim = function (str) {
             return str.replace(/^\s+ | \s+$/g, "");
             /*
-            Huh?  Take a breath.  Here we go:
-            - The "|" separates this into two expressions, as in A or B.
-            - "^\s+" matches a sequence of one or more whitespace characters at the beginning of a string.
-            - "\s+$" is the same thing, but at the end of the string.
-            - "g" makes is global, so we get all the whitespace.
-            - "" is nothing, which is what we replace the whitespace with.
-            */
+             Huh?  Take a breath.  Here we go:
+             - The "|" separates this into two expressions, as in A or B.
+             - "^\s+" matches a sequence of one or more whitespace characters at the beginning of a string.
+             - "\s+$" is the same thing, but at the end of the string.
+             - "g" makes is global, so we get all the whitespace.
+             - "" is nothing, which is what we replace the whitespace with.
+             */
         };
         Utils.rot13 = function (str) {
             var retVal = ""; // trouble explaining it in the future.  There's a lot to be said for obvious code.
@@ -126,6 +126,13 @@ var TSC;
         Utils.unexpectedToken = function () {
             var source = document.getElementById("source-code");
             source.value = '{\n  int a\n  a == 5 + 1\n  print(a)\n} $';
+            this.compile();
+        };
+        Utils.projectTwoExample = function () {
+            var source = document.getElementById("source-code");
+            source.value = '{\n int a \n boolean b \n { \n string c \n ' +
+                'a = 5 \n b = true \n c = "inta" \n print(c) \n ' +
+                '} \n print(b) \n print(a) \n } $';
             this.compile();
         };
         return Utils;
