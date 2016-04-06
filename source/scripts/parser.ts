@@ -25,7 +25,6 @@ module TSC {
 
         public static parseStatementList() {
             // checking for: print, identifier, int, boolean, string, {, 'while', 'if'
-            //_CST.addBranchNode("STATEMENT LIST");
             if (_CurrentToken.type === PRINT.type ||
                 _CurrentToken.type === IDENTIFIER.type ||
                 _CurrentToken.type === INT.type ||
@@ -37,11 +36,9 @@ module TSC {
             ) {
                 _CST.addBranchNode("STATEMENT LIST");
                 this.parseStatement();
-                this.parseStatementList()
+                this.parseStatementList();
                 _CST.endChildren();
             }
-            //_CST.endChildren();
-
             // otherwise, do nothing
         }
 
@@ -207,7 +204,6 @@ module TSC {
         }
 
         public static parseCharList() {
-            //_CST.addBranchNode("CHAR LIST");
             if (_CurrentToken.type === CHARACTER.type) {
                 _CST.addBranchNode("CHAR LIST");
                 this.match(CHARACTER.type);
@@ -220,7 +216,6 @@ module TSC {
                 _CST.endChildren();
             }
             // otherwise, do nothing
-            //_CST.endChildren();
         }
 
         public static match(type) {

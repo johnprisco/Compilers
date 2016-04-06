@@ -24,7 +24,6 @@ var TSC;
         };
         Parser.parseStatementList = function () {
             // checking for: print, identifier, int, boolean, string, {, 'while', 'if'
-            //_CST.addBranchNode("STATEMENT LIST");
             if (_CurrentToken.type === PRINT.type ||
                 _CurrentToken.type === IDENTIFIER.type ||
                 _CurrentToken.type === INT.type ||
@@ -38,7 +37,6 @@ var TSC;
                 this.parseStatementList();
                 _CST.endChildren();
             }
-            //_CST.endChildren();
             // otherwise, do nothing
         };
         Parser.parseStatement = function () {
@@ -191,7 +189,6 @@ var TSC;
             _CST.endChildren();
         };
         Parser.parseCharList = function () {
-            //_CST.addBranchNode("CHAR LIST");
             if (_CurrentToken.type === CHARACTER.type) {
                 _CST.addBranchNode("CHAR LIST");
                 this.match(CHARACTER.type);
@@ -205,7 +202,6 @@ var TSC;
                 _CST.endChildren();
             }
             // otherwise, do nothing
-            //_CST.endChildren();
         };
         Parser.match = function (type) {
             if (_CurrentToken.type === type) {
