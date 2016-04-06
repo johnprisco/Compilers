@@ -25,7 +25,7 @@ module TSC {
 
         public static parseStatementList() {
             // checking for: print, identifier, int, boolean, string, {, 'while', 'if'
-            _CST.addBranchNode("STATEMENT LIST");
+            //_CST.addBranchNode("STATEMENT LIST");
             if (_CurrentToken.type === PRINT.type ||
                 _CurrentToken.type === IDENTIFIER.type ||
                 _CurrentToken.type === INT.type ||
@@ -35,10 +35,12 @@ module TSC {
                 _CurrentToken.type === WHILE.type ||
                 _CurrentToken.type === IF.type
             ) {
+                _CST.addBranchNode("STATEMENT LIST");
                 this.parseStatement();
                 this.parseStatementList()
+                _CST.endChildren();
             }
-            _CST.endChildren();
+            //_CST.endChildren();
 
             // otherwise, do nothing
         }
@@ -205,21 +207,25 @@ module TSC {
         }
 
         public static parseCharList() {
-            _CST.addBranchNode("CHAR LIST");
+            //_CST.addBranchNode("CHAR LIST");
             if (_CurrentToken.type === CHARACTER.type) {
+                _CST.addBranchNode("CHAR LIST");
                 this.match(CHARACTER.type);
                 this.parseCharList();
+                _CST.endChildren();
             } else if (_CurrentToken.type === SPACE.type) {
+                _CST.addBranchNode("CHAR LIST");
                 this.match(SPACE.type);
                 this.parseCharList();
+                _CST.endChildren();
             }
             // otherwise, do nothing
-            _CST.endChildren();
-
+            //_CST.endChildren();
         }
 
         public static match(type) {
             if (_CurrentToken.type === type) {
+
                 _CST.addLeafNode(_CurrentToken);
                 _Logger.logMessage("Successfully matched " + type + " token.");
             } else {
