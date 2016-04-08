@@ -88,13 +88,25 @@
             </div>
         </div>
         <div class="row">
-            <div class="cst-output-container col-sm-6">
+            <div class="cst-output-container col-sm-4">
                 <h3 style="padding-left: 10px;">Concrete Syntax Tree</h3>
                 <textarea id="cst-output" style="resize: none;" readonly></textarea>
             </div>
-            <div class="ast-output-container col-sm-6">
+            <div class="ast-output-container col-sm-4">
                 <h3 style="padding-left: 10px;">Abstract Syntax Tree</h3>
                 <textarea id="ast-output" style="resize: none;" readonly></textarea>
+            </div>
+            <div class="symbol-table-container col-sm-4">
+                <h3 style="padding-left: 10px;">Symbol Table</h3>
+                <table id="symbol-table" style="width: 100%;"
+                       class="table table-condensed table-hover table-bordered">
+                    <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Scope</th>
+                        <th>Line Number</th>
+                    </tr>
+                </table>
             </div>
         </div>
     </div>
