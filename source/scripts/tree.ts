@@ -13,6 +13,10 @@ module TSC {
             return this.root;
         }
 
+        public setRoot(node: Node) {
+            this.root = node;
+        }
+
         public addBranchNode(type: string): void {
             // Create a node to be added
             var node: Node = new Node();
@@ -22,7 +26,7 @@ module TSC {
                 this.root = node;
                 this.currentNode = node;
             } else {
-                this.currentNode.children.push(node);
+                this.currentNode.addChild(node);
                 node.parent = this.currentNode;
                 this.currentNode = node;
             }
@@ -39,7 +43,7 @@ module TSC {
                 // log an error message, throw error
 
             } else {
-                this.currentNode.children.push(node);
+                this.currentNode.addChild(node);
                 node.parent = this.currentNode;
             }
         }

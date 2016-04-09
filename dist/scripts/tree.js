@@ -8,6 +8,9 @@ var TSC;
         Tree.prototype.getRoot = function () {
             return this.root;
         };
+        Tree.prototype.setRoot = function (node) {
+            this.root = node;
+        };
         Tree.prototype.addBranchNode = function (type) {
             // Create a node to be added
             var node = new TSC.Node();
@@ -17,7 +20,7 @@ var TSC;
                 this.currentNode = node;
             }
             else {
-                this.currentNode.children.push(node);
+                this.currentNode.addChild(node);
                 node.parent = this.currentNode;
                 this.currentNode = node;
             }
@@ -31,7 +34,7 @@ var TSC;
             if (this.root === null || (!this.root)) {
             }
             else {
-                this.currentNode.children.push(node);
+                this.currentNode.addChild(node);
                 node.parent = this.currentNode;
             }
         };
