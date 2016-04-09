@@ -8,6 +8,11 @@ module TSC {
             this.root = null;
             this.currentNode = null;
         }
+
+        public getRoot(): Node {
+            return this.root;
+        }
+
         public addBranchNode(type: string): void {
             // Create a node to be added
             var node: Node = new Node();
@@ -87,5 +92,6 @@ module TSC {
             // Return the result.
             return traversalResult;
         }
+
     }
 }

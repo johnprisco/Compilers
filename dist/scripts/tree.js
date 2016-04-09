@@ -5,6 +5,9 @@ var TSC;
             this.root = null;
             this.currentNode = null;
         }
+        Tree.prototype.getRoot = function () {
+            return this.root;
+        };
         Tree.prototype.addBranchNode = function (type) {
             // Create a node to be added
             var node = new TSC.Node();
