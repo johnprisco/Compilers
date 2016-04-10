@@ -1,7 +1,9 @@
 module TSC {
     export class Scope {
         private name: number;
-        private symbols: Symbol[];
+        private symbols: Symbol[] = [];
+        //private children: Scope[] = [];
+        //private parent: Scope;
 
         constructor(name: number) {
             this.setName(name);
@@ -22,5 +24,21 @@ module TSC {
         public getSymbols(): Symbol[] {
             return this.symbols;
         }
+
+        //public getChildren(): Scope[] {
+        //    return this.children;
+        //}
+        //
+        //public addChild(child: Scope): void {
+        //    this.children.push(child);
+        //}
+        //
+        //public getParent(): Scope {
+        //    return this.parent;
+        //}
+        //
+        //public setParent(parent: Scope): void {
+        //    this.parent = parent;
+        //}
     }
 }

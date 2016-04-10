@@ -1,7 +1,10 @@
 var TSC;
 (function (TSC) {
     var Scope = (function () {
+        //private children: Scope[] = [];
+        //private parent: Scope;
         function Scope(name) {
+            this.symbols = [];
             this.setName(name);
         }
         Scope.prototype.getName = function () {
