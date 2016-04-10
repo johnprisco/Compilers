@@ -11,6 +11,7 @@ var TSC;
             _Logger.logAST(this.abstractSyntaxTree.toString());
             // Next, we build the symbol table
             // Do some type checking
+            console.log(this.abstractSyntaxTree.getRoot());
         };
         SemanticAnalyzer.buildAST = function (root) {
             this.analyzeProgram(root);
@@ -31,7 +32,6 @@ var TSC;
                 this.abstractSyntaxTree.setRoot(newNode);
                 astNode = newNode;
             }
-            console.log(cstNode);
             // Statement list is up next, if there is one
             if (cstNode.children.length > 2) {
                 this.analyzeStatementList(cstNode.children[1], astNode);
@@ -42,30 +42,30 @@ var TSC;
             if (!cstNode) {
                 return;
             }
-            //console.log(cstNode);
             this.analyzeStatement(cstNode.children[0], astNode);
             this.analyzeStatementList(cstNode.children[1], astNode);
         };
         SemanticAnalyzer.analyzeStatement = function (cstNode, astNode) {
-            console.log(cstNode);
+            //console.log("!!! Statement CST Node !!!");
+            //console.log(cstNode);
             switch (cstNode.children[0].type) {
                 case "Print Statement":
-                    this.analyzePrintStatement(cstNode, astNode);
+                    this.analyzePrintStatement(cstNode.children[0], astNode);
                     break;
                 case "Assignment Statement":
-                    this.analyzeAssignmentStatement(cstNode, astNode);
+                    this.analyzeAssignmentStatement(cstNode.children[0], astNode);
                     break;
                 case "Variable Declaration":
-                    this.analyzeVariableDeclaration(cstNode, astNode);
+                    this.analyzeVariableDeclaration(cstNode.children[0], astNode);
                     break;
                 case "While Statement":
-                    this.analyzeWhileStatement(cstNode, astNode);
+                    this.analyzeWhileStatement(cstNode.children[0], astNode);
                     break;
                 case "If Statement":
-                    this.analyzeIfStatement(cstNode, astNode);
+                    this.analyzeIfStatement(cstNode.children[0], astNode);
                     break;
                 case "Block":
-                    this.analyzeBlock(cstNode, astNode);
+                    this.analyzeBlock(cstNode.children[0], astNode);
                     break;
                 default:
                     // TODO: Log and throw error
@@ -80,22 +80,21 @@ var TSC;
         };
         SemanticAnalyzer.analyzeAssignmentStatement = function (cstNode, astNode) {
             var newNode = new TSC.Node("Assignment Statement");
-            astNode.addChild(newNode);
-            astNode = newNode;
             // Add the identifier to the AST
             var id = new TSC.Node(cstNode.children[0].value);
             newNode.addChild(id);
+            astNode.addChild(newNode);
+            astNode = newNode;
             this.analyzeExpression(cstNode.children[2], astNode);
         };
         SemanticAnalyzer.analyzeVariableDeclaration = function (cstNode, astNode) {
             var newNode = new TSC.Node("Variable Declaration");
-            astNode.addChild(newNode);
-            astNode = newNode;
             // Add the type and value of the variable to the AST
             var type = new TSC.Node(cstNode.children[0].value);
             var value = new TSC.Node(cstNode.children[1].value);
             newNode.addChild(type);
             newNode.addChild(value);
+            astNode.addChild(newNode);
         };
         SemanticAnalyzer.analyzeWhileStatement = function (cstNode, astNode) {
             var newNode = new TSC.Node("While Statement");
@@ -124,10 +123,10 @@ var TSC;
                     break;
                 case "Identifier":
                     var newNode = new TSC.Node("Identifier");
-                    astNode.addChild(newNode);
-                    astNode = newNode;
                     var id = new TSC.Node(cstNode.value);
                     newNode.addChild(id);
+                    astNode.addChild(newNode);
+                    astNode = newNode;
                     break;
                 default:
                     // TODO: Handle an error here

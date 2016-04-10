@@ -13,7 +13,7 @@ module TSC {
             // Next, we build the symbol table
 
             // Do some type checking
-
+            console.log(this.abstractSyntaxTree.getRoot());
         }
 
         public static buildAST(root: Node): void {
@@ -37,7 +37,6 @@ module TSC {
                 this.abstractSyntaxTree.setRoot(newNode);
                 astNode = newNode;
             }
-            console.log(cstNode);
             // Statement list is up next, if there is one
             if (cstNode.children.length > 2) {
                 this.analyzeStatementList(cstNode.children[1], astNode);
@@ -49,31 +48,32 @@ module TSC {
             if (!cstNode) {
                 return;
             }
-            //console.log(cstNode);
+
             this.analyzeStatement(cstNode.children[0], astNode);
             this.analyzeStatementList(cstNode.children[1], astNode);
         }
 
         public static analyzeStatement(cstNode: Node, astNode: Node): void {
-            console.log(cstNode);
+            //console.log("!!! Statement CST Node !!!");
+            //console.log(cstNode);
             switch (cstNode.children[0].type) {
                 case "Print Statement":
-                    this.analyzePrintStatement(cstNode, astNode);
+                    this.analyzePrintStatement(cstNode.children[0], astNode);
                     break;
                 case "Assignment Statement":
-                    this.analyzeAssignmentStatement(cstNode, astNode);
+                    this.analyzeAssignmentStatement(cstNode.children[0], astNode);
                     break;
                 case "Variable Declaration":
-                    this.analyzeVariableDeclaration(cstNode, astNode);
+                    this.analyzeVariableDeclaration(cstNode.children[0], astNode);
                     break;
                 case "While Statement":
-                    this.analyzeWhileStatement(cstNode, astNode);
+                    this.analyzeWhileStatement(cstNode.children[0], astNode);
                     break;
                 case "If Statement":
-                    this.analyzeIfStatement(cstNode, astNode);
+                    this.analyzeIfStatement(cstNode.children[0], astNode);
                     break;
                 case "Block":
-                    this.analyzeBlock(cstNode, astNode);
+                    this.analyzeBlock(cstNode.children[0], astNode);
                     break;
                 default:
                     // TODO: Log and throw error
@@ -90,26 +90,28 @@ module TSC {
 
         public static analyzeAssignmentStatement(cstNode: Node, astNode: Node): void {
             var newNode = new Node("Assignment Statement");
-            astNode.addChild(newNode);
-            astNode = newNode;
+
 
             // Add the identifier to the AST
             var id = new Node(cstNode.children[0].value);
             newNode.addChild(id);
 
+            astNode.addChild(newNode);
+            astNode = newNode;
             this.analyzeExpression(cstNode.children[2], astNode);
         }
 
         public static analyzeVariableDeclaration(cstNode: Node, astNode: Node): void {
             var newNode = new Node("Variable Declaration");
-            astNode.addChild(newNode);
-            astNode = newNode;
+
 
             // Add the type and value of the variable to the AST
             var type = new Node(cstNode.children[0].value);
             var value = new Node(cstNode.children[1].value);
             newNode.addChild(type);
             newNode.addChild(value);
+            astNode.addChild(newNode);
+
         }
 
         public static analyzeWhileStatement(cstNode: Node, astNode: Node): void {
@@ -143,11 +145,12 @@ module TSC {
                     break;
                 case "Identifier":
                     var newNode = new Node("Identifier");
-                    astNode.addChild(newNode);
-                    astNode = newNode;
+
 
                     var id = new Node(cstNode.value);
                     newNode.addChild(id);
+                    astNode.addChild(newNode);
+                    astNode = newNode;
                     break;
                 default:
                     // TODO: Handle an error here
