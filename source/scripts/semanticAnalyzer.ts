@@ -13,7 +13,7 @@ module TSC {
             // Next, we build the symbol table
 
             // Do some type checking
-            console.log(this.abstractSyntaxTree.getRoot());
+            //console.log(this.abstractSyntaxTree.getRoot());
         }
 
         public static buildAST(root: Node): void {
@@ -85,15 +85,18 @@ module TSC {
             var newNode = new Node("Print Statement");
             astNode.addChild(newNode);
             astNode = newNode;
+            console.log(cstNode.children[2]);
             this.analyzeExpression(cstNode.children[2], astNode);
         }
 
         public static analyzeAssignmentStatement(cstNode: Node, astNode: Node): void {
+            //console.log("!!! Assignment CST Node !!!");
+            //console.log(cstNode);
             var newNode = new Node("Assignment Statement");
 
 
             // Add the identifier to the AST
-            var id = new Node(cstNode.children[0].value);
+            var id = new Node(cstNode.children[0].children[0].value);
             newNode.addChild(id);
 
             astNode.addChild(newNode);
@@ -104,10 +107,9 @@ module TSC {
         public static analyzeVariableDeclaration(cstNode: Node, astNode: Node): void {
             var newNode = new Node("Variable Declaration");
 
-
             // Add the type and value of the variable to the AST
             var type = new Node(cstNode.children[0].value);
-            var value = new Node(cstNode.children[1].value);
+            var value = new Node(cstNode.children[1].children[0].value);
             newNode.addChild(type);
             newNode.addChild(value);
             astNode.addChild(newNode);
@@ -133,24 +135,20 @@ module TSC {
         }
 
         public static analyzeExpression(cstNode: Node, astNode: Node): void {
-            switch (cstNode.type) {
+            switch (cstNode.children[0].type) {
                 case "Int Expression":
-                    this.analyzeIntExpression(cstNode, astNode);
+                    this.analyzeIntExpression(cstNode.children[0], astNode);
                     break;
                 case "String Expression":
-                    this.analyzeStringExpression(cstNode, astNode);
+                    this.analyzeStringExpression(cstNode.children[0], astNode);
                     break;
                 case "Boolean Expression":
-                    this.analyzeBooleanExpression(cstNode, astNode);
+                    this.analyzeBooleanExpression(cstNode.children[0], astNode);
                     break;
                 case "Identifier":
-                    var newNode = new Node("Identifier");
-
-
-                    var id = new Node(cstNode.value);
-                    newNode.addChild(id);
-                    astNode.addChild(newNode);
-                    astNode = newNode;
+                    console.log(cstNode.children[0]);
+                    var id = new Node(cstNode.children[0].children[0].value);
+                    astNode.addChild(id);
                     break;
                 default:
                     // TODO: Handle an error here
@@ -159,16 +157,14 @@ module TSC {
         }
 
         public static analyzeIntExpression(cstNode: Node, astNode: Node): void {
-            var newNode = new Node("Int Expression");
-            astNode.addChild(newNode);
-            astNode = newNode;
+
 
             if (cstNode.children.length === 1) {
                 var value = new Node(cstNode.children[0].value);
-                newNode.addChild(value);
+                astNode.addChild(value);
             } else {
                 var value = new Node(cstNode.children[0].value);
-                newNode.addChild(value);
+                astNode.addChild(value);
 
                 var plus = new Node("+");
                 astNode.addChild(plus);
@@ -183,7 +179,7 @@ module TSC {
         }
 
         public static analyzeBooleanExpression(cstNode: Node, astNode: Node): void {
-            console.log("Yup this hasn't been implemented yet");
+
         }
 
         public static analyzeCharList(cstNode: Node, astNode: Node, string: string): void {

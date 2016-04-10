@@ -11,7 +11,7 @@ var TSC;
             _Logger.logAST(this.abstractSyntaxTree.toStringAST());
             // Next, we build the symbol table
             // Do some type checking
-            console.log(this.abstractSyntaxTree.getRoot());
+            //console.log(this.abstractSyntaxTree.getRoot());
         };
         SemanticAnalyzer.buildAST = function (root) {
             this.analyzeProgram(root);
@@ -76,12 +76,15 @@ var TSC;
             var newNode = new TSC.Node("Print Statement");
             astNode.addChild(newNode);
             astNode = newNode;
+            console.log(cstNode.children[2]);
             this.analyzeExpression(cstNode.children[2], astNode);
         };
         SemanticAnalyzer.analyzeAssignmentStatement = function (cstNode, astNode) {
+            //console.log("!!! Assignment CST Node !!!");
+            //console.log(cstNode);
             var newNode = new TSC.Node("Assignment Statement");
             // Add the identifier to the AST
-            var id = new TSC.Node(cstNode.children[0].value);
+            var id = new TSC.Node(cstNode.children[0].children[0].value);
             newNode.addChild(id);
             astNode.addChild(newNode);
             astNode = newNode;
@@ -91,7 +94,7 @@ var TSC;
             var newNode = new TSC.Node("Variable Declaration");
             // Add the type and value of the variable to the AST
             var type = new TSC.Node(cstNode.children[0].value);
-            var value = new TSC.Node(cstNode.children[1].value);
+            var value = new TSC.Node(cstNode.children[1].children[0].value);
             newNode.addChild(type);
             newNode.addChild(value);
             astNode.addChild(newNode);
@@ -111,22 +114,20 @@ var TSC;
             this.analyzeBlock(cstNode.children[2], astNode);
         };
         SemanticAnalyzer.analyzeExpression = function (cstNode, astNode) {
-            switch (cstNode.type) {
+            switch (cstNode.children[0].type) {
                 case "Int Expression":
-                    this.analyzeIntExpression(cstNode, astNode);
+                    this.analyzeIntExpression(cstNode.children[0], astNode);
                     break;
                 case "String Expression":
-                    this.analyzeStringExpression(cstNode, astNode);
+                    this.analyzeStringExpression(cstNode.children[0], astNode);
                     break;
                 case "Boolean Expression":
-                    this.analyzeBooleanExpression(cstNode, astNode);
+                    this.analyzeBooleanExpression(cstNode.children[0], astNode);
                     break;
                 case "Identifier":
-                    var newNode = new TSC.Node("Identifier");
-                    var id = new TSC.Node(cstNode.value);
-                    newNode.addChild(id);
-                    astNode.addChild(newNode);
-                    astNode = newNode;
+                    console.log(cstNode.children[0]);
+                    var id = new TSC.Node(cstNode.children[0].children[0].value);
+                    astNode.addChild(id);
                     break;
                 default:
                     // TODO: Handle an error here
@@ -134,16 +135,13 @@ var TSC;
             }
         };
         SemanticAnalyzer.analyzeIntExpression = function (cstNode, astNode) {
-            var newNode = new TSC.Node("Int Expression");
-            astNode.addChild(newNode);
-            astNode = newNode;
             if (cstNode.children.length === 1) {
                 var value = new TSC.Node(cstNode.children[0].value);
-                newNode.addChild(value);
+                astNode.addChild(value);
             }
             else {
                 var value = new TSC.Node(cstNode.children[0].value);
-                newNode.addChild(value);
+                astNode.addChild(value);
                 var plus = new TSC.Node("+");
                 astNode.addChild(plus);
                 astNode = plus;
@@ -154,7 +152,6 @@ var TSC;
             this.analyzeCharList(cstNode.children[1], astNode, "");
         };
         SemanticAnalyzer.analyzeBooleanExpression = function (cstNode, astNode) {
-            console.log("Yup this hasn't been implemented yet");
         };
         SemanticAnalyzer.analyzeCharList = function (cstNode, astNode, string) {
             if (cstNode.children.length === 1) {
