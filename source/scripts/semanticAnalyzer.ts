@@ -179,15 +179,19 @@ module TSC {
         }
 
         public static analyzeBooleanExpression(cstNode: Node, astNode: Node): void {
-            //console.log(cstNode);
-            // The next node is going to be the boolop
-            var newNode = new Node(cstNode.children[2].value);
-            astNode.addChild(newNode);
-            astNode = newNode;
+            if (cstNode.children.length > 1) {
+                // The next node is going to be the boolop
+                var newNode = new Node(cstNode.children[2].value);
+                astNode.addChild(newNode);
+                astNode = newNode;
 
-            // then we need to evaluate the expressions on both sides of it
-            this.analyzeExpression(cstNode.children[1], astNode);
-            this.analyzeExpression(cstNode.children[3], astNode);
+                // then we need to evaluate the expressions on both sides of it
+                this.analyzeExpression(cstNode.children[1], astNode);
+                this.analyzeExpression(cstNode.children[3], astNode);
+            } else {
+                var newNode = new Node(cstNode.children[0].value);
+                astNode.addChild(newNode);
+            }
         }
 
         public static analyzeCharList(cstNode: Node, astNode: Node, string: string): void {

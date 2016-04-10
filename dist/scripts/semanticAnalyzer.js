@@ -152,14 +152,19 @@ var TSC;
             this.analyzeCharList(cstNode.children[1], astNode, "");
         };
         SemanticAnalyzer.analyzeBooleanExpression = function (cstNode, astNode) {
-            //console.log(cstNode);
-            // The next node is going to be the boolop
-            var newNode = new TSC.Node(cstNode.children[2].value);
-            astNode.addChild(newNode);
-            astNode = newNode;
-            // then we need to evaluate the expressions on both sides of it
-            this.analyzeExpression(cstNode.children[1], astNode);
-            this.analyzeExpression(cstNode.children[3], astNode);
+            if (cstNode.children.length > 1) {
+                // The next node is going to be the boolop
+                var newNode = new TSC.Node(cstNode.children[2].value);
+                astNode.addChild(newNode);
+                astNode = newNode;
+                // then we need to evaluate the expressions on both sides of it
+                this.analyzeExpression(cstNode.children[1], astNode);
+                this.analyzeExpression(cstNode.children[3], astNode);
+            }
+            else {
+                var newNode = new TSC.Node(cstNode.children[0].value);
+                astNode.addChild(newNode);
+            }
         };
         SemanticAnalyzer.analyzeCharList = function (cstNode, astNode, string) {
             if (cstNode.children.length === 1) {
