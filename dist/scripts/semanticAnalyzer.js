@@ -9,9 +9,7 @@ var TSC;
             // First, we take the CST and build the AST with it
             this.buildAST(_CST.getRoot());
             _Logger.logAST(this.abstractSyntaxTree.toStringAST());
-            // Next, we build the symbol table
-            // Do some type checking
-            //console.log(this.abstractSyntaxTree.getRoot());
+            console.log(this.abstractSyntaxTree.getRoot());
         };
         SemanticAnalyzer.buildAST = function (root) {
             this.analyzeProgram(root);
@@ -177,6 +175,7 @@ var TSC;
                 this.analyzeCharList(cstNode.children[1], astNode, string);
             }
         };
+        SemanticAnalyzer.scopeName = 0;
         return SemanticAnalyzer;
     })();
     TSC.SemanticAnalyzer = SemanticAnalyzer;

@@ -1,6 +1,8 @@
 module TSC {
     export class SemanticAnalyzer {
         private static abstractSyntaxTree: Tree;
+        private static currentScope: Scope;
+        private static scopeName: number = 0;
 
         public static performAnalysis(): void {
             _Logger.logIgnoringVerboseMode("Beginning Semantic Analysis.");
@@ -9,11 +11,7 @@ module TSC {
             // First, we take the CST and build the AST with it
             this.buildAST(_CST.getRoot());
             _Logger.logAST(this.abstractSyntaxTree.toStringAST());
-
-            // Next, we build the symbol table
-
-            // Do some type checking
-            //console.log(this.abstractSyntaxTree.getRoot());
+            console.log(this.abstractSyntaxTree.getRoot());
         }
 
         public static buildAST(root: Node): void {
