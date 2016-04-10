@@ -8,7 +8,7 @@ module TSC {
 
             // First, we take the CST and build the AST with it
             this.buildAST(_CST.getRoot());
-            _Logger.logAST(this.abstractSyntaxTree.toString());
+            _Logger.logAST(this.abstractSyntaxTree.toStringAST());
 
             // Next, we build the symbol table
 
