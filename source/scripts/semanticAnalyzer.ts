@@ -85,7 +85,7 @@ module TSC {
             var newNode = new Node("Print Statement");
             astNode.addChild(newNode);
             astNode = newNode;
-            console.log(cstNode.children[2]);
+            //console.log(cstNode.children[2]);
             this.analyzeExpression(cstNode.children[2], astNode);
         }
 
@@ -146,7 +146,7 @@ module TSC {
                     this.analyzeBooleanExpression(cstNode.children[0], astNode);
                     break;
                 case "Identifier":
-                    console.log(cstNode.children[0]);
+                    //console.log(cstNode.children[0]);
                     var id = new Node(cstNode.children[0].children[0].value);
                     astNode.addChild(id);
                     break;
@@ -179,7 +179,15 @@ module TSC {
         }
 
         public static analyzeBooleanExpression(cstNode: Node, astNode: Node): void {
+            //console.log(cstNode);
+            // The next node is going to be the boolop
+            var newNode = new Node(cstNode.children[2].value);
+            astNode.addChild(newNode);
+            astNode = newNode;
 
+            // then we need to evaluate the expressions on both sides of it
+            this.analyzeExpression(cstNode.children[1], astNode);
+            this.analyzeExpression(cstNode.children[3], astNode);
         }
 
         public static analyzeCharList(cstNode: Node, astNode: Node, string: string): void {
