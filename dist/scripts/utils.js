@@ -68,6 +68,7 @@ var TSC;
                 _Logger.logIgnoringVerboseMode("Completed parsing program.");
             }
             _Logger.logCST();
+            TSC.SemanticAnalyzer.performAnalysis();
         };
         Utils.clearTokensTable = function () {
             var table = document.getElementById('tokens-table');

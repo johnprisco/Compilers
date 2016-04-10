@@ -2,8 +2,8 @@ module TSC {
     export class Node {
 
         // Define properties
-        public type: String;
-        public value: String;
+        public type: string;
+        public value: string;
         public children: Node[];
         public parent: Node;
         public lineNumber: number;

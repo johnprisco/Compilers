@@ -79,6 +79,7 @@ module TSC {
                 _Logger.logIgnoringVerboseMode("Completed parsing program.");
             }
             _Logger.logCST();
+            SemanticAnalyzer.performAnalysis()
         }
 
         public static clearTokensTable() {

@@ -1,6 +1,6 @@
 module TSC {
     export class Token {
-        constructor(public type: String, public value: String, public line: number) {
+        constructor(public type: string, public value: string, public line: number) {
             this.type = type;
             this.value = value;
             this.line = line;

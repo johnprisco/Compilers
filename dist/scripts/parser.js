@@ -184,10 +184,9 @@ var TSC;
             _CST.endChildren();
         };
         Parser.parseId = function () {
-            // TODO: Is it necessary to add a branch here? Project 2 examples suggest not.
-            //_CST.addBranchNode("IDENTIFIER");
+            _CST.addBranchNode("Identifier");
             this.match(IDENTIFIER.type);
-            //_CST.endChildren();
+            _CST.endChildren();
         };
         Parser.parseCharList = function () {
             if (_CurrentToken.type === CHARACTER.type) {

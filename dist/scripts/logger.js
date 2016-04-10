@@ -40,6 +40,10 @@ var TSC;
             var log = document.getElementById("log-output");
             log.value += message + "\n";
         };
+        Logger.logAST = function (output) {
+            var log = document.getElementById('ast-output');
+            log.value = output;
+        };
         return Logger;
     })();
     TSC.Logger = Logger;

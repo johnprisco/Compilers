@@ -1,27 +1,19 @@
 module TSC {
-    export class SemanticAnalyser {
+    export class SemanticAnalyzer {
         private static abstractSyntaxTree: Tree;
 
-        public static performAnalysis(cst: Tree): void {
+        public static performAnalysis(): void {
             _Logger.logIgnoringVerboseMode("Beginning Semantic Analysis.");
             this.abstractSyntaxTree = new Tree();
 
             // First, we take the CST and build the AST with it
-            this.buildAST(cst.getRoot());
+            this.buildAST(_CST.getRoot());
+            _Logger.logAST(this.abstractSyntaxTree.toString());
 
             // Next, we build the symbol table
 
             // Do some type checking
 
-        }
-
-        // Used when analyzing a block
-        public static isRootDefined(): boolean {
-            if (this.abstractSyntaxTree.getRoot()) {
-                return false;
-            } else {
-                return true;
-            }
         }
 
         public static buildAST(root: Node): void {
@@ -38,16 +30,18 @@ module TSC {
 
             // We have to define the root of the AST the first time,
             // so we'll check if its been set
-            if (this.isRootDefined()) {
-                astNode.children.push(newNode);
-                astNode = astNode.getLastChild();
+            if (this.abstractSyntaxTree.getRoot() != null) {
+                astNode.addChild(newNode);
+                astNode = newNode;
             } else {
                 this.abstractSyntaxTree.setRoot(newNode);
                 astNode = newNode;
             }
-
-            // Statement list is up next
-            this.analyzeStatementList(cstNode.children[1], astNode);
+            console.log(cstNode);
+            // Statement list is up next, if there is one
+            if (cstNode.children.length > 2) {
+                this.analyzeStatementList(cstNode.children[1], astNode);
+            }
         }
 
         public static analyzeStatementList(cstNode: Node, astNode: Node): void {
@@ -55,13 +49,14 @@ module TSC {
             if (!cstNode) {
                 return;
             }
-
+            //console.log(cstNode);
             this.analyzeStatement(cstNode.children[0], astNode);
             this.analyzeStatementList(cstNode.children[1], astNode);
         }
 
         public static analyzeStatement(cstNode: Node, astNode: Node): void {
-            switch (cstNode.type) {
+            console.log(cstNode);
+            switch (cstNode.children[0].type) {
                 case "Print Statement":
                     this.analyzePrintStatement(cstNode, astNode);
                     break;
@@ -89,44 +84,114 @@ module TSC {
         public static analyzePrintStatement(cstNode: Node, astNode: Node): void {
             var newNode = new Node("Print Statement");
             astNode.addChild(newNode);
-            astNode = astNode.getLastChild();
+            astNode = newNode;
             this.analyzeExpression(cstNode.children[2], astNode);
         }
 
         public static analyzeAssignmentStatement(cstNode: Node, astNode: Node): void {
+            var newNode = new Node("Assignment Statement");
+            astNode.addChild(newNode);
+            astNode = newNode;
 
+            // Add the identifier to the AST
+            var id = new Node(cstNode.children[0].value);
+            newNode.addChild(id);
+
+            this.analyzeExpression(cstNode.children[2], astNode);
         }
 
         public static analyzeVariableDeclaration(cstNode: Node, astNode: Node): void {
+            var newNode = new Node("Variable Declaration");
+            astNode.addChild(newNode);
+            astNode = newNode;
 
+            // Add the type and value of the variable to the AST
+            var type = new Node(cstNode.children[0].value);
+            var value = new Node(cstNode.children[1].value);
+            newNode.addChild(type);
+            newNode.addChild(value);
         }
 
         public static analyzeWhileStatement(cstNode: Node, astNode: Node): void {
+            var newNode = new Node("While Statement");
+            astNode.addChild(newNode);
+            astNode = newNode;
 
+            this.analyzeBooleanExpression(cstNode.children[1], astNode);
+            this.analyzeBlock(cstNode.children[2], astNode);
         }
 
         public static analyzeIfStatement(cstNode: Node, astNode: Node): void {
+            var newNode = new Node("If Statement");
+            astNode.addChild(newNode);
+            astNode = newNode;
 
+            this.analyzeBooleanExpression(cstNode.children[1], astNode);
+            this.analyzeBlock(cstNode.children[2], astNode);
         }
 
         public static analyzeExpression(cstNode: Node, astNode: Node): void {
+            switch (cstNode.type) {
+                case "Int Expression":
+                    this.analyzeIntExpression(cstNode, astNode);
+                    break;
+                case "String Expression":
+                    this.analyzeStringExpression(cstNode, astNode);
+                    break;
+                case "Boolean Expression":
+                    this.analyzeBooleanExpression(cstNode, astNode);
+                    break;
+                case "Identifier":
+                    var newNode = new Node("Identifier");
+                    astNode.addChild(newNode);
+                    astNode = newNode;
 
+                    var id = new Node(cstNode.value);
+                    newNode.addChild(id);
+                    break;
+                default:
+                    // TODO: Handle an error here
+                    break;
+            }
         }
 
         public static analyzeIntExpression(cstNode: Node, astNode: Node): void {
+            var newNode = new Node("Int Expression");
+            astNode.addChild(newNode);
+            astNode = newNode;
 
+            if (cstNode.children.length === 1) {
+                var value = new Node(cstNode.children[0].value);
+                newNode.addChild(value);
+            } else {
+                var value = new Node(cstNode.children[0].value);
+                newNode.addChild(value);
+
+                var plus = new Node("+");
+                astNode.addChild(plus);
+                astNode = plus;
+
+                this.analyzeExpression(cstNode.children[2], astNode);
+            }
         }
 
         public static analyzeStringExpression(cstNode: Node, astNode: Node): void {
-
+            this.analyzeCharList(cstNode.children[1], astNode, "");
         }
 
         public static analyzeBooleanExpression(cstNode: Node, astNode: Node): void {
-
+            console.log("Yup this hasn't been implemented yet");
         }
 
-        public static analyzeCharList(cstNode: Node, astNode: Node): void {
-
+        public static analyzeCharList(cstNode: Node, astNode: Node, string: string): void {
+            if (cstNode.children.length === 1) {
+                string += cstNode.children[0].value;
+                var newNode = new Node(string);
+                astNode.addChild(newNode);
+            } else {
+                string += cstNode.children[0].value;
+                this.analyzeCharList(cstNode.children[1], astNode, string);
+            }
         }
     }
 }

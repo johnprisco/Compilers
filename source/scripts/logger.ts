@@ -44,5 +44,10 @@ module TSC {
             var log = <HTMLTextAreaElement> document.getElementById("log-output");
             log.value += message + "\n";
         }
+
+        public static logAST(output: string) {
+            var log = <HTMLTextAreaElement> document.getElementById('ast-output');
+            log.value = output;
+        }
     }
 }

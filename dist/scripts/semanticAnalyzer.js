@@ -1,57 +1,54 @@
 var TSC;
 (function (TSC) {
-    var SemanticAnalyser = (function () {
-        function SemanticAnalyser() {
+    var SemanticAnalyzer = (function () {
+        function SemanticAnalyzer() {
         }
-        SemanticAnalyser.performAnalysis = function (cst) {
+        SemanticAnalyzer.performAnalysis = function () {
             _Logger.logIgnoringVerboseMode("Beginning Semantic Analysis.");
             this.abstractSyntaxTree = new TSC.Tree();
             // First, we take the CST and build the AST with it
-            this.buildAST(cst.getRoot());
+            this.buildAST(_CST.getRoot());
+            _Logger.logAST(this.abstractSyntaxTree.toString());
             // Next, we build the symbol table
             // Do some type checking
         };
-        // Used when analyzing a block
-        SemanticAnalyser.isRootDefined = function () {
-            if (this.abstractSyntaxTree.getRoot()) {
-                return false;
-            }
-            else {
-                return true;
-            }
-        };
-        SemanticAnalyser.buildAST = function (root) {
+        SemanticAnalyzer.buildAST = function (root) {
             this.analyzeProgram(root);
         };
-        SemanticAnalyser.analyzeProgram = function (node) {
+        SemanticAnalyzer.analyzeProgram = function (node) {
             // Only one thing to do here
             this.analyzeBlock(node.children[0]);
         };
-        SemanticAnalyser.analyzeBlock = function (cstNode, astNode) {
+        SemanticAnalyzer.analyzeBlock = function (cstNode, astNode) {
             var newNode = new TSC.Node("Block");
             // We have to define the root of the AST the first time,
             // so we'll check if its been set
-            if (this.isRootDefined()) {
-                astNode.children.push(newNode);
-                astNode = astNode.getLastChild();
+            if (this.abstractSyntaxTree.getRoot() != null) {
+                astNode.addChild(newNode);
+                astNode = newNode;
             }
             else {
                 this.abstractSyntaxTree.setRoot(newNode);
                 astNode = newNode;
             }
-            // Statement list is up next
-            this.analyzeStatementList(cstNode.children[1], astNode);
+            console.log(cstNode);
+            // Statement list is up next, if there is one
+            if (cstNode.children.length > 2) {
+                this.analyzeStatementList(cstNode.children[1], astNode);
+            }
         };
-        SemanticAnalyser.analyzeStatementList = function (cstNode, astNode) {
+        SemanticAnalyzer.analyzeStatementList = function (cstNode, astNode) {
             // Handle the epsilon production
             if (!cstNode) {
                 return;
             }
+            //console.log(cstNode);
             this.analyzeStatement(cstNode.children[0], astNode);
             this.analyzeStatementList(cstNode.children[1], astNode);
         };
-        SemanticAnalyser.analyzeStatement = function (cstNode, astNode) {
-            switch (cstNode.type) {
+        SemanticAnalyzer.analyzeStatement = function (cstNode, astNode) {
+            console.log(cstNode);
+            switch (cstNode.children[0].type) {
                 case "Print Statement":
                     this.analyzePrintStatement(cstNode, astNode);
                     break;
@@ -75,31 +72,103 @@ var TSC;
                     break;
             }
         };
-        SemanticAnalyser.analyzePrintStatement = function (cstNode, astNode) {
+        SemanticAnalyzer.analyzePrintStatement = function (cstNode, astNode) {
             var newNode = new TSC.Node("Print Statement");
             astNode.addChild(newNode);
-            astNode = astNode.getLastChild();
+            astNode = newNode;
             this.analyzeExpression(cstNode.children[2], astNode);
         };
-        SemanticAnalyser.analyzeAssignmentStatement = function (cstNode, astNode) {
+        SemanticAnalyzer.analyzeAssignmentStatement = function (cstNode, astNode) {
+            var newNode = new TSC.Node("Assignment Statement");
+            astNode.addChild(newNode);
+            astNode = newNode;
+            // Add the identifier to the AST
+            var id = new TSC.Node(cstNode.children[0].value);
+            newNode.addChild(id);
+            this.analyzeExpression(cstNode.children[2], astNode);
         };
-        SemanticAnalyser.analyzeVariableDeclaration = function (cstNode, astNode) {
+        SemanticAnalyzer.analyzeVariableDeclaration = function (cstNode, astNode) {
+            var newNode = new TSC.Node("Variable Declaration");
+            astNode.addChild(newNode);
+            astNode = newNode;
+            // Add the type and value of the variable to the AST
+            var type = new TSC.Node(cstNode.children[0].value);
+            var value = new TSC.Node(cstNode.children[1].value);
+            newNode.addChild(type);
+            newNode.addChild(value);
         };
-        SemanticAnalyser.analyzeWhileStatement = function (cstNode, astNode) {
+        SemanticAnalyzer.analyzeWhileStatement = function (cstNode, astNode) {
+            var newNode = new TSC.Node("While Statement");
+            astNode.addChild(newNode);
+            astNode = newNode;
+            this.analyzeBooleanExpression(cstNode.children[1], astNode);
+            this.analyzeBlock(cstNode.children[2], astNode);
         };
-        SemanticAnalyser.analyzeIfStatement = function (cstNode, astNode) {
+        SemanticAnalyzer.analyzeIfStatement = function (cstNode, astNode) {
+            var newNode = new TSC.Node("If Statement");
+            astNode.addChild(newNode);
+            astNode = newNode;
+            this.analyzeBooleanExpression(cstNode.children[1], astNode);
+            this.analyzeBlock(cstNode.children[2], astNode);
         };
-        SemanticAnalyser.analyzeExpression = function (cstNode, astNode) {
+        SemanticAnalyzer.analyzeExpression = function (cstNode, astNode) {
+            switch (cstNode.type) {
+                case "Int Expression":
+                    this.analyzeIntExpression(cstNode, astNode);
+                    break;
+                case "String Expression":
+                    this.analyzeStringExpression(cstNode, astNode);
+                    break;
+                case "Boolean Expression":
+                    this.analyzeBooleanExpression(cstNode, astNode);
+                    break;
+                case "Identifier":
+                    var newNode = new TSC.Node("Identifier");
+                    astNode.addChild(newNode);
+                    astNode = newNode;
+                    var id = new TSC.Node(cstNode.value);
+                    newNode.addChild(id);
+                    break;
+                default:
+                    // TODO: Handle an error here
+                    break;
+            }
         };
-        SemanticAnalyser.analyzeIntExpression = function (cstNode, astNode) {
+        SemanticAnalyzer.analyzeIntExpression = function (cstNode, astNode) {
+            var newNode = new TSC.Node("Int Expression");
+            astNode.addChild(newNode);
+            astNode = newNode;
+            if (cstNode.children.length === 1) {
+                var value = new TSC.Node(cstNode.children[0].value);
+                newNode.addChild(value);
+            }
+            else {
+                var value = new TSC.Node(cstNode.children[0].value);
+                newNode.addChild(value);
+                var plus = new TSC.Node("+");
+                astNode.addChild(plus);
+                astNode = plus;
+                this.analyzeExpression(cstNode.children[2], astNode);
+            }
         };
-        SemanticAnalyser.analyzeStringExpression = function (cstNode, astNode) {
+        SemanticAnalyzer.analyzeStringExpression = function (cstNode, astNode) {
+            this.analyzeCharList(cstNode.children[1], astNode, "");
         };
-        SemanticAnalyser.analyzeBooleanExpression = function (cstNode, astNode) {
+        SemanticAnalyzer.analyzeBooleanExpression = function (cstNode, astNode) {
+            console.log("Yup this hasn't been implemented yet");
         };
-        SemanticAnalyser.analyzeCharList = function (cstNode, astNode) {
+        SemanticAnalyzer.analyzeCharList = function (cstNode, astNode, string) {
+            if (cstNode.children.length === 1) {
+                string += cstNode.children[0].value;
+                var newNode = new TSC.Node(string);
+                astNode.addChild(newNode);
+            }
+            else {
+                string += cstNode.children[0].value;
+                this.analyzeCharList(cstNode.children[1], astNode, string);
+            }
         };
-        return SemanticAnalyser;
+        return SemanticAnalyzer;
     })();
-    TSC.SemanticAnalyser = SemanticAnalyser;
+    TSC.SemanticAnalyzer = SemanticAnalyzer;
 })(TSC || (TSC = {}));

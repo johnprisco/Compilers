@@ -6,6 +6,7 @@ var _CurrentToken: TSC.Token = null;
 var _TokenIndex: number = 0;
 var _VerboseMode: boolean = true;
 var _CST: TSC.Tree = null;
+var _SemanticAnalyzer = TSC.SemanticAnalyzer;
 
 // Token Types
 const LEFT_BRACE       = {type: 'LEFT_BRACE', value: '{'};

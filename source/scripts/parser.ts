@@ -198,10 +198,9 @@ module TSC {
         }
 
         public static parseId() {
-            // TODO: Is it necessary to add a branch here? Project 2 examples suggest not.
-            //_CST.addBranchNode("IDENTIFIER");
+            _CST.addBranchNode("Identifier");
             this.match(IDENTIFIER.type);
-            //_CST.endChildren();
+            _CST.endChildren();
         }
 
         public static parseCharList() {
