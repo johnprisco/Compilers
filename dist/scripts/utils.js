@@ -85,12 +85,10 @@ var TSC;
         Utils.missingEoP = function () {
             var source = document.getElementById("source-code");
             source.value = '{ \n  int a \n  a = 2 \n  print(a) \n} ';
-            this.compile();
         };
         Utils.invalidSymbol = function () {
             var source = document.getElementById("source-code");
             source.value = '{ \n  int a \n  a = 2 \n  print(a - 2) \n} $';
-            this.compile();
         };
         Utils.everything = function () {
             var source = document.getElementById("source-code");
@@ -113,29 +111,48 @@ var TSC;
                 "  }\n" +
                 "} $";
             source.value = everything;
-            this.compile();
         };
         Utils.basicProgram = function () {
             var source = document.getElementById("source-code");
             source.value = '{}$';
-            this.compile();
         };
         Utils.newLineString = function () {
             var source = document.getElementById("source-code");
             source.value = '{\n  string a\n  a = \"str\ning\"\n  print(a)\n} $';
-            this.compile();
         };
         Utils.unexpectedToken = function () {
             var source = document.getElementById("source-code");
             source.value = '{\n  int a\n  a == 5 + 1\n  print(a)\n} $';
-            this.compile();
         };
         Utils.projectTwoExample = function () {
             var source = document.getElementById("source-code");
             source.value = '{\n int a \n boolean b \n { \n string c \n ' +
                 'a = 5 \n b = true \n c = "inta" \n print(c) \n ' +
                 '} \n print(b) \n print(a) \n } $';
-            this.compile();
+        };
+        Utils.parentScope = function () {
+            var source = document.getElementById("source-code");
+            source.value = '{\n  int a\n  a = 5\n  {\n    print(a)\n  }\n} $';
+        };
+        Utils.undeclaredIdentifier = function () {
+            var source = document.getElementById("source-code");
+            source.value = '{\n  a = 5\n} $';
+        };
+        Utils.unusedVariable = function () {
+            var source = document.getElementById("source-code");
+            source.value = '{\n  string a\n  int b\n  a = "true"\n  print(a)\n} $';
+        };
+        Utils.badStringAssignment = function () {
+            var source = document.getElementById("source-code");
+            source.value = '{\n  string a\n  a = true\n} $';
+        };
+        Utils.badBooleanAssignment = function () {
+            var source = document.getElementById("source-code");
+            source.value = '{\n  boolean a\n  a = "true"\n} $';
+        };
+        Utils.goodIntAssignment = function () {
+            var source = document.getElementById("source-code");
+            source.value = '{\n  int a\n  a = 5\n} $';
         };
         return Utils;
     })();

@@ -92,8 +92,8 @@ module TSC {
                     this.analyzeBlock(cstNode.children[0], scope, astNode);
                     break;
                 default:
-                    // TODO: Log and throw error
-                    break;
+                    _Logger.logError("Statement undefined.", cstNode.getLineNumber(), "Semantic Analyzer");
+                    throw new Error("Undefined statement passed to analyzeStatement(). This shouldn't happen.");
             }
         }
 
@@ -194,8 +194,8 @@ module TSC {
                     }
                     break;
                 default:
-                    // TODO: Handle an error here
-                    break;
+                    _Logger.logError("Undefined expression.", cstNode.getLineNumber(), "Semantic Analyzer");
+                    throw new Error("Undefined expression. This shouldn't happen.");
             }
         }
 

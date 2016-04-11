@@ -56,8 +56,8 @@ module TSC {
             _Tokens = [];
             _CurrentToken = null;
             _TokenIndex = 0;
-            var log:HTMLTextAreaElement = <HTMLTextAreaElement> document.getElementById("log-output");
-            var source:HTMLTextAreaElement = <HTMLTextAreaElement> document.getElementById("source-code");
+            var log: HTMLTextAreaElement = <HTMLTextAreaElement> document.getElementById("log-output");
+            var source: HTMLTextAreaElement = <HTMLTextAreaElement> document.getElementById("source-code");
             log.value = "";
             this.clearTable('tokens-table');
             this.clearTable('symbol-table');
@@ -97,15 +97,13 @@ module TSC {
         }
 
         public static missingEoP() {
-            var source:HTMLTextAreaElement = <HTMLTextAreaElement> document.getElementById("source-code");
+            var source: HTMLTextAreaElement = <HTMLTextAreaElement> document.getElementById("source-code");
             source.value = '{ \n  int a \n  a = 2 \n  print(a) \n} ';
-            this.compile();
         }
 
         public static invalidSymbol() {
-            var source:HTMLTextAreaElement = <HTMLTextAreaElement> document.getElementById("source-code");
+            var source: HTMLTextAreaElement = <HTMLTextAreaElement> document.getElementById("source-code");
             source.value = '{ \n  int a \n  a = 2 \n  print(a - 2) \n} $';
-            this.compile();
         }
 
         public static everything() {
@@ -131,33 +129,58 @@ module TSC {
                 "} $";
 
             source.value = everything;
-            this.compile();
         }
 
         public static basicProgram() {
-            var source:HTMLTextAreaElement = <HTMLTextAreaElement> document.getElementById("source-code");
+            var source: HTMLTextAreaElement = <HTMLTextAreaElement> document.getElementById("source-code");
             source.value = '{}$';
-            this.compile();
         }
 
         public static newLineString() {
-            var source:HTMLTextAreaElement = <HTMLTextAreaElement> document.getElementById("source-code");
+            var source: HTMLTextAreaElement = <HTMLTextAreaElement> document.getElementById("source-code");
             source.value = '{\n  string a\n  a = \"str\ning\"\n  print(a)\n} $';
-            this.compile();
         }
 
         public static unexpectedToken() {
-            var source:HTMLTextAreaElement = <HTMLTextAreaElement> document.getElementById("source-code");
+            var source: HTMLTextAreaElement = <HTMLTextAreaElement> document.getElementById("source-code");
             source.value = '{\n  int a\n  a == 5 + 1\n  print(a)\n} $';
-            this.compile();
         }
 
         public static projectTwoExample() {
-            var source:HTMLTextAreaElement = <HTMLTextAreaElement> document.getElementById("source-code");
+            var source: HTMLTextAreaElement = <HTMLTextAreaElement> document.getElementById("source-code");
             source.value = '{\n int a \n boolean b \n { \n string c \n ' +
                 'a = 5 \n b = true \n c = "inta" \n print(c) \n ' +
                 '} \n print(b) \n print(a) \n } $';
-            this.compile();
+        }
+
+        public static parentScope() {
+            var source: HTMLTextAreaElement = <HTMLTextAreaElement> document.getElementById("source-code");
+            source.value = '{\n  int a\n  a = 5\n  {\n    print(a)\n  }\n} $';
+        }
+
+        public static undeclaredIdentifier() {
+            var source: HTMLTextAreaElement = <HTMLTextAreaElement> document.getElementById("source-code");
+            source.value = '{\n  a = 5\n} $';
+        }
+
+        public static unusedVariable() {
+            var source: HTMLTextAreaElement = <HTMLTextAreaElement> document.getElementById("source-code");
+            source.value = '{\n  string a\n  int b\n  a = "true"\n  print(a)\n} $';
+        }
+
+        public static badStringAssignment() {
+            var source: HTMLTextAreaElement = <HTMLTextAreaElement> document.getElementById("source-code");
+            source.value = '{\n  string a\n  a = true\n} $';
+        }
+
+        public static badBooleanAssignment() {
+            var source: HTMLTextAreaElement = <HTMLTextAreaElement> document.getElementById("source-code");
+            source.value = '{\n  boolean a\n  a = "true"\n} $';
+        }
+
+        public static goodIntAssignment() {
+            var source: HTMLTextAreaElement = <HTMLTextAreaElement> document.getElementById("source-code");
+            source.value = '{\n  int a\n  a = 5\n} $';
         }
     }
 }
