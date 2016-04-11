@@ -16,7 +16,8 @@ module TSC {
 
         public static logError(message: string, line: number, module: String): void {
             var log = <HTMLTextAreaElement> document.getElementById("log-output");
-            log.value += "ERROR in " + module + " on line " + line + ": " + message;
+            log.value += "ERROR in " + module + " on line " + line + ": " + message + "\n";
+            log.value += "Ending compilation.";
         }
 
         public static logTokens(): void {

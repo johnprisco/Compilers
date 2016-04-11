@@ -16,7 +16,8 @@ var TSC;
         };
         Logger.logError = function (message, line, module) {
             var log = document.getElementById("log-output");
-            log.value += "ERROR in " + module + " on line " + line + ": " + message;
+            log.value += "ERROR in " + module + " on line " + line + ": " + message + "\n";
+            log.value += "Ending compilation.";
         };
         Logger.logTokens = function () {
             var table = document.getElementById('tokens-table');

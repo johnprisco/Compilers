@@ -156,7 +156,7 @@ var TSC;
                     astNode.addChild(id);
                     var search = scope.findIdentifier(cstNode.children[0].children[0].value);
                     if (!search) {
-                        _Logger.logError("Identifier not found.", cstNode.children[0].children[0].lineNumber, "Semantic Analysis");
+                        _Logger.logError("Identifier '" + cstNode.children[0].children[0].value + "' not found.", cstNode.children[0].children[0].lineNumber, "Semantic Analysis");
                         throw new Error("ID not found.");
                     }
                     break;
