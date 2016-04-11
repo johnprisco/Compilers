@@ -72,7 +72,7 @@ module TSC {
         public static analyzeStatement(cstNode: Node, astNode: Node, scope: Scope): void {
             //console.log("!!! Statement CST Node !!!");
             //console.log(cstNode);
-            switch (cstNode.children[0].type) {
+            switch (cstNode.children[0].getType()) {
                 case "Print Statement":
                     this.analyzePrintStatement(cstNode.children[0], astNode, scope);
                     break;
@@ -107,32 +107,32 @@ module TSC {
         public static analyzeAssignmentStatement(cstNode: Node, astNode: Node, scope: Scope): void {
             var newNode = new Node("Assignment Statement");
             // Add the identifier to the AST
-            var id = new Node(cstNode.children[0].children[0].value);
+            var id = new Node(cstNode.children[0].children[0].getValue());
             newNode.addChild(id);
-            newNode.lineNumber = cstNode.children[0].children[0].lineNumber;
+            newNode.setLineNumber(cstNode.children[0].children[0].getLineNumber());
             astNode.addChild(newNode);
             astNode = newNode;
 
             this.analyzeExpression(cstNode.children[2], astNode, scope);
 
             // First, make sure the ID exists
-            _Logger.logMessage("Checking for identifier '" + cstNode.children[0].children[0].value + "' in Scope " + scope.getName() + ".");
-            var scopeCheck = scope.findIdentifier(cstNode.children[0].children[0].value);
+            _Logger.logMessage("Checking for identifier '" + cstNode.children[0].children[0].getValue() + "' in Scope " + scope.getName() + ".");
+            var scopeCheck = scope.findIdentifier(cstNode.children[0].children[0].getValue());
             if (!scopeCheck) {
-                _Logger.logError("Identifier '" + cstNode.children[0].children[0].value + "' not in scope.", astNode.lineNumber,
+                _Logger.logError("Identifier '" + cstNode.children[0].children[0].getValue() + "' not in scope.", astNode.getLineNumber(),
                                  "Semantic Analyzer");
                 throw new Error("ID not in scope, breaking.");
             }
-            _Logger.logMessage("Found '" + cstNode.children[0].children[0].value + "' in Scope " + scope.getName() + ".");
+            _Logger.logMessage("Found '" + cstNode.children[0].children[0].getValue() + "' in Scope " + scope.getName() + ".");
 
             // Then, type check it
-            _Logger.logMessage("Checking if identifier '" + cstNode.children[0].children[0].value + "' is being assigned the type it was declared.");
-            var typeCheck = scope.confirmType(cstNode.children[0].children[0].value, astNode.children[1]);
+            _Logger.logMessage("Checking if identifier '" + cstNode.children[0].children[0].getValue() + "' is being assigned the type it was declared.");
+            var typeCheck = scope.confirmType(cstNode.children[0].children[0].getValue(), astNode.children[1]);
             console.log(cstNode);
             console.log(astNode);
             if (!typeCheck) {
-                _Logger.logError("Type mismatch. Expected " + scope.getTypeOfSymbol(cstNode.children[0].children[0].value) + ".",
-                                 astNode.lineNumber, "Semantic Analyzer");
+                _Logger.logError("Type mismatch. Expected " + scope.getTypeOfSymbol(cstNode.children[0].children[0].getValue()) + ".",
+                                 astNode.getLineNumber(), "Semantic Analyzer");
                 throw new Error("Type mismatch, breaking.");
             }
             _Logger.logMessage("Identifier assigned successfully.");
@@ -142,13 +142,13 @@ module TSC {
             var newNode = new Node("Variable Declaration");
 
             // Add the type and value of the variable to the AST
-            var type = new Node(cstNode.children[0].value);
-            var value = new Node(cstNode.children[1].children[0].value);
+            var type = new Node(cstNode.children[0].getValue());
+            var value = new Node(cstNode.children[1].children[0].getValue());
             newNode.addChild(type);
             newNode.addChild(value);
             astNode.addChild(newNode);
 
-            var newSymbol = new Symbol(cstNode.children[1].children[0].value, cstNode.children[0].value, cstNode.children[0].lineNumber);
+            var newSymbol = new Symbol(cstNode.children[1].children[0].getValue(), cstNode.children[0].getValue(), cstNode.children[0].getLineNumber());
             scope.addSymbol(newSymbol);
             _Logger.logMessage("Item added to Symbol Table: " + newSymbol.getType() + " " + newSymbol.getName() +
                                " in Scope " + scope.getName() + ".")
@@ -173,7 +173,7 @@ module TSC {
         }
 
         public static analyzeExpression(cstNode: Node, astNode: Node, scope: Scope): void {
-            switch (cstNode.children[0].type) {
+            switch (cstNode.children[0].getType()) {
                 case "Int Expression":
                     this.analyzeIntExpression(cstNode.children[0], astNode, scope);
                     break;
@@ -184,11 +184,12 @@ module TSC {
                     this.analyzeBooleanExpression(cstNode.children[0], astNode, scope);
                     break;
                 case "Identifier":
-                    var id = new Node(cstNode.children[0].children[0].value);
+                    var id = new Node(cstNode.children[0].children[0].getValue());
                     astNode.addChild(id);
-                    var search = scope.findIdentifier(cstNode.children[0].children[0].value);
+                    var search = scope.findIdentifier(cstNode.children[0].children[0].getValue());
                     if (!search) {
-                        _Logger.logError("Identifier '" + cstNode.children[0].children[0].value + "' not found.", cstNode.children[0].children[0].lineNumber, "Semantic Analysis");
+                        _Logger.logError("Identifier '" + cstNode.children[0].children[0].getValue() + "' not found.",
+                                         cstNode.children[0].children[0].getLineNumber(), "Semantic Analysis");
                         throw new Error("ID not found.");
                     }
                     break;
@@ -200,12 +201,12 @@ module TSC {
 
         public static analyzeIntExpression(cstNode: Node, astNode: Node, scope: Scope): void {
             if (cstNode.children.length === 1) {
-                var value = new Node(cstNode.children[0].value);
-                value.isInt = true;
+                var value = new Node(cstNode.children[0].getValue());
+                value.setInt(true);
                 astNode.addChild(value);
             } else {
-                var value = new Node(cstNode.children[0].value);
-                value.isInt = true;
+                var value = new Node(cstNode.children[0].getValue());
+                value.setInt(true);
                 astNode.addChild(value);
 
                 var plus = new Node("+");
@@ -223,7 +224,7 @@ module TSC {
         public static analyzeBooleanExpression(cstNode: Node, astNode: Node, scope: Scope): void {
             if (cstNode.children.length > 1) {
                 // The next node is going to be the boolop
-                var newNode = new Node(cstNode.children[2].value);
+                var newNode = new Node(cstNode.children[2].getValue());
                 astNode.addChild(newNode);
                 astNode = newNode;
 
@@ -231,19 +232,19 @@ module TSC {
                 this.analyzeExpression(cstNode.children[1], astNode, scope);
                 this.analyzeExpression(cstNode.children[3], astNode, scope);
             } else {
-                var newNode = new Node(cstNode.children[0].value);
-                newNode.isBoolean = true;
+                var newNode = new Node(cstNode.children[0].getValue());
+                newNode.setBoolean(true);
                 astNode.addChild(newNode);
             }
         }
 
         public static analyzeCharList(cstNode: Node, astNode: Node, string: string, scope: Scope): void {
             if (cstNode.children.length === 1) {
-                string += cstNode.children[0].value;
+                string += cstNode.children[0].getValue();
                 var newNode = new Node(string);
                 astNode.addChild(newNode);
             } else {
-                string += cstNode.children[0].value;
+                string += cstNode.children[0].getValue();
                 this.analyzeCharList(cstNode.children[1], astNode, string, scope);
             }
         }

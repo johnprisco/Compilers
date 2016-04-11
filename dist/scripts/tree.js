@@ -14,33 +14,33 @@ var TSC;
         Tree.prototype.addBranchNode = function (type) {
             // Create a node to be added
             var node = new TSC.Node();
-            node.type = type;
+            node.setType(type);
             if (this.root === null || (!this.root)) {
                 this.root = node;
                 this.currentNode = node;
             }
             else {
                 this.currentNode.addChild(node);
-                node.parent = this.currentNode;
+                node.setParent(this.currentNode);
                 this.currentNode = node;
             }
         };
         Tree.prototype.addLeafNode = function (token) {
             var node = new TSC.Node();
-            node.type = token.type;
-            node.value = token.value;
-            node.isLeafNode = true;
-            node.lineNumber = token.line;
+            node.setType(token.type);
+            node.setValue(token.value);
+            node.setLeafNode(true);
+            node.setLineNumber(token.line);
             if (this.root === null || (!this.root)) {
             }
             else {
                 this.currentNode.addChild(node);
-                node.parent = this.currentNode;
+                node.setParent(this.currentNode);
             }
         };
         Tree.prototype.endChildren = function () {
-            if ((this.currentNode.parent !== null) && (this.currentNode.parent.type !== undefined)) {
-                this.currentNode = this.currentNode.parent;
+            if ((this.currentNode.getParent() !== null) && (this.currentNode.getParent().getType() !== undefined)) {
+                this.currentNode = this.currentNode.getParent();
             }
             else {
             }

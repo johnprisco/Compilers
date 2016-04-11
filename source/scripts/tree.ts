@@ -20,38 +20,38 @@ module TSC {
         public addBranchNode(type: string): void {
             // Create a node to be added
             var node: Node = new Node();
-            node.type = type;
+            node.setType(type);
 
             if (this.root === null || (!this.root)) {
                 this.root = node;
                 this.currentNode = node;
             } else {
                 this.currentNode.addChild(node);
-                node.parent = this.currentNode;
+                node.setParent(this.currentNode);
                 this.currentNode = node;
             }
         }
 
         public addLeafNode(token: Token): void {
             var node: Node = new Node();
-            node.type = token.type;
-            node.value = token.value;
-            node.isLeafNode = true;
-            node.lineNumber = token.line;
+            node.setType(token.type);
+            node.setValue(token.value);
+            node.setLeafNode(true);
+            node.setLineNumber(token.line);
 
             if (this.root === null || (!this.root)) {
                 // log an error message, throw error
 
             } else {
                 this.currentNode.addChild(node);
-                node.parent = this.currentNode;
+                node.setParent(this.currentNode);
             }
         }
 
         public endChildren(): void {
-            if ((this.currentNode.parent !== null) && (this.currentNode.parent.type !== undefined))
+            if ((this.currentNode.getParent() !== null) && (this.currentNode.getParent().getType() !== undefined))
             {
-                this.currentNode = this.currentNode.parent;
+                this.currentNode = this.currentNode.getParent();
             }
             else
             {

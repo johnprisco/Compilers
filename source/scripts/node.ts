@@ -2,14 +2,14 @@ module TSC {
     export class Node {
 
         // Define properties
-        public type: string;
-        public value: string;
+        private type: string;
+        private value: string;
         public children: Node[];
-        public parent: Node;
-        public lineNumber: number;
-        public isLeafNode: boolean;
-        public isBoolean: boolean = false;
-        public isInt: boolean = false;
+        private parent: Node;
+        private lineNumber: number;
+        private isLeafNode: boolean;
+        private isBoolean: boolean = false;
+        private isInt: boolean = false;
 
         constructor(type?: string) {
             if (type) {
@@ -25,9 +25,60 @@ module TSC {
             this.isLeafNode = false;
         }
 
-        public getLastChild(): Node {
-            var position = this.children.length - 1;
-            return this.children[position];
+        public getType(): string {
+            return this.type;
+        }
+
+        public setType(type: string): void {
+            this.type = type;
+        }
+
+        public getValue(): string {
+            return this.value;
+        }
+
+        public setValue(value: string): void {
+            this.value = value;
+        }
+
+        public getParent(): Node {
+            return this.parent;
+        }
+
+        public setParent(parent: Node): void {
+            this.parent = parent;
+        }
+
+        public getLineNumber(): number {
+            return this.lineNumber;
+        }
+
+        public setLineNumber(number: number): void {
+            this.lineNumber = number;
+        }
+
+        public checkLeafNode(): boolean {
+            return this.isLeafNode;
+        }
+
+        public setLeafNode(bool: boolean): void {
+            this.isLeafNode = bool;
+        }
+
+        public checkBoolean(): boolean {
+            return this.isBoolean;
+        }
+
+        public setBoolean(bool: boolean): void {
+            this.isBoolean = bool;
+        }
+
+        public getInt(): boolean {
+            return this.isInt;
+        }
+
+        public setInt(bool: boolean): void {
+            this.isInt = bool;
         }
 
         public addChild(node: Node): void {
