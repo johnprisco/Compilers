@@ -51,6 +51,7 @@ var TSC;
         };
         Logger.logScope = function (scope) {
             var table = document.getElementById('symbol-table');
+            var unusedSymbols = [];
             for (var i = 0; i < scope.getSymbols().length; i++) {
                 var symbols = scope.getSymbols();
                 var row = table.insertRow(i + 1);
@@ -62,6 +63,15 @@ var TSC;
                 type.innerHTML = symbols[i].getType();
                 level.innerHTML = scope.getName();
                 line.innerHTML = symbols[i].getLine();
+                if (!symbols[i].getInitialized()) {
+                    unusedSymbols.push(symbols[i]);
+                }
+            }
+            this.logUnusedIdentifiers(unusedSymbols);
+        };
+        Logger.logUnusedIdentifiers = function (symbols) {
+            for (var i = 0; i < symbols.length; i++) {
+                this.logWarning("Unused identifier '" + symbols[i].getName() + "' on line " + symbols[i].getLine() + ".");
             }
         };
         return Logger;

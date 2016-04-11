@@ -58,6 +58,7 @@ module TSC {
 
         public static logScope(scope: Scope): void {
             var table = <HTMLTableElement> document.getElementById('symbol-table');
+            var unusedSymbols: Symbol[] = [];
             for (var i = 0; i < scope.getSymbols().length; i++) {
                 var symbols = scope.getSymbols();
 
@@ -71,6 +72,18 @@ module TSC {
                 type.innerHTML = symbols[i].getType();
                 level.innerHTML = scope.getName();
                 line.innerHTML = symbols[i].getLine();
+
+                if (!symbols[i].getInitialized()) {
+                    unusedSymbols.push(symbols[i]);
+                }
+            }
+
+            this.logUnusedIdentifiers(unusedSymbols);
+        }
+
+        public static logUnusedIdentifiers(symbols: Symbol[]) {
+            for (var i = 0; i < symbols.length; i++) {
+                this.logWarning("Unused identifier '" + symbols[i].getName() + "' on line " + symbols[i].getLine() + ".");
             }
         }
     }
