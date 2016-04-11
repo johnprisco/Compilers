@@ -5,17 +5,22 @@ var TSC;
         }
         Parser.parse = function () {
             _CurrentToken = _Tokens[_TokenIndex];
+            _CST = new TSC.Tree();
             this.parseProgram();
         };
         Parser.parseProgram = function () {
-            _Logger.logIgnoringVerboseMode("Parsing program.");
+            _Logger.logIgnoringVerboseMode("\nParsing program.\n");
+            _CST.addBranchNode("Program");
             this.parseBlock();
             this.match(END_OF_PROGRAM.type);
+            _CST.endChildren();
         };
         Parser.parseBlock = function () {
+            _CST.addBranchNode("Block");
             this.match(LEFT_BRACE.type);
             this.parseStatementList();
             this.match(RIGHT_BRACE.type);
+            _CST.endChildren();
         };
         Parser.parseStatementList = function () {
             // checking for: print, identifier, int, boolean, string, {, 'while', 'if'
@@ -27,12 +32,15 @@ var TSC;
                 _CurrentToken.type === LEFT_BRACE.type ||
                 _CurrentToken.type === WHILE.type ||
                 _CurrentToken.type === IF.type) {
+                _CST.addBranchNode("Statement List");
                 this.parseStatement();
                 this.parseStatementList();
+                _CST.endChildren();
             }
             // otherwise, do nothing
         };
         Parser.parseStatement = function () {
+            _CST.addBranchNode("Statement");
             switch (_CurrentToken.type) {
                 case PRINT.type:
                     this.parsePrintStatement();
@@ -54,19 +62,25 @@ var TSC;
                 default:
                     this.parseBlock();
             }
+            _CST.endChildren();
         };
         Parser.parsePrintStatement = function () {
+            _CST.addBranchNode("Print Statement");
             this.match(PRINT.type);
             this.match(LEFT_PAREN.type);
             this.parseExpr();
             this.match(RIGHT_PAREN.type);
+            _CST.endChildren();
         };
         Parser.parseAssignmentStatement = function () {
+            _CST.addBranchNode("Assignment Statement");
             this.parseId();
             this.match(ASSIGNMENT.type);
             this.parseExpr();
+            _CST.endChildren();
         };
         Parser.parseVarDecl = function () {
+            _CST.addBranchNode("Variable Declaration");
             switch (_CurrentToken.type) {
                 case STRING.type:
                     this.match(STRING.type);
@@ -84,18 +98,24 @@ var TSC;
                     _Logger.logError("We should never have gotten to this point.", _CurrentToken.line, 'Parser');
                     throw new Error("Something broke in parser.");
             }
+            _CST.endChildren();
         };
         Parser.parseWhileStatement = function () {
+            _CST.addBranchNode("While Statement");
             this.match(WHILE.type);
             this.parseBooleanExpr();
             this.parseBlock();
+            _CST.endChildren();
         };
         Parser.parseIfStatement = function () {
+            _CST.addBranchNode("If Statement");
             this.match(IF.type);
             this.parseBooleanExpr();
             this.parseBlock();
+            _CST.endChildren();
         };
         Parser.parseExpr = function () {
+            _CST.addBranchNode("Expression");
             switch (_CurrentToken.type) {
                 // IntExpr
                 case DIGIT.type:
@@ -119,8 +139,10 @@ var TSC;
                     _Logger.logError("We should never have gotten to this point.", _CurrentToken.line, 'Parser');
                     throw new Error("Something broke in parser.");
             }
+            _CST.endChildren();
         };
         Parser.parseIntExpr = function () {
+            _CST.addBranchNode("Int Expression");
             if (_CurrentToken.type === DIGIT.type) {
                 this.match(DIGIT.type);
                 if (_CurrentToken.type === PLUS.type) {
@@ -128,13 +150,17 @@ var TSC;
                     this.parseExpr();
                 }
             }
+            _CST.endChildren();
         };
         Parser.parseStringExpr = function () {
+            _CST.addBranchNode("String Expression");
             this.match(QUOTE.type);
             this.parseCharList();
             this.match(QUOTE.type);
+            _CST.endChildren();
         };
         Parser.parseBooleanExpr = function () {
+            _CST.addBranchNode("Boolean Expression");
             if (_CurrentToken.type === TRUE.type) {
                 this.match(TRUE.type);
             }
@@ -155,23 +181,31 @@ var TSC;
                     this.match(RIGHT_PAREN.type);
                 }
             }
+            _CST.endChildren();
         };
         Parser.parseId = function () {
+            _CST.addBranchNode("Identifier");
             this.match(IDENTIFIER.type);
+            _CST.endChildren();
         };
         Parser.parseCharList = function () {
             if (_CurrentToken.type === CHARACTER.type) {
+                _CST.addBranchNode("Char List");
                 this.match(CHARACTER.type);
                 this.parseCharList();
+                _CST.endChildren();
             }
             else if (_CurrentToken.type === SPACE.type) {
+                _CST.addBranchNode("Char List");
                 this.match(SPACE.type);
                 this.parseCharList();
+                _CST.endChildren();
             }
             // otherwise, do nothing
         };
         Parser.match = function (type) {
             if (_CurrentToken.type === type) {
+                _CST.addLeafNode(_CurrentToken);
                 _Logger.logMessage("Successfully matched " + type + " token.");
             }
             else {

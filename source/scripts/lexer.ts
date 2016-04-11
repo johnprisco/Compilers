@@ -5,7 +5,7 @@ module TSC {
 	export class Lexer {
 
 		public static lex() {
-            _Logger.logIgnoringVerboseMode("Beginning lexical analysis.");
+            _Logger.logIgnoringVerboseMode("Beginning lexical analysis.\n");
             var keywordStrings = ['while', 'print', 'if', 'int', 'string', 'boolean', 'true', 'false'];
             var symbolStrings = ['{', '}', '(', ')', '=', '!=', '==', '"', '$', '+'];
             var lexingString = false;
