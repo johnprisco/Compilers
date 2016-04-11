@@ -52,7 +52,8 @@ var TSC;
             var log = document.getElementById("log-output");
             var source = document.getElementById("source-code");
             log.value = "";
-            this.clearTokensTable();
+            this.clearTable('tokens-table');
+            this.clearTable('symbol-table');
             if (source.value === '') {
                 _Logger.logIgnoringVerboseMode("Try putting some code in there!");
                 return;
@@ -70,8 +71,8 @@ var TSC;
             _Logger.logCST();
             TSC.SemanticAnalyzer.performAnalysis();
         };
-        Utils.clearTokensTable = function () {
-            var table = document.getElementById('tokens-table');
+        Utils.clearTable = function (element) {
+            var table = document.getElementById(element);
             var length = table.rows.length;
             if (length > 1) {
                 // Remove rows from the bottom up

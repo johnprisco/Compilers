@@ -59,7 +59,8 @@ module TSC {
             var log:HTMLTextAreaElement = <HTMLTextAreaElement> document.getElementById("log-output");
             var source:HTMLTextAreaElement = <HTMLTextAreaElement> document.getElementById("source-code");
             log.value = "";
-            this.clearTokensTable();
+            this.clearTable('tokens-table');
+            this.clearTable('symbol-table');
 
             if (source.value === '') {
                 _Logger.logIgnoringVerboseMode("Try putting some code in there!");
@@ -82,8 +83,8 @@ module TSC {
             SemanticAnalyzer.performAnalysis()
         }
 
-        public static clearTokensTable() {
-            var table = <HTMLTableElement> document.getElementById('tokens-table');
+        public static clearTable(element: string) {
+            var table = <HTMLTableElement> document.getElementById(element);
             var length = table.rows.length;
 
             if (length > 1) {

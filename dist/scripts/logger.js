@@ -44,6 +44,26 @@ var TSC;
             var log = document.getElementById('ast-output');
             log.value = output;
         };
+        Logger.logSymbolTable = function (symbolTable) {
+            for (var i = 0; i < symbolTable.length; i++) {
+                this.logScope(symbolTable[i]);
+            }
+        };
+        Logger.logScope = function (scope) {
+            var table = document.getElementById('symbol-table');
+            for (var i = 0; i < scope.getSymbols().length; i++) {
+                var symbols = scope.getSymbols();
+                var row = table.insertRow(i + 1);
+                var name = row.insertCell(0);
+                var type = row.insertCell(1);
+                var level = row.insertCell(2);
+                var line = row.insertCell(3);
+                name.innerHTML = symbols[i].getName();
+                type.innerHTML = symbols[i].getType();
+                level.innerHTML = scope.getName();
+                line.innerHTML = symbols[i].getLine();
+            }
+        };
         return Logger;
     })();
     TSC.Logger = Logger;

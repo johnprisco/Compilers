@@ -11,7 +11,8 @@ var TSC;
             // First, we take the CST and build the AST with it
             this.buildAST(_CST.getRoot());
             _Logger.logAST(this.abstractSyntaxTree.toStringAST());
-            console.log(this.scopes);
+            _Logger.logSymbolTable(this.scopes);
+            _Logger.logIgnoringVerboseMode("Semantic Analysis complete.");
         };
         SemanticAnalyzer.buildAST = function (root) {
             this.analyzeProgram(root);
@@ -31,6 +32,7 @@ var TSC;
                 astNode = newNode;
                 var newScope = new TSC.Scope(this.scopeName);
                 this.scopeName++;
+                newScope.setParent(scope);
                 this.scopes.push(newScope);
                 // Statement list is up next, if there is one
                 if (cstNode.children.length > 2) {
@@ -86,19 +88,29 @@ var TSC;
             var newNode = new TSC.Node("Print Statement");
             astNode.addChild(newNode);
             astNode = newNode;
-            //console.log(cstNode.children[2]);
             this.analyzeExpression(cstNode.children[2], astNode, scope);
         };
         SemanticAnalyzer.analyzeAssignmentStatement = function (cstNode, astNode, scope) {
-            //console.log("!!! Assignment CST Node !!!");
-            //console.log(cstNode);
             var newNode = new TSC.Node("Assignment Statement");
             // Add the identifier to the AST
             var id = new TSC.Node(cstNode.children[0].children[0].value);
             newNode.addChild(id);
+            newNode.lineNumber = cstNode.children[0].children[0].lineNumber;
             astNode.addChild(newNode);
             astNode = newNode;
             this.analyzeExpression(cstNode.children[2], astNode, scope);
+            // First, make sure the ID exists
+            var scopeCheck = scope.findIdentifier(cstNode.children[0].children[0].value);
+            if (!scopeCheck) {
+                _Logger.logError("Identifier '" + cstNode.children[0].children[0].value + "' not in scope.", astNode.lineNumber, "Semantic Analyzer");
+                throw new Error("ID not in scope, breaking.");
+            }
+            // Then, type check it
+            var typeCheck = scope.confirmType(cstNode.children[0].children[0].value, astNode.children[1].type);
+            if (!typeCheck) {
+                _Logger.logError("Type mismatch. Expected " + scope.getTypeOfSymbol(cstNode.children[0].children[0].value) + ".", astNode.lineNumber, "Semantic Analyzer");
+                throw new Error("Type mismatch, breaking.");
+            }
         };
         SemanticAnalyzer.analyzeVariableDeclaration = function (cstNode, astNode, scope) {
             var newNode = new TSC.Node("Variable Declaration");
@@ -137,9 +149,13 @@ var TSC;
                     this.analyzeBooleanExpression(cstNode.children[0], astNode, scope);
                     break;
                 case "Identifier":
-                    //console.log(cstNode.children[0]);
                     var id = new TSC.Node(cstNode.children[0].children[0].value);
                     astNode.addChild(id);
+                    var search = scope.findIdentifier(cstNode.children[0].children[0].value);
+                    if (!search) {
+                        _Logger.logError("Identifier not found.", cstNode.children[0].children[0].lineNumber, "Semantic Analysis");
+                        throw new Error("ID not found.");
+                    }
                     break;
                 default:
                     // TODO: Handle an error here
