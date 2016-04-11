@@ -51,14 +51,34 @@
                     </table>
                 </div>
             </div>
+            <div class="symbol-table-container col-sm-6">
+                <h3 style="padding-left: 10px;">Symbol Table</h3>
+                <table id="symbol-table" style="width: 100%;"
+                       class="table table-condensed table-hover table-bordered">
+                    <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Scope</th>
+                        <th>Line Number</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="cst-output-container col-sm-6">
+                <h3 style="padding-left: 10px;">Concrete Syntax Tree</h3>
+                <textarea id="cst-output" style="resize: none;" readonly></textarea>
+            </div>
+            <div class="ast-output-container col-sm-6">
+                <h3 style="padding-left: 10px;">Abstract Syntax Tree</h3>
+                <textarea id="ast-output" style="resize: none;" readonly></textarea>
+            </div>
+        </div>
+        <div class="row">
             <div class="test-programs col-sm-6">
-                <h3 style="padding-left: 10px;">Test Programs</h3>
+                <h3 style="padding-left: 10px;">Basic Programs</h3>
                 <div style="overflow:scroll; height:300px;">
                     <table id="programs-table" style="width: 100%;" class="table borderless">
-                        <tr>
-                            <td><button type="button" class="btn btn-primary" onclick="TSC.Utils.projectTwoExample();">Project 2 Example</button></td>
-                            <td style="vertical-align: middle;">Testing CST Generation.</td>
-                        </tr>
                         <tr>
                             <td><button type="button" class="btn btn-primary" onclick="TSC.Utils.basicProgram();">Basic Program</button></td>
                             <td style="vertical-align: middle;">Tests the most basic program the language can consist of.</td>
@@ -86,27 +106,36 @@
                     </table>
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="cst-output-container col-sm-4">
-                <h3 style="padding-left: 10px;">Concrete Syntax Tree</h3>
-                <textarea id="cst-output" style="resize: none;" readonly></textarea>
-            </div>
-            <div class="ast-output-container col-sm-4">
-                <h3 style="padding-left: 10px;">Abstract Syntax Tree</h3>
-                <textarea id="ast-output" style="resize: none;" readonly></textarea>
-            </div>
-            <div class="symbol-table-container col-sm-4">
-                <h3 style="padding-left: 10px;">Symbol Table</h3>
-                <table id="symbol-table" style="width: 100%;"
-                       class="table table-condensed table-hover table-bordered">
-                    <tr>
-                        <th>Name</th>
-                        <th>Type</th>
-                        <th>Scope</th>
-                        <th>Line Number</th>
-                    </tr>
-                </table>
+            <div class="test-programs col-sm-6">
+                <h3 style="padding-left: 10px;">Scope & Type Programs</h3>
+                <div style="overflow:scroll; height:300px;">
+                    <table id="scope-type-programs-table" style="width: 100%;" class="table borderless">
+                        <tr>
+                            <td><button type="button" class="btn btn-primary" onclick="TSC.Utils.parentScope();">Parent Scope</button></td>
+                            <td style="vertical-align: middle;">Tests a program that must grab a variable from a parent scope.</td>
+                        </tr>
+                        <tr>
+                            <td><button type="button" class="btn btn-primary" onclick="TSC.Utils.goodIntAssignment();">Integer Assignment</button></td>
+                            <td style="vertical-align: middle;">Tests a program that declares and assigns an integer.</td>
+                        </tr>
+                        <tr>
+                            <td><button type="button" class="btn btn-warning" onclick="TSC.Utils.undeclaredIdentifier();">Undeclared ID</button></td>
+                            <td style="vertical-align: middle;">Tests a program that does not declare an ID before assigning it.</td>
+                        </tr>
+                        <tr>
+                            <td><button type="button" class="btn btn-warning" onclick="TSC.Utils.unusedVariable();">Unused Variable</button></td>
+                            <td style="vertical-align: middle;">Tests a program that declares but does not use a variable.</td>
+                        </tr>
+                        <tr>
+                            <td><button type="button" class="btn btn-danger" onclick="TSC.Utils.badBooleanAssignment();">Bad Boolean</button></td>
+                            <td style="vertical-align: middle;">Tests a program that incorrectly assigns a boolean.</td>
+                        </tr>
+                        <tr>
+                            <td><button type="button" class="btn btn-danger" onclick="TSC.Utils.badStringAssignment();">Bad String</button></td>
+                            <td style="vertical-align: middle;">Tests a program that incorrectly assigns a string.</td>
+                        </tr>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

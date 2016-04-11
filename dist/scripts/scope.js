@@ -79,12 +79,13 @@ var TSC;
                         return node.isBoolean;
                     //return (value === "false" || value === "true");
                     default:
-                        // TODO: Handle this
-                        break;
+                        _Logger.logError("Type not found.", node.getLineNumber(), "Semantic Analyzer");
+                        throw new Error("Type not found, breaking. This shouldn't happen.");
                 }
             }
             else {
-                console.log("Not found");
+                _Logger.logError("Type undefined.", node.getLineNumber(), "Semantic Analyzer");
+                throw new Error("Type undefined, breaking. This shouldn't happen.");
             }
         };
         Scope.prototype.findIdentifier = function (id) {
