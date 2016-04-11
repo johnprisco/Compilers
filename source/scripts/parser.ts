@@ -7,7 +7,7 @@ module TSC {
         }
 
         public static parseProgram() {
-            _Logger.logIgnoringVerboseMode("Parsing program.");
+            _Logger.logIgnoringVerboseMode("\nParsing program.\n");
             _CST.addBranchNode("Program");
             this.parseBlock();
             this.match(END_OF_PROGRAM.type);

@@ -6,7 +6,7 @@ var TSC;
         function Lexer() {
         }
         Lexer.lex = function () {
-            _Logger.logIgnoringVerboseMode("Beginning lexical analysis.");
+            _Logger.logIgnoringVerboseMode("Beginning lexical analysis.\n");
             var keywordStrings = ['while', 'print', 'if', 'int', 'string', 'boolean', 'true', 'false'];
             var symbolStrings = ['{', '}', '(', ')', '=', '!=', '==', '"', '$', '+'];
             var lexingString = false;

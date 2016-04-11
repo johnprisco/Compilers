@@ -78,12 +78,12 @@ module TSC {
                 }
             }
 
-            this.logUnusedIdentifiers(unusedSymbols);
+            this.logUninitializedIdentifiers(unusedSymbols);
         }
 
-        public static logUnusedIdentifiers(symbols: Symbol[]) {
+        public static logUninitializedIdentifiers(symbols: Symbol[]) {
             for (var i = 0; i < symbols.length; i++) {
-                this.logWarning("Unused identifier '" + symbols[i].getName() + "' on line " + symbols[i].getLine() + ".");
+                this.logWarning("Identifier '" + symbols[i].getName() + "' on line " + symbols[i].getLine() + " was not initialized.");
             }
         }
     }

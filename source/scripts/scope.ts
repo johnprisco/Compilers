@@ -112,7 +112,7 @@ module TSC {
         public findIdentifierInScope(id: string, scope: Scope): boolean {
             for (var i = 0; i < scope.symbols.length; i++) {
                 if (scope.symbols[i].getName() === id) {
-                    this.symbols[i].setInitialized(true);
+                    scope.symbols[i].setInitialized(true);
                     return true;
                 }
             }

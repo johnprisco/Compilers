@@ -4,16 +4,14 @@ var TSC;
         function SemanticAnalyzer() {
         }
         SemanticAnalyzer.performAnalysis = function () {
-            _Logger.logIgnoringVerboseMode("Beginning Semantic Analysis.");
+            _Logger.logIgnoringVerboseMode("\nBeginning Semantic Analysis.\n");
             this.scopes = [];
             this.scopeName = 0;
             this.abstractSyntaxTree = new TSC.Tree();
-            // First, we take the CST and build the AST with it
             this.buildAST(_CST.getRoot());
             _Logger.logAST(this.abstractSyntaxTree.toStringAST());
             _Logger.logSymbolTable(this.scopes);
             _Logger.logIgnoringVerboseMode("Semantic Analysis complete.");
-            console.log(this.scopes);
         };
         SemanticAnalyzer.buildAST = function (root) {
             this.analyzeProgram(root);
@@ -21,6 +19,7 @@ var TSC;
         SemanticAnalyzer.analyzeProgram = function (node) {
             // Only one thing to do here
             var newScope = new TSC.Scope(this.scopeName);
+            _Logger.logMessage("Created Scope " + newScope.getName() + ".");
             this.scopeName++;
             this.analyzeBlock(node.children[0], newScope);
         };
@@ -32,6 +31,7 @@ var TSC;
                 astNode.addChild(newNode);
                 astNode = newNode;
                 var newScope = new TSC.Scope(this.scopeName);
+                _Logger.logMessage("Created Scope " + newScope.getName() + ".");
                 this.scopeName++;
                 newScope.setParent(scope);
                 this.scopes.push(newScope);
@@ -123,6 +123,8 @@ var TSC;
             astNode.addChild(newNode);
             var newSymbol = new TSC.Symbol(cstNode.children[1].children[0].value, cstNode.children[0].value, cstNode.children[0].lineNumber);
             scope.addSymbol(newSymbol);
+            _Logger.logMessage("Item added to Symbol Table: " + newSymbol.getType() + " " + newSymbol.getName() +
+                " in Scope " + scope.getName() + ".");
         };
         SemanticAnalyzer.analyzeWhileStatement = function (cstNode, astNode, scope) {
             var newNode = new TSC.Node("While Statement");

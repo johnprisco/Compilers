@@ -5,18 +5,15 @@ module TSC {
         private static scopeName: number;
 
         public static performAnalysis(): void {
-            _Logger.logIgnoringVerboseMode("Beginning Semantic Analysis.");
+            _Logger.logIgnoringVerboseMode("\nBeginning Semantic Analysis.\n");
             this.scopes = [];
             this.scopeName = 0;
             this.abstractSyntaxTree = new Tree();
 
-            // First, we take the CST and build the AST with it
             this.buildAST(_CST.getRoot());
             _Logger.logAST(this.abstractSyntaxTree.toStringAST());
             _Logger.logSymbolTable(this.scopes);
             _Logger.logIgnoringVerboseMode("Semantic Analysis complete.");
-
-            console.log(this.scopes);
         }
 
         public static buildAST(root: Node): void {
@@ -26,6 +23,7 @@ module TSC {
         public static analyzeProgram(node: Node): void {
             // Only one thing to do here
             var newScope = new Scope(this.scopeName);
+            _Logger.logMessage("Created Scope " + newScope.getName() + ".");
             this.scopeName++;
             this.analyzeBlock(node.children[0], newScope);
         }
@@ -40,6 +38,7 @@ module TSC {
                 astNode = newNode;
 
                 var newScope = new Scope(this.scopeName);
+                _Logger.logMessage("Created Scope " + newScope.getName() + ".");
                 this.scopeName++;
                 newScope.setParent(scope);
                 this.scopes.push(newScope);
@@ -145,6 +144,8 @@ module TSC {
 
             var newSymbol = new Symbol(cstNode.children[1].children[0].value, cstNode.children[0].value, cstNode.children[0].lineNumber);
             scope.addSymbol(newSymbol);
+            _Logger.logMessage("Item added to Symbol Table: " + newSymbol.getType() + " " + newSymbol.getName() +
+                               " in Scope " + scope.getName() + ".")
         }
 
         public static analyzeWhileStatement(cstNode: Node, astNode: Node, scope: Scope): void {

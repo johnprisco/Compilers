@@ -95,7 +95,7 @@ var TSC;
         Scope.prototype.findIdentifierInScope = function (id, scope) {
             for (var i = 0; i < scope.symbols.length; i++) {
                 if (scope.symbols[i].getName() === id) {
-                    this.symbols[i].setInitialized(true);
+                    scope.symbols[i].setInitialized(true);
                     return true;
                 }
             }

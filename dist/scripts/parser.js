@@ -9,7 +9,7 @@ var TSC;
             this.parseProgram();
         };
         Parser.parseProgram = function () {
-            _Logger.logIgnoringVerboseMode("Parsing program.");
+            _Logger.logIgnoringVerboseMode("\nParsing program.\n");
             _CST.addBranchNode("Program");
             this.parseBlock();
             this.match(END_OF_PROGRAM.type);

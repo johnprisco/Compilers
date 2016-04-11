@@ -67,11 +67,11 @@ var TSC;
                     unusedSymbols.push(symbols[i]);
                 }
             }
-            this.logUnusedIdentifiers(unusedSymbols);
+            this.logUninitializedIdentifiers(unusedSymbols);
         };
-        Logger.logUnusedIdentifiers = function (symbols) {
+        Logger.logUninitializedIdentifiers = function (symbols) {
             for (var i = 0; i < symbols.length; i++) {
-                this.logWarning("Unused identifier '" + symbols[i].getName() + "' on line " + symbols[i].getLine() + ".");
+                this.logWarning("Identifier '" + symbols[i].getName() + "' on line " + symbols[i].getLine() + " was not initialized.");
             }
         };
         return Logger;
