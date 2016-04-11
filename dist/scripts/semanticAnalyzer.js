@@ -13,6 +13,7 @@ var TSC;
             _Logger.logAST(this.abstractSyntaxTree.toStringAST());
             _Logger.logSymbolTable(this.scopes);
             _Logger.logIgnoringVerboseMode("Semantic Analysis complete.");
+            console.log(this.scopes);
         };
         SemanticAnalyzer.buildAST = function (root) {
             this.analyzeProgram(root);

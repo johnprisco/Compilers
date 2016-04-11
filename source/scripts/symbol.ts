@@ -3,6 +3,7 @@ module TSC {
         private name: string;
         private type: string;
         private line: number;
+        private isInitialized: boolean = false;
 
         constructor(name: string, type: string, line: number) {
             this.setName(name);
@@ -32,6 +33,14 @@ module TSC {
 
         public setLine(line: number) {
             this.line = line;
+        }
+
+        public getInitialized(): boolean {
+            return this.isInitialized;
+        }
+
+        public setInitialized(bool: boolean): void {
+            this.isInitialized = bool;
         }
     }
 }

@@ -15,6 +15,8 @@ module TSC {
             _Logger.logAST(this.abstractSyntaxTree.toStringAST());
             _Logger.logSymbolTable(this.scopes);
             _Logger.logIgnoringVerboseMode("Semantic Analysis complete.");
+
+            console.log(this.scopes);
         }
 
         public static buildAST(root: Node): void {

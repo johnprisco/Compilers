@@ -97,6 +97,7 @@ module TSC {
         public findIdentifier(id: string): boolean {
             for (var i = 0; i < this.symbols.length; i++) {
                 if (this.symbols[i].getName() === id) {
+                    this.symbols[i].setInitialized(true);
                     return true;
                 }
             }
@@ -111,6 +112,7 @@ module TSC {
         public findIdentifierInScope(id: string, scope: Scope): boolean {
             for (var i = 0; i < scope.symbols.length; i++) {
                 if (scope.symbols[i].getName() === id) {
+                    this.symbols[i].setInitialized(true);
                     return true;
                 }
             }

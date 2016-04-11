@@ -81,6 +81,7 @@ var TSC;
         Scope.prototype.findIdentifier = function (id) {
             for (var i = 0; i < this.symbols.length; i++) {
                 if (this.symbols[i].getName() === id) {
+                    this.symbols[i].setInitialized(true);
                     return true;
                 }
             }
@@ -94,6 +95,7 @@ var TSC;
         Scope.prototype.findIdentifierInScope = function (id, scope) {
             for (var i = 0; i < scope.symbols.length; i++) {
                 if (scope.symbols[i].getName() === id) {
+                    this.symbols[i].setInitialized(true);
                     return true;
                 }
             }
