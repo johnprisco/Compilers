@@ -127,7 +127,9 @@ module TSC {
 
             // Then, type check it
             _Logger.logMessage("Checking if identifier '" + cstNode.children[0].children[0].value + "' is being assigned the type it was declared.");
-            var typeCheck = scope.confirmType(cstNode.children[0].children[0].value, astNode.children[1].type);
+            var typeCheck = scope.confirmType(cstNode.children[0].children[0].value, astNode.children[1]);
+            console.log(cstNode);
+            console.log(astNode);
             if (!typeCheck) {
                 _Logger.logError("Type mismatch. Expected " + scope.getTypeOfSymbol(cstNode.children[0].children[0].value) + ".",
                                  astNode.lineNumber, "Semantic Analyzer");
@@ -199,9 +201,11 @@ module TSC {
         public static analyzeIntExpression(cstNode: Node, astNode: Node, scope: Scope): void {
             if (cstNode.children.length === 1) {
                 var value = new Node(cstNode.children[0].value);
+                value.isInt = true;
                 astNode.addChild(value);
             } else {
                 var value = new Node(cstNode.children[0].value);
+                value.isInt = true;
                 astNode.addChild(value);
 
                 var plus = new Node("+");
@@ -228,6 +232,7 @@ module TSC {
                 this.analyzeExpression(cstNode.children[3], astNode, scope);
             } else {
                 var newNode = new Node(cstNode.children[0].value);
+                newNode.isBoolean = true;
                 astNode.addChild(newNode);
             }
         }

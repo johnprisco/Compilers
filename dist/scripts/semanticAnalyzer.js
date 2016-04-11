@@ -110,7 +110,9 @@ var TSC;
             _Logger.logMessage("Found '" + cstNode.children[0].children[0].value + "' in Scope " + scope.getName() + ".");
             // Then, type check it
             _Logger.logMessage("Checking if identifier '" + cstNode.children[0].children[0].value + "' is being assigned the type it was declared.");
-            var typeCheck = scope.confirmType(cstNode.children[0].children[0].value, astNode.children[1].type);
+            var typeCheck = scope.confirmType(cstNode.children[0].children[0].value, astNode.children[1]);
+            console.log(cstNode);
+            console.log(astNode);
             if (!typeCheck) {
                 _Logger.logError("Type mismatch. Expected " + scope.getTypeOfSymbol(cstNode.children[0].children[0].value) + ".", astNode.lineNumber, "Semantic Analyzer");
                 throw new Error("Type mismatch, breaking.");
@@ -172,10 +174,12 @@ var TSC;
         SemanticAnalyzer.analyzeIntExpression = function (cstNode, astNode, scope) {
             if (cstNode.children.length === 1) {
                 var value = new TSC.Node(cstNode.children[0].value);
+                value.isInt = true;
                 astNode.addChild(value);
             }
             else {
                 var value = new TSC.Node(cstNode.children[0].value);
+                value.isInt = true;
                 astNode.addChild(value);
                 var plus = new TSC.Node("+");
                 astNode.addChild(plus);
@@ -198,6 +202,7 @@ var TSC;
             }
             else {
                 var newNode = new TSC.Node(cstNode.children[0].value);
+                newNode.isBoolean = true;
                 astNode.addChild(newNode);
             }
         };

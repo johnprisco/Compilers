@@ -2,6 +2,8 @@ var TSC;
 (function (TSC) {
     var Node = (function () {
         function Node(type) {
+            this.isBoolean = false;
+            this.isInt = false;
             if (type) {
                 this.type = type;
             }

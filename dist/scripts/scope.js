@@ -59,16 +59,25 @@ var TSC;
                 return this.getTypeOfSymbolInScope(id, scope.getParent());
             }
         };
-        Scope.prototype.confirmType = function (id, value) {
+        Scope.prototype.confirmType = function (id, node) {
             var type = this.getTypeOfSymbol(id);
+            var value = node.type;
             if (type) {
                 switch (type) {
                     case "int":
                         return !isNaN(value);
                     case "string":
+                        if (value === "true" || value === "false") {
+                            console.log("We in here");
+                            return !node.isBoolean;
+                        }
+                        if (node.isInt) {
+                            return false;
+                        }
                         return (typeof value === 'string');
                     case "boolean":
-                        return (value === "false" || value === "true");
+                        return node.isBoolean;
+                    //return (value === "false" || value === "true");
                     default:
                         // TODO: Handle this
                         break;

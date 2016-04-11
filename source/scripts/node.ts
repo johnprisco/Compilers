@@ -8,6 +8,8 @@ module TSC {
         public parent: Node;
         public lineNumber: number;
         public isLeafNode: boolean;
+        public isBoolean: boolean = false;
+        public isInt: boolean = false;
 
         constructor(type?: string) {
             if (type) {
