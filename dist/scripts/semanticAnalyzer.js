@@ -120,7 +120,7 @@ var TSC;
             newNode.addChild(type);
             newNode.addChild(value);
             astNode.addChild(newNode);
-            var newSymbol = new TSC.Symbol(cstNode.children[1].children[0].value, cstNode.children[0].value, cstNode.lineNumber);
+            var newSymbol = new TSC.Symbol(cstNode.children[1].children[0].value, cstNode.children[0].value, cstNode.children[0].lineNumber);
             scope.addSymbol(newSymbol);
         };
         SemanticAnalyzer.analyzeWhileStatement = function (cstNode, astNode, scope) {

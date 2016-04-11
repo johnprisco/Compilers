@@ -141,7 +141,7 @@ module TSC {
             newNode.addChild(value);
             astNode.addChild(newNode);
 
-            var newSymbol = new Symbol(cstNode.children[1].children[0].value, cstNode.children[0].value, cstNode.lineNumber);
+            var newSymbol = new Symbol(cstNode.children[1].children[0].value, cstNode.children[0].value, cstNode.children[0].lineNumber);
             scope.addSymbol(newSymbol);
         }
 
