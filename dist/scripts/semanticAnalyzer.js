@@ -101,17 +101,21 @@ var TSC;
             astNode = newNode;
             this.analyzeExpression(cstNode.children[2], astNode, scope);
             // First, make sure the ID exists
+            _Logger.logMessage("Checking for identifier '" + cstNode.children[0].children[0].value + "' in Scope " + scope.getName() + ".");
             var scopeCheck = scope.findIdentifier(cstNode.children[0].children[0].value);
             if (!scopeCheck) {
                 _Logger.logError("Identifier '" + cstNode.children[0].children[0].value + "' not in scope.", astNode.lineNumber, "Semantic Analyzer");
                 throw new Error("ID not in scope, breaking.");
             }
+            _Logger.logMessage("Found '" + cstNode.children[0].children[0].value + "' in Scope " + scope.getName() + ".");
             // Then, type check it
+            _Logger.logMessage("Checking if identifier '" + cstNode.children[0].children[0].value + "' is being assigned the type it was declared.");
             var typeCheck = scope.confirmType(cstNode.children[0].children[0].value, astNode.children[1].type);
             if (!typeCheck) {
                 _Logger.logError("Type mismatch. Expected " + scope.getTypeOfSymbol(cstNode.children[0].children[0].value) + ".", astNode.lineNumber, "Semantic Analyzer");
                 throw new Error("Type mismatch, breaking.");
             }
+            _Logger.logMessage("Identifier assigned successfully.");
         };
         SemanticAnalyzer.analyzeVariableDeclaration = function (cstNode, astNode, scope) {
             var newNode = new TSC.Node("Variable Declaration");
