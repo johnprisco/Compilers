@@ -4,6 +4,7 @@ var TSC;
         function Node(type) {
             this.isBoolean = false;
             this.isInt = false;
+            this.isIdentifier = false;
             if (type) {
                 this.type = type;
             }
@@ -60,6 +61,12 @@ var TSC;
         };
         Node.prototype.addChild = function (node) {
             this.children.push(node);
+        };
+        Node.prototype.getIdentifier = function () {
+            return this.isIdentifier;
+        };
+        Node.prototype.setIdentifier = function (bool) {
+            this.isIdentifier = bool;
         };
         return Node;
     })();

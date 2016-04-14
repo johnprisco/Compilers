@@ -60,15 +60,23 @@ var TSC;
             }
         };
         Scope.prototype.confirmType = function (id, node) {
+            // TODO: If something is being assigned to an ID, we need to check
+            // TODO: if that ID is stored in the symbol table with the same type
             var type = this.getTypeOfSymbol(id);
             var value = node.type;
-            if (type) {
+            if (node.getIdentifier()) {
+                // TODO: If something is being assigned to an ID, we need to check
+                // TODO: if that ID is stored in the symbol table with the same type
+                // Lookup up the ID in scope
+                var idType = this.getTypeOfSymbol(node.getType());
+                return type === idType;
+            }
+            else if (type) {
                 switch (type) {
                     case "int":
                         return !isNaN(value);
                     case "string":
                         if (value === "true" || value === "false") {
-                            console.log("We in here");
                             return !node.isBoolean;
                         }
                         if (node.isInt) {
