@@ -1,3 +1,18 @@
 {
-
+    "compilerOptions": {
+        "module": "commonjs"
+    },
+    "files": [
+        "globals.ts",
+        "lexer.ts",
+        "logger.ts",
+        "node.ts",
+        "parser.ts",
+        "scope.ts",
+        "semanticAnalyzer.ts",
+        "symbol.ts",
+        "token.ts",
+        "tree.ts",
+        "utils.ts"
+    ]
 }

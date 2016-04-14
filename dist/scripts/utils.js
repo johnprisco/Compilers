@@ -1,3 +1,5 @@
+///<reference path='globals.ts' />
+///<reference path='tree.ts' />
 /* --------
    Utils.ts
 
