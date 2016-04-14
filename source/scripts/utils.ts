@@ -71,7 +71,7 @@ module TSC {
             _Lexer.lex();
             // . . . and parse!
 
-            _Logger.logMessage("Lexical analysis successful.");
+            _Logger.logIgnoringVerboseMode("Lexical analysis successful.");
 
             // This will allow us to parse multiple programs.
             // Not very useful in Project One, but possibly in the future?
