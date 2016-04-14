@@ -10,6 +10,7 @@ module TSC {
         private isLeafNode: boolean;
         private isBoolean: boolean = false;
         private isInt: boolean = false;
+    private isIdentifier: boolean = false;
 
         constructor(type?: string) {
             if (type) {
@@ -83,6 +84,15 @@ module TSC {
 
         public addChild(node: Node): void {
             this.children.push(node);
+        }
+
+        public getIdentifier(): boolean {
+            return this.isIdentifier;
+        }
+
+
+        public setIdentifier(bool: boolean): void {
+            this.isIdentifier = bool;
         }
     }
 }

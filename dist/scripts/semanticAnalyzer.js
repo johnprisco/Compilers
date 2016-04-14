@@ -59,8 +59,6 @@ var TSC;
             this.analyzeStatementList(cstNode.children[1], astNode, scope);
         };
         SemanticAnalyzer.analyzeStatement = function (cstNode, astNode, scope) {
-            //console.log("!!! Statement CST Node !!!");
-            //console.log(cstNode);
             switch (cstNode.children[0].getType()) {
                 case "Print Statement":
                     this.analyzePrintStatement(cstNode.children[0], astNode, scope);
@@ -111,8 +109,6 @@ var TSC;
             // Then, type check it
             _Logger.logMessage("Checking if identifier '" + cstNode.children[0].children[0].getValue() + "' is being assigned the type it was declared.");
             var typeCheck = scope.confirmType(cstNode.children[0].children[0].getValue(), astNode.children[1]);
-            console.log(cstNode);
-            console.log(astNode);
             if (!typeCheck) {
                 _Logger.logError("Type mismatch. Expected " + scope.getTypeOfSymbol(cstNode.children[0].children[0].getValue()) + ".", astNode.getLineNumber(), "Semantic Analyzer");
                 throw new Error("Type mismatch, breaking.");
@@ -159,6 +155,7 @@ var TSC;
                     break;
                 case "Identifier":
                     var id = new TSC.Node(cstNode.children[0].children[0].getValue());
+                    id.setIdentifier(true);
                     astNode.addChild(id);
                     var search = scope.findIdentifier(cstNode.children[0].children[0].getValue());
                     if (!search) {
