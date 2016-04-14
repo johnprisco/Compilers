@@ -65,8 +65,6 @@ var TSC;
             var type = this.getTypeOfSymbol(id);
             var value = node.type;
             if (node.getIdentifier()) {
-                // TODO: If something is being assigned to an ID, we need to check
-                // TODO: if that ID is stored in the symbol table with the same type
                 // Lookup up the ID in scope
                 var idType = this.getTypeOfSymbol(node.getType());
                 return type === idType;

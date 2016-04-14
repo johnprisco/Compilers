@@ -58,10 +58,8 @@ var TSC;
                 _Logger.logIgnoringVerboseMode("Try putting some code in there!");
                 return;
             }
-            // Grab the tokens from the lexer . . .
             _Lexer.lex();
-            // . . . and parse!
-            _Logger.logMessage("Lexical analysis successful.");
+            _Logger.logIgnoringVerboseMode("Lexical analysis successful.");
             // This will allow us to parse multiple programs.
             // Not very useful in Project One, but possibly in the future?
             while (_TokenIndex < _Tokens.length) {

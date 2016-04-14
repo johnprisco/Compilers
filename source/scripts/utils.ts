@@ -66,10 +66,7 @@ module TSC {
                 _Logger.logIgnoringVerboseMode("Try putting some code in there!");
                 return;
             }
-
-            // Grab the tokens from the lexer . . .
             _Lexer.lex();
-            // . . . and parse!
 
             _Logger.logIgnoringVerboseMode("Lexical analysis successful.");
 
