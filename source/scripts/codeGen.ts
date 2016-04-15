@@ -1,7 +1,15 @@
+///<reference path='codeTable.ts' />
+///<reference path='staticTable.ts' />
+///<reference path='jumpTable.ts' />
+///<reference path='scope.ts' />
+///<reference path='node.ts' />
+///<reference path='globals.ts' />
+
 module TSC {
     export class CodeGenerator {
-        private staticTable;
-        private jumpTable;
+        private codeTable: CodeTable;
+        private staticTable: StaticTable;
+        private jumpTable: JumpTable;
        
         public static generateCode(node: Node, scope: Scope): void {
             this.generateCodeFromNode(node, scope);
@@ -70,6 +78,29 @@ module TSC {
         
         public static generateCodeForAssignmentStatement(node: Node, scope: Scope): void {
             
+        }
+        
+        public loadAccumulatorWithConstant(constant: string): void {
+            this.codeTable.addByte('A9');
+            this.codeTable.addByte(constant);
+        }
+        
+        public loadAccumulatorFromMemory(atAddress: string, fromAddress: string): void {
+            this.codeTable.addByte('AD');
+            this.codeTable.addByte(atAddress);
+            this.codeTable.addByte(fromAddress);
+        }
+        
+        public storeAccumulatorInMemory(atAddress: string, fromAddress: string): void {
+            this.codeTable.addByte('8D');
+            this.codeTable.addByte(atAddress);
+            this.codeTable.addByte(fromAddress);
+        }
+        
+        public addWithCarry(atAddress: string, fromAddress: string): void {
+            this.codeTable.addByte('6D');
+            this.codeTable.addByte(atAddress);
+            this.codeTable.addByte(fromAddress);
         }
     }
 }

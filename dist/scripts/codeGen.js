@@ -1,3 +1,9 @@
+///<reference path='codeTable.ts' />
+///<reference path='staticTable.ts' />
+///<reference path='jumpTable.ts' />
+///<reference path='scope.ts' />
+///<reference path='node.ts' />
+///<reference path='globals.ts' />
 var TSC;
 (function (TSC) {
     var CodeGenerator = (function () {
@@ -52,6 +58,25 @@ var TSC;
         CodeGenerator.generateCodeForBooleanDeclaration = function (node, scope) {
         };
         CodeGenerator.generateCodeForAssignmentStatement = function (node, scope) {
+        };
+        CodeGenerator.prototype.loadAccumulatorWithConstant = function (constant) {
+            this.codeTable.addByte('A9');
+            this.codeTable.addByte(constant);
+        };
+        CodeGenerator.prototype.loadAccumulatorFromMemory = function (atAddress, fromAddress) {
+            this.codeTable.addByte('AD');
+            this.codeTable.addByte(atAddress);
+            this.codeTable.addByte(fromAddress);
+        };
+        CodeGenerator.prototype.storeAccumulatorInMemory = function (atAddress, fromAddress) {
+            this.codeTable.addByte('8D');
+            this.codeTable.addByte(atAddress);
+            this.codeTable.addByte(fromAddress);
+        };
+        CodeGenerator.prototype.addWithCarry = function (atAddress, fromAddress) {
+            this.codeTable.addByte('6D');
+            this.codeTable.addByte(atAddress);
+            this.codeTable.addByte(fromAddress);
         };
         return CodeGenerator;
     })();
