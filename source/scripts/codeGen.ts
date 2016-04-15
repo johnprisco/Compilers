@@ -102,5 +102,56 @@ module TSC {
             this.codeTable.addByte(atAddress);
             this.codeTable.addByte(fromAddress);
         }
+        
+        public loadXRegisterWithConstant(constant: string): void {
+            this.codeTable.addByte('A2');
+            this.codeTable.addByte(constant);
+        }
+        
+        public loadXRegisterFromMemory(atAddress: string, fromAddress: string): void {
+            this.codeTable.addByte('AE');
+            this.codeTable.addByte(atAddress);
+            this.codeTable.addByte(fromAddress);
+        }
+        
+        public loadYRegisterWithConstant(constant: string): void {
+            this.codeTable.addByte('A0');
+            this.codeTable.addByte(constant);
+        }
+        
+        public loadYRegisterFromMemory(atAddress: string, fromAddress: string): void {
+            this.codeTable.addByte('AC');
+            this.codeTable.addByte(atAddress);
+            this.codeTable.addByte(fromAddress);
+        }
+        
+        public noOperation(): void {
+            this.codeTable.addByte('EA');
+        }
+        
+        public break(): void {
+            this.codeTable.addByte('00');
+        }
+        
+        public compareByte(atAddress: string, fromAddress: string): void {
+            this.codeTable.addByte('EC');
+            this.codeTable.addByte(atAddress);
+            this.codeTable.addByte(fromAddress);
+        }
+        
+        public branch(comparisonByte: string): void {
+            this.codeTable.addByte('D0');
+            this.codeTable.addByte(comparisonByte)
+        }
+        
+        // TODO: I don't remember this one
+        public incrementByte(): void {
+            // this.codeTable.addByte('EE');
+            // this.codeTable.addByte
+        }
+        
+        public systemCall(): void {
+            this.codeTable.addByte('FF');
+        }
     }
 }

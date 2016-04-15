@@ -78,6 +78,47 @@ var TSC;
             this.codeTable.addByte(atAddress);
             this.codeTable.addByte(fromAddress);
         };
+        CodeGenerator.prototype.loadXRegisterWithConstant = function (constant) {
+            this.codeTable.addByte('A2');
+            this.codeTable.addByte(constant);
+        };
+        CodeGenerator.prototype.loadXRegisterFromMemory = function (atAddress, fromAddress) {
+            this.codeTable.addByte('AE');
+            this.codeTable.addByte(atAddress);
+            this.codeTable.addByte(fromAddress);
+        };
+        CodeGenerator.prototype.loadYRegisterWithConstant = function (constant) {
+            this.codeTable.addByte('A0');
+            this.codeTable.addByte(constant);
+        };
+        CodeGenerator.prototype.loadYRegisterFromMemory = function (atAddress, fromAddress) {
+            this.codeTable.addByte('AC');
+            this.codeTable.addByte(atAddress);
+            this.codeTable.addByte(fromAddress);
+        };
+        CodeGenerator.prototype.noOperation = function () {
+            this.codeTable.addByte('EA');
+        };
+        CodeGenerator.prototype.break = function () {
+            this.codeTable.addByte('00');
+        };
+        CodeGenerator.prototype.compareByte = function (atAddress, fromAddress) {
+            this.codeTable.addByte('EC');
+            this.codeTable.addByte(atAddress);
+            this.codeTable.addByte(fromAddress);
+        };
+        CodeGenerator.prototype.branch = function (comparisonByte) {
+            this.codeTable.addByte('D0');
+            this.codeTable.addByte(comparisonByte);
+        };
+        // TODO: I don't remember this one
+        CodeGenerator.prototype.incrementByte = function () {
+            // this.codeTable.addByte('EE');
+            // this.codeTable.addByte
+        };
+        CodeGenerator.prototype.systemCall = function () {
+            this.codeTable.addByte('FF');
+        };
         return CodeGenerator;
     })();
     TSC.CodeGenerator = CodeGenerator;
