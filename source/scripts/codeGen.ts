@@ -17,11 +17,11 @@ module TSC {
             this.codeTable = new CodeTable();
             this.jumpTable = new JumpTable();
             this.generateCodeFromNode(node, scope);
+            this.break();
             console.log(this.codeTable);
         }
         
         public static generateCodeFromNode(node: Node, scope: Scope): void {
-            console.log(node.getType());
             switch (node.getType()) {
                 case "Block":
                     this.generateCodeForBlock(node, scope);
@@ -30,6 +30,7 @@ module TSC {
                     this.generateCodeForWhileStatement(node, scope);
                     break;
                 case "If Statement":
+                    console.log(node);
                     this.generateCodeForIfStatement(node, scope);
                     break;
                 case "Print Statement":
@@ -59,7 +60,19 @@ module TSC {
         }
         
         public static generateCodeForIfStatement(node: Node, scope: Scope): void {
+            var firstTableEntry = this.staticTable.findItemWithIdentifier(node.children[0].children[0].getType());
+            this.loadXRegisterFromMemory(firstTableEntry.getTemp(), "XX");
             
+            var secondTableEntry = this.staticTable.findItemWithIdentifier(node.children[0].children[1].getType());
+            this.compareByte(secondTableEntry.getTemp(), "XX");
+            
+            var jumpEntry = new JumpTableItem(this.jumpTable.getCurrentTemp());
+            this.jumpTable.addItem(jumpEntry);
+            this.branch(jumpEntry.getTemp());
+            this.jumpTable.incrementTemp();
+            
+            // Lastly, generateBlock
+            this.generateCodeForBlock(node.children[1], scope);
         }
         
         public static generateCodeForPrintStatement(node: Node, scope: Scope): void {
@@ -188,7 +201,7 @@ module TSC {
         
         // TODO: I don't remember this one
         public static incrementByte(): void {
-            // this.codeTable.addByte('EE');
+            // this.codeTable.addBytech('EE');
         }
         
         public static systemCall(): void {

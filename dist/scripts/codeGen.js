@@ -15,10 +15,10 @@ var TSC;
             this.codeTable = new TSC.CodeTable();
             this.jumpTable = new TSC.JumpTable();
             this.generateCodeFromNode(node, scope);
+            this.break();
             console.log(this.codeTable);
         };
         CodeGenerator.generateCodeFromNode = function (node, scope) {
-            console.log(node.getType());
             switch (node.getType()) {
                 case "Block":
                     this.generateCodeForBlock(node, scope);
@@ -27,6 +27,7 @@ var TSC;
                     this.generateCodeForWhileStatement(node, scope);
                     break;
                 case "If Statement":
+                    console.log(node);
                     this.generateCodeForIfStatement(node, scope);
                     break;
                 case "Print Statement":
@@ -52,6 +53,16 @@ var TSC;
         CodeGenerator.generateCodeForWhileStatement = function (node, scope) {
         };
         CodeGenerator.generateCodeForIfStatement = function (node, scope) {
+            var firstTableEntry = this.staticTable.findItemWithIdentifier(node.children[0].children[0].getType());
+            this.loadXRegisterFromMemory(firstTableEntry.getTemp(), "XX");
+            var secondTableEntry = this.staticTable.findItemWithIdentifier(node.children[0].children[1].getType());
+            this.compareByte(secondTableEntry.getTemp(), "XX");
+            var jumpEntry = new TSC.JumpTableItem(this.jumpTable.getCurrentTemp());
+            this.jumpTable.addItem(jumpEntry);
+            this.branch(jumpEntry.getTemp());
+            this.jumpTable.incrementTemp();
+            // Lastly, generateBlock
+            this.generateCodeForBlock(node.children[1], scope);
         };
         CodeGenerator.generateCodeForPrintStatement = function (node, scope) {
             var tableEntry = this.staticTable.findItemWithIdentifier(node.children[0].getType());
@@ -158,7 +169,7 @@ var TSC;
         };
         // TODO: I don't remember this one
         CodeGenerator.incrementByte = function () {
-            // this.codeTable.addByte('EE');
+            // this.codeTable.addBytech('EE');
         };
         CodeGenerator.systemCall = function () {
             this.codeTable.addByte('FF');
