@@ -1,6 +1,6 @@
 module TSC {
     export class CodeTable {
-        private table: string[];
+        private table: string[] = [];
         private currentAddress: number = 0;
         
         constructor() {

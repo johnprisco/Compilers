@@ -24,6 +24,13 @@ module TSC {
              */
 
         }
+        
+        public static leftPad(string: string, length: number): string {
+            for (var i = 1; i < length; i++) {
+                string = "0" + string;
+            }
+            return string;
+        }
 
         public static rot13(str)     // An easy-to understand implementation of the famous and common Rot13 obfuscator.
         {                       // You can do this in three lines with a complex regular experssion, but I'd have

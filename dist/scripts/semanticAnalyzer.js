@@ -18,6 +18,7 @@ var TSC;
             _Logger.logAST(this.abstractSyntaxTree.toStringAST());
             _Logger.logSymbolTable(this.scopes);
             _Logger.logIgnoringVerboseMode("Semantic Analysis complete.");
+            // console.log(this.abstractSyntaxTree.getRoot());
             TSC.CodeGenerator.generateCode(this.abstractSyntaxTree.getRoot(), this.scopes[0]);
         };
         SemanticAnalyzer.buildAST = function (root) {

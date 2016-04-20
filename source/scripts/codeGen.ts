@@ -4,15 +4,20 @@
 ///<reference path='scope.ts' />
 ///<reference path='node.ts' />
 ///<reference path='globals.ts' />
+///<reference path='utils.ts' />
 
 module TSC {
     export class CodeGenerator {
-        private codeTable: CodeTable;
-        private staticTable: StaticTable;
-        private jumpTable: JumpTable;
+        private static codeTable: CodeTable;
+        private static staticTable: StaticTable;
+        private static jumpTable: JumpTable;
        
         public static generateCode(node: Node, scope: Scope): void {
+            this.staticTable = new StaticTable();
+            this.codeTable = new CodeTable();
+            this.jumpTable = new JumpTable();
             this.generateCodeFromNode(node, scope);
+            console.log(this.codeTable);
         }
         
         public static generateCodeFromNode(node: Node, scope: Scope): void {
@@ -61,11 +66,30 @@ module TSC {
         }
         
         public static generateCodeForVariableDeclaration(node: Node, scope: Scope): void {
-            
+            switch (node.children[0].getType()) {
+                case "int":
+                    this.generateCodeForIntDeclaration(node, scope);
+                    break;
+                case "boolean":
+                    this.generateCodeForBooleanDeclaration(node, scope);
+                    break;
+                case "string":
+                    this.generateCodeForStringDeclaration(node, scope);
+                    break;
+                default:
+                    throw new Error("BROKEN");
+            }
         }
         
         public static generateCodeForIntDeclaration(node: Node, scope: Scope): void {
+            // Initialize to zero
+            this.loadAccumulatorWithConstant("00");
+            this.storeAccumulatorInMemory(this.staticTable.getCurrentTemp(), "XX");
             
+            // Make entry in static table
+            // What to put for address?
+            var item = new StaticTableItem(this.staticTable.getCurrentTemp(), node.children[1].getType(), "+0");
+            this.staticTable.addItem(item);
         }
         
         public static generateCodeForStringDeclaration(node: Node, scope: Scope): void {
@@ -77,80 +101,84 @@ module TSC {
         }
         
         public static generateCodeForAssignmentStatement(node: Node, scope: Scope): void {
+            // lookup the ID in the static table. 
+            var tableEntry = this.staticTable.findItemWithIdentifier(node.children[0].getType());
+            var value = Utils.leftPad(node.children[1].getType(), 2);
             
+            this.loadAccumulatorWithConstant(value);
+            this.storeAccumulatorInMemory(tableEntry.getTemp(), "XX");
         }
         
-        public loadAccumulatorWithConstant(constant: string): void {
+        public static loadAccumulatorWithConstant(constant: string): void {
             this.codeTable.addByte('A9');
             this.codeTable.addByte(constant);
         }
         
-        public loadAccumulatorFromMemory(atAddress: string, fromAddress: string): void {
+        public static loadAccumulatorFromMemory(atAddress: string, fromAddress: string): void {
             this.codeTable.addByte('AD');
             this.codeTable.addByte(atAddress);
             this.codeTable.addByte(fromAddress);
         }
         
-        public storeAccumulatorInMemory(atAddress: string, fromAddress: string): void {
+        public static storeAccumulatorInMemory(atAddress: string, fromAddress: string): void {
             this.codeTable.addByte('8D');
             this.codeTable.addByte(atAddress);
             this.codeTable.addByte(fromAddress);
         }
         
-        public addWithCarry(atAddress: string, fromAddress: string): void {
+        public static addWithCarry(atAddress: string, fromAddress: string): void {
             this.codeTable.addByte('6D');
             this.codeTable.addByte(atAddress);
             this.codeTable.addByte(fromAddress);
         }
         
-        public loadXRegisterWithConstant(constant: string): void {
+        public static loadXRegisterWithConstant(constant: string): void {
             this.codeTable.addByte('A2');
             this.codeTable.addByte(constant);
         }
         
-        public loadXRegisterFromMemory(atAddress: string, fromAddress: string): void {
+        public static loadXRegisterFromMemory(atAddress: string, fromAddress: string): void {
             this.codeTable.addByte('AE');
             this.codeTable.addByte(atAddress);
             this.codeTable.addByte(fromAddress);
         }
         
-        public loadYRegisterWithConstant(constant: string): void {
+        public static loadYRegisterWithConstant(constant: string): void {
             this.codeTable.addByte('A0');
             this.codeTable.addByte(constant);
         }
         
-        public loadYRegisterFromMemory(atAddress: string, fromAddress: string): void {
+        public static loadYRegisterFromMemory(atAddress: string, fromAddress: string): void {
             this.codeTable.addByte('AC');
             this.codeTable.addByte(atAddress);
             this.codeTable.addByte(fromAddress);
         }
         
-        public noOperation(): void {
+        public static noOperation(): void {
             this.codeTable.addByte('EA');
         }
         
-        public break(): void {
+        public static break(): void {
             this.codeTable.addByte('00');
         }
         
-        public compareByte(atAddress: string, fromAddress: string): void {
+        public static compareByte(atAddress: string, fromAddress: string): void {
             this.codeTable.addByte('EC');
             this.codeTable.addByte(atAddress);
             this.codeTable.addByte(fromAddress);
         }
         
-        public branch(comparisonByte: string): void {
+        public static branch(comparisonByte: string): void {
             this.codeTable.addByte('D0');
             this.codeTable.addByte(comparisonByte)
         }
         
         // TODO: I don't remember this one
-        public incrementByte(): void {
+        public static incrementByte(): void {
             // this.codeTable.addByte('EE');
-            // this.codeTable.addByte
         }
         
-        public systemCall(): void {
+        public static systemCall(): void {
             this.codeTable.addByte('FF');
         }
     }

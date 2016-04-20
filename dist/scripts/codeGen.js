@@ -4,13 +4,18 @@
 ///<reference path='scope.ts' />
 ///<reference path='node.ts' />
 ///<reference path='globals.ts' />
+///<reference path='utils.ts' />
 var TSC;
 (function (TSC) {
     var CodeGenerator = (function () {
         function CodeGenerator() {
         }
         CodeGenerator.generateCode = function (node, scope) {
+            this.staticTable = new TSC.StaticTable();
+            this.codeTable = new TSC.CodeTable();
+            this.jumpTable = new TSC.JumpTable();
             this.generateCodeFromNode(node, scope);
+            console.log(this.codeTable);
         };
         CodeGenerator.generateCodeFromNode = function (node, scope) {
             switch (node.getType()) {
@@ -50,73 +55,97 @@ var TSC;
         CodeGenerator.generateCodeForPrintStatement = function (node, scope) {
         };
         CodeGenerator.generateCodeForVariableDeclaration = function (node, scope) {
+            switch (node.children[0].getType()) {
+                case "int":
+                    this.generateCodeForIntDeclaration(node, scope);
+                    break;
+                case "boolean":
+                    this.generateCodeForBooleanDeclaration(node, scope);
+                    break;
+                case "string":
+                    this.generateCodeForStringDeclaration(node, scope);
+                    break;
+                default:
+                    throw new Error("BROKEN");
+            }
         };
         CodeGenerator.generateCodeForIntDeclaration = function (node, scope) {
+            // Initialize to zero
+            this.loadAccumulatorWithConstant("00");
+            this.storeAccumulatorInMemory(this.staticTable.getCurrentTemp(), "XX");
+            // Make entry in static table
+            // What to put for address?
+            var item = new TSC.StaticTableItem(this.staticTable.getCurrentTemp(), node.children[1].getType(), "+0");
+            this.staticTable.addItem(item);
         };
         CodeGenerator.generateCodeForStringDeclaration = function (node, scope) {
         };
         CodeGenerator.generateCodeForBooleanDeclaration = function (node, scope) {
         };
         CodeGenerator.generateCodeForAssignmentStatement = function (node, scope) {
+            // lookup the ID in the static table. 
+            var tableEntry = this.staticTable.findItemWithIdentifier(node.children[0].getType());
+            var value = TSC.Utils.leftPad(node.children[1].getType(), 2);
+            this.loadAccumulatorWithConstant(value);
+            this.storeAccumulatorInMemory(tableEntry.getTemp(), "XX");
         };
-        CodeGenerator.prototype.loadAccumulatorWithConstant = function (constant) {
+        CodeGenerator.loadAccumulatorWithConstant = function (constant) {
             this.codeTable.addByte('A9');
             this.codeTable.addByte(constant);
         };
-        CodeGenerator.prototype.loadAccumulatorFromMemory = function (atAddress, fromAddress) {
+        CodeGenerator.loadAccumulatorFromMemory = function (atAddress, fromAddress) {
             this.codeTable.addByte('AD');
             this.codeTable.addByte(atAddress);
             this.codeTable.addByte(fromAddress);
         };
-        CodeGenerator.prototype.storeAccumulatorInMemory = function (atAddress, fromAddress) {
+        CodeGenerator.storeAccumulatorInMemory = function (atAddress, fromAddress) {
             this.codeTable.addByte('8D');
             this.codeTable.addByte(atAddress);
             this.codeTable.addByte(fromAddress);
         };
-        CodeGenerator.prototype.addWithCarry = function (atAddress, fromAddress) {
+        CodeGenerator.addWithCarry = function (atAddress, fromAddress) {
             this.codeTable.addByte('6D');
             this.codeTable.addByte(atAddress);
             this.codeTable.addByte(fromAddress);
         };
-        CodeGenerator.prototype.loadXRegisterWithConstant = function (constant) {
+        CodeGenerator.loadXRegisterWithConstant = function (constant) {
             this.codeTable.addByte('A2');
             this.codeTable.addByte(constant);
         };
-        CodeGenerator.prototype.loadXRegisterFromMemory = function (atAddress, fromAddress) {
+        CodeGenerator.loadXRegisterFromMemory = function (atAddress, fromAddress) {
             this.codeTable.addByte('AE');
             this.codeTable.addByte(atAddress);
             this.codeTable.addByte(fromAddress);
         };
-        CodeGenerator.prototype.loadYRegisterWithConstant = function (constant) {
+        CodeGenerator.loadYRegisterWithConstant = function (constant) {
             this.codeTable.addByte('A0');
             this.codeTable.addByte(constant);
         };
-        CodeGenerator.prototype.loadYRegisterFromMemory = function (atAddress, fromAddress) {
+        CodeGenerator.loadYRegisterFromMemory = function (atAddress, fromAddress) {
             this.codeTable.addByte('AC');
             this.codeTable.addByte(atAddress);
             this.codeTable.addByte(fromAddress);
         };
-        CodeGenerator.prototype.noOperation = function () {
+        CodeGenerator.noOperation = function () {
             this.codeTable.addByte('EA');
         };
-        CodeGenerator.prototype.break = function () {
+        CodeGenerator.break = function () {
             this.codeTable.addByte('00');
         };
-        CodeGenerator.prototype.compareByte = function (atAddress, fromAddress) {
+        CodeGenerator.compareByte = function (atAddress, fromAddress) {
             this.codeTable.addByte('EC');
             this.codeTable.addByte(atAddress);
             this.codeTable.addByte(fromAddress);
         };
-        CodeGenerator.prototype.branch = function (comparisonByte) {
+        CodeGenerator.branch = function (comparisonByte) {
             this.codeTable.addByte('D0');
             this.codeTable.addByte(comparisonByte);
         };
         // TODO: I don't remember this one
-        CodeGenerator.prototype.incrementByte = function () {
+        CodeGenerator.incrementByte = function () {
             // this.codeTable.addByte('EE');
-            // this.codeTable.addByte
         };
-        CodeGenerator.prototype.systemCall = function () {
+        CodeGenerator.systemCall = function () {
             this.codeTable.addByte('FF');
         };
         return CodeGenerator;

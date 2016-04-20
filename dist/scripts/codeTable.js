@@ -2,6 +2,7 @@ var TSC;
 (function (TSC) {
     var CodeTable = (function () {
         function CodeTable() {
+            this.table = [];
             this.currentAddress = 0;
             for (var i = 0; i < 256; i++) {
                 this.table[i] = "";
