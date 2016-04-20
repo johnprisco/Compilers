@@ -29,6 +29,9 @@ var TSC;
                 }
             }
         };
+        StaticTable.prototype.incrementTemp = function () {
+            this.suffix++;
+        };
         return StaticTable;
     })();
     TSC.StaticTable = StaticTable;

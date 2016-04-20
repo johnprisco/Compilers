@@ -74,9 +74,10 @@ var TSC;
             this.loadAccumulatorWithConstant("00");
             this.storeAccumulatorInMemory(this.staticTable.getCurrentTemp(), "XX");
             // Make entry in static table
-            // What to put for address?
+            // TODO: Fix what to put for address in item
             var item = new TSC.StaticTableItem(this.staticTable.getCurrentTemp(), node.children[1].getType(), "+0");
             this.staticTable.addItem(item);
+            this.staticTable.incrementTemp();
         };
         CodeGenerator.generateCodeForStringDeclaration = function (node, scope) {
         };
@@ -84,10 +85,20 @@ var TSC;
         };
         CodeGenerator.generateCodeForAssignmentStatement = function (node, scope) {
             // lookup the ID in the static table. 
-            var tableEntry = this.staticTable.findItemWithIdentifier(node.children[0].getType());
-            var value = TSC.Utils.leftPad(node.children[1].getType(), 2);
-            this.loadAccumulatorWithConstant(value);
-            this.storeAccumulatorInMemory(tableEntry.getTemp(), "XX");
+            console.log(node);
+            if (node.children[1].getIdentifier()) {
+                // Setting an ID to another ID's value
+                var firstTableEntry = this.staticTable.findItemWithIdentifier(node.children[1].getType());
+                var secondTableEntry = this.staticTable.findItemWithIdentifier(node.children[0].getType());
+                this.loadAccumulatorFromMemory(firstTableEntry.getTemp(), "XX");
+                this.storeAccumulatorInMemory(secondTableEntry.getTemp(), "XX");
+            }
+            else {
+                var tableEntry = this.staticTable.findItemWithIdentifier(node.children[0].getType());
+                var value = TSC.Utils.leftPad(node.children[1].getType(), 2);
+                this.loadAccumulatorWithConstant(value);
+                this.storeAccumulatorInMemory(tableEntry.getTemp(), "XX");
+            }
         };
         CodeGenerator.loadAccumulatorWithConstant = function (constant) {
             this.codeTable.addByte('A9');

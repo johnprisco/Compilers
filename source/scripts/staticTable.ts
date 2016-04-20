@@ -32,6 +32,10 @@ module TSC {
                 }
             }
         }
+        
+        public incrementTemp() {
+            this.suffix++;
+        }
     }
     
     export class StaticTableItem {

@@ -87,9 +87,10 @@ module TSC {
             this.storeAccumulatorInMemory(this.staticTable.getCurrentTemp(), "XX");
             
             // Make entry in static table
-            // What to put for address?
+            // TODO: Fix what to put for address in item
             var item = new StaticTableItem(this.staticTable.getCurrentTemp(), node.children[1].getType(), "+0");
             this.staticTable.addItem(item);
+            this.staticTable.incrementTemp();
         }
         
         public static generateCodeForStringDeclaration(node: Node, scope: Scope): void {
@@ -102,11 +103,20 @@ module TSC {
         
         public static generateCodeForAssignmentStatement(node: Node, scope: Scope): void {
             // lookup the ID in the static table. 
-            var tableEntry = this.staticTable.findItemWithIdentifier(node.children[0].getType());
-            var value = Utils.leftPad(node.children[1].getType(), 2);
-            
-            this.loadAccumulatorWithConstant(value);
-            this.storeAccumulatorInMemory(tableEntry.getTemp(), "XX");
+            console.log(node);
+            if (node.children[1].getIdentifier()) {
+                // Setting an ID to another ID's value
+                var firstTableEntry = this.staticTable.findItemWithIdentifier(node.children[1].getType());
+                var secondTableEntry = this.staticTable.findItemWithIdentifier(node.children[0].getType())
+                this.loadAccumulatorFromMemory(firstTableEntry.getTemp(), "XX");
+                this.storeAccumulatorInMemory(secondTableEntry.getTemp(), "XX");
+            } else {
+                var tableEntry = this.staticTable.findItemWithIdentifier(node.children[0].getType());
+                var value = Utils.leftPad(node.children[1].getType(), 2);
+                
+                this.loadAccumulatorWithConstant(value);
+                this.storeAccumulatorInMemory(tableEntry.getTemp(), "XX");
+            }
         }
         
         public static loadAccumulatorWithConstant(constant: string): void {
