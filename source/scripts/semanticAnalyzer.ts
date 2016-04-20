@@ -23,6 +23,7 @@ module TSC {
             _Logger.logIgnoringVerboseMode("Semantic Analysis complete.");
             // console.log(this.abstractSyntaxTree.getRoot());
             CodeGenerator.generateCode(this.abstractSyntaxTree.getRoot(), this.scopes[0]);
+
         }
 
         public static buildAST(root: Node): void {
@@ -112,6 +113,7 @@ module TSC {
         }
 
         public static analyzeAssignmentStatement(cstNode: Node, astNode: Node, scope: Scope): void {
+            // console.log(cstNode);
             var newNode = new Node("Assignment Statement");
             // Add the identifier to the AST
             var id = new Node(cstNode.children[0].children[0].getValue());
@@ -211,6 +213,7 @@ module TSC {
                 value.setInt(true);
                 astNode.addChild(value);
             } else {
+                
                 var value = new Node(cstNode.children[0].getValue());
                 value.setInt(true);
                 astNode.addChild(value);
@@ -218,13 +221,29 @@ module TSC {
                 var plus = new Node("+");
                 astNode.addChild(plus);
                 astNode = plus;
-
+                console.log(cstNode.children[2].children[0]);
+                // So the grammar says it can be an expression, but thats not exactly true
+                // It can be an Identifier or an Int Expression
+                // So if we check which it is, and call the appropriate function, we'll
+                // fix the bug
+                var typeCheck = cstNode.children[2].children[0];
+                if (typeCheck.getType() === "Boolean Expression" || typeCheck.getType() === "String Expression") {
+                    _Logger.logError("Type mismatch, expected Int Expression.", typeCheck.getLineNumber(), "Semantic Analyzer");
+                    throw new Error("Type mismatch.");
+                } 
+                
+                
                 this.analyzeExpression(cstNode.children[2], astNode, scope);
             }
         }
 
         public static analyzeStringExpression(cstNode: Node, astNode: Node, scope: Scope): void {
-            this.analyzeCharList(cstNode.children[1], astNode, "", scope);
+            if (cstNode.children.length > 2) {
+                this.analyzeCharList(cstNode.children[1], astNode, "", scope);
+            } else {
+                var newNode = new Node("");
+                astNode.addChild(newNode);
+            }
         }
 
         public static analyzeBooleanExpression(cstNode: Node, astNode: Node, scope: Scope): void {

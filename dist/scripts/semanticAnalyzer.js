@@ -98,6 +98,7 @@ var TSC;
             this.analyzeExpression(cstNode.children[2], astNode, scope);
         };
         SemanticAnalyzer.analyzeAssignmentStatement = function (cstNode, astNode, scope) {
+            // console.log(cstNode);
             var newNode = new TSC.Node("Assignment Statement");
             // Add the identifier to the AST
             var id = new TSC.Node(cstNode.children[0].children[0].getValue());
@@ -189,11 +190,27 @@ var TSC;
                 var plus = new TSC.Node("+");
                 astNode.addChild(plus);
                 astNode = plus;
+                console.log(cstNode.children[2].children[0]);
+                // So the grammar says it can be an expression, but thats not exactly true
+                // It can be an Identifier or an Int Expression
+                // So if we check which it is, and call the appropriate function, we'll
+                // fix the bug
+                var typeCheck = cstNode.children[2].children[0];
+                if (typeCheck.getType() === "Boolean Expression" || typeCheck.getType() === "String Expression") {
+                    _Logger.logError("Type mismatch, expected Int Expression.", typeCheck.getLineNumber(), "Semantic Analyzer");
+                    throw new Error("Type mismatch.");
+                }
                 this.analyzeExpression(cstNode.children[2], astNode, scope);
             }
         };
         SemanticAnalyzer.analyzeStringExpression = function (cstNode, astNode, scope) {
-            this.analyzeCharList(cstNode.children[1], astNode, "", scope);
+            if (cstNode.children.length > 2) {
+                this.analyzeCharList(cstNode.children[1], astNode, "", scope);
+            }
+            else {
+                var newNode = new TSC.Node("");
+                astNode.addChild(newNode);
+            }
         };
         SemanticAnalyzer.analyzeBooleanExpression = function (cstNode, astNode, scope) {
             if (cstNode.children.length > 1) {

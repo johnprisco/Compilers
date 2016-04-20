@@ -68,6 +68,7 @@ module TSC {
             _TokenIndex = 0;
             var log: HTMLTextAreaElement = <HTMLTextAreaElement> document.getElementById("log-output");
             var source: HTMLTextAreaElement = <HTMLTextAreaElement> document.getElementById("source-code");
+            source.value = this.trim(source.value);
             log.value = "";
             this.clearTable('tokens-table');
             this.clearTable('symbol-table');
