@@ -20,7 +20,8 @@ var TSC;
             // Grab the "raw" source code.
             var sourceCode = document.getElementById("source-code").value;
             // Trim the leading and trailing spaces.
-            sourceCode = TSC.Utils.trim(sourceCode);
+            // sourceCode = TSC.Utils.trim(sourceCode);
+            sourceCode = sourceCode.trim();
             // Helpful compilers will correct some mistakes
             // Checking to make sure the program ends with a $
             if (sourceCode[sourceCode.length - 1] != '$') {
