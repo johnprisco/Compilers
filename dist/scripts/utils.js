@@ -51,6 +51,7 @@ var TSC;
             _TokenIndex = 0;
             var log = document.getElementById("log-output");
             var source = document.getElementById("source-code");
+            source.value = this.trim(source.value);
             log.value = "";
             this.clearTable('tokens-table');
             this.clearTable('symbol-table');
