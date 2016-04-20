@@ -18,6 +18,7 @@ var TSC;
             console.log(this.codeTable);
         };
         CodeGenerator.generateCodeFromNode = function (node, scope) {
+            console.log(node.getType());
             switch (node.getType()) {
                 case "Block":
                     this.generateCodeForBlock(node, scope);
@@ -53,6 +54,10 @@ var TSC;
         CodeGenerator.generateCodeForIfStatement = function (node, scope) {
         };
         CodeGenerator.generateCodeForPrintStatement = function (node, scope) {
+            var tableEntry = this.staticTable.findItemWithIdentifier(node.children[0].getType());
+            this.loadYRegisterFromMemory(tableEntry.getTemp(), "XX");
+            this.loadXRegisterWithConstant("01");
+            this.systemCall();
         };
         CodeGenerator.generateCodeForVariableDeclaration = function (node, scope) {
             switch (node.children[0].getType()) {
@@ -85,7 +90,6 @@ var TSC;
         };
         CodeGenerator.generateCodeForAssignmentStatement = function (node, scope) {
             // lookup the ID in the static table. 
-            console.log(node);
             if (node.children[1].getIdentifier()) {
                 // Setting an ID to another ID's value
                 var firstTableEntry = this.staticTable.findItemWithIdentifier(node.children[1].getType());

@@ -21,6 +21,7 @@ module TSC {
         }
         
         public static generateCodeFromNode(node: Node, scope: Scope): void {
+            console.log(node.getType());
             switch (node.getType()) {
                 case "Block":
                     this.generateCodeForBlock(node, scope);
@@ -62,7 +63,10 @@ module TSC {
         }
         
         public static generateCodeForPrintStatement(node: Node, scope: Scope): void {
-            
+            var tableEntry = this.staticTable.findItemWithIdentifier(node.children[0].getType());
+            this.loadYRegisterFromMemory(tableEntry.getTemp(), "XX");
+            this.loadXRegisterWithConstant("01");
+            this.systemCall();
         }
         
         public static generateCodeForVariableDeclaration(node: Node, scope: Scope): void {
@@ -103,7 +107,6 @@ module TSC {
         
         public static generateCodeForAssignmentStatement(node: Node, scope: Scope): void {
             // lookup the ID in the static table. 
-            console.log(node);
             if (node.children[1].getIdentifier()) {
                 // Setting an ID to another ID's value
                 var firstTableEntry = this.staticTable.findItemWithIdentifier(node.children[1].getType());
