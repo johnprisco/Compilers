@@ -25,12 +25,39 @@ var TSC;
         JumpTable.prototype.incrementTemp = function () {
             this.suffix++;
         };
+        JumpTable.prototype.getItemWithId = function (temp) {
+            for (var i = 0; i < this.items.length; i++) {
+                if (this.items[i].getTemp() === temp) {
+                    return this.items[i];
+                }
+            }
+            return null;
+        };
+        JumpTable.prototype.removeTempsInCodeTable = function (codeTable) {
+            var regex = /^(J[0-9])/;
+            for (var i = 0; i < codeTable.table.length; i++) {
+                var current = codeTable.table[i];
+                console.log(current.match(regex));
+                if (current.match(regex)) {
+                    var item = this.getItemWithId(current.match(regex)[1]);
+                    codeTable.addByteAtAddress(TSC.Utils.leftPad(item.getDistance().toString(16), 2), i.toString());
+                }
+            }
+        };
+        JumpTable.prototype.setDistanceForItem = function (item, distance) {
+            for (var i = 0; i < this.items.length; i++) {
+                if (this.items[i] === item) {
+                    this.items[i].setDistance(distance);
+                }
+            }
+        };
         return JumpTable;
     })();
     TSC.JumpTable = JumpTable;
     var JumpTableItem = (function () {
         function JumpTableItem(temp) {
             this.temp = temp;
+            this.distance = 0;
         }
         JumpTableItem.prototype.getTemp = function () {
             return this.temp;

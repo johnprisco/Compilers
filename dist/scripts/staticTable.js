@@ -35,6 +35,27 @@ var TSC;
         StaticTable.prototype.getOffset = function () {
             return this.suffix;
         };
+        StaticTable.prototype.getItemWithId = function (temp) {
+            for (var i = 0; i < this.items.length; i++) {
+                if (this.items[i].getTemp() === temp) {
+                    return this.items[i];
+                }
+            }
+            return null;
+        };
+        StaticTable.prototype.removeTempsInCodeTable = function (codeTable) {
+            var regex = /^(T[0-9])/;
+            for (var i = 0; i < codeTable.table.length; i++) {
+                var current = codeTable.table[i];
+                if (current.match(regex)) {
+                    var item = this.getItemWithId(current.match(regex)[1]);
+                    console.log("current address");
+                    console.log(codeTable.getCurrentAddress());
+                    codeTable.addByteAtAddress((parseInt(item.getTemp()[1]) + codeTable.getCurrentAddress() + 1).toString(16), i.toString());
+                    codeTable.addByteAtAddress("00", (i + 1).toString());
+                }
+            }
+        };
         return StaticTable;
     })();
     TSC.StaticTable = StaticTable;

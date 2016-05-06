@@ -40,6 +40,30 @@ module TSC {
         public getOffset(): number {
             return this.suffix;
         }
+        
+        public getItemWithId(temp): StaticTableItem {
+            for (var i = 0; i < this.items.length; i++) {
+                if (this.items[i].getTemp() === temp) {
+                    return this.items[i];
+                }
+            }
+            return null;    
+        }
+        
+        public removeTempsInCodeTable(codeTable: CodeTable): void {
+            
+            var regex = /^(T[0-9])/;
+            for (var i = 0; i < codeTable.table.length; i++) {
+                var current = codeTable.table[i];
+                if (current.match(regex)) {
+                    var item: StaticTableItem = this.getItemWithId(current.match(regex)[1]);
+                    console.log("current address");
+                    console.log(codeTable.getCurrentAddress());
+                    codeTable.addByteAtAddress((parseInt(item.getTemp()[1]) + codeTable.getCurrentAddress() + 1).toString(16), i.toString());
+                    codeTable.addByteAtAddress("00", (i + 1).toString());
+                }
+            }
+        }
     }
     
     export class StaticTableItem {

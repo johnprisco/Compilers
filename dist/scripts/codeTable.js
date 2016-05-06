@@ -13,8 +13,8 @@ var TSC;
             this.currentAddress++;
         };
         CodeTable.prototype.addByteAtAddress = function (byte, address) {
+            byte = byte.toUpperCase();
             this.table[address] = byte;
-            this.currentAddress++;
         };
         CodeTable.prototype.getCurrentAddress = function () {
             return this.currentAddress;

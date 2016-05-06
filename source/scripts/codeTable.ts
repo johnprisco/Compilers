@@ -1,6 +1,6 @@
 module TSC {
     export class CodeTable {
-        private table: string[] = [];
+        public table: string[] = [];
         private currentAddress: number = 0;
         
         constructor() {
@@ -15,8 +15,8 @@ module TSC {
         }
         
         public addByteAtAddress(byte: string, address: string): void {
+            byte = byte.toUpperCase();
             this.table[address] = byte;
-            this.currentAddress++;
         }
         
         public getCurrentAddress(): number {

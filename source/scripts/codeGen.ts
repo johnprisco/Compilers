@@ -20,7 +20,8 @@ module TSC {
             this.generateCodeFromNode(node, scope);
             this.break();
             this.codeTable.zeroOutEmptySlots();
-            
+            this.staticTable.removeTempsInCodeTable(this.codeTable);
+            this.jumpTable.removeTempsInCodeTable(this.codeTable);
             console.log(this.codeTable.toString());
         }
         
@@ -34,6 +35,7 @@ module TSC {
                     this.generateCodeForWhileStatement(node, scope);
                     break;
                 case "If Statement":
+                    console.log(node); 
                     this.generateCodeForIfStatement(node, scope);
                     break;
                 case "Print Statement":
@@ -77,21 +79,25 @@ module TSC {
             // Set the suffix of the jump table item entered above  
         }
         
-        public static generateCodeForIfStatement(node: Node, scope: Scope): void {
+        public static generateCodeForIfStatement(node: Node, scope: Scope): void {            
             var firstTableEntry = this.staticTable.findItemWithIdentifier(node.children[0].children[0].getType());
             this.loadXRegisterFromMemory(firstTableEntry.getTemp(), "XX");
             
             var secondTableEntry = this.staticTable.findItemWithIdentifier(node.children[0].children[1].getType());
             this.compareByte(secondTableEntry.getTemp(), "XX");
-            
+                
             var jumpEntry = new JumpTableItem(this.jumpTable.getCurrentTemp());
             this.jumpTable.addItem(jumpEntry);
+            var start = this.codeTable.getCurrentAddress();
             this.branch(jumpEntry.getTemp());
             this.jumpTable.incrementTemp();
             
             // Lastly, generate block
             this.generateCodeForBlock(node.children[1], scope);
             
+            // Update the jump distance for the new entry
+            console.log(this.codeTable.getCurrentAddress() - start + 1);
+            this.jumpTable.setDistanceForItem(jumpEntry, this.codeTable.getCurrentAddress() - start + 1)
         }
         
         public static generateCodeForPrintStatement(node: Node, scope: Scope): void {

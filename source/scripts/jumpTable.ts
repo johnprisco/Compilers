@@ -25,8 +25,38 @@ module TSC {
             this.items.push(item);
         }
         
-        public incrementTemp() {
+        public incrementTemp(): void {
             this.suffix++;
+        }
+        
+        public getItemWithId(temp): JumpTableItem {
+            for (var i = 0; i < this.items.length; i++) {
+                if (this.items[i].getTemp() === temp) {
+                    return this.items[i];
+                }
+            }
+            return null;
+        }
+        
+        public removeTempsInCodeTable(codeTable: CodeTable): void {
+            var regex = /^(J[0-9])/;
+            for (var i = 0; i < codeTable.table.length; i++) {
+                var current = codeTable.table[i];
+                console.log(current.match(regex));
+                if (current.match(regex)) {
+                    var item: JumpTableItem = this.getItemWithId(current.match(regex)[1]);
+                    
+                    codeTable.addByteAtAddress(Utils.leftPad(item.getDistance().toString(16), 2), i.toString());
+                }
+            }
+        }
+        
+        public setDistanceForItem(item: JumpTableItem, distance: number) {
+            for (var i = 0; i < this.items.length; i++) {
+                if (this.items[i] === item) {
+                    this.items[i].setDistance(distance);
+                }
+            }
         }
     }
     
@@ -36,6 +66,7 @@ module TSC {
         
         constructor(temp: string) {
             this.temp = temp;
+            this.distance = 0;
         }
         
         public getTemp(): string {

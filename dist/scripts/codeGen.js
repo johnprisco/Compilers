@@ -17,6 +17,8 @@ var TSC;
             this.generateCodeFromNode(node, scope);
             this.break();
             this.codeTable.zeroOutEmptySlots();
+            this.staticTable.removeTempsInCodeTable(this.codeTable);
+            this.jumpTable.removeTempsInCodeTable(this.codeTable);
             console.log(this.codeTable.toString());
         };
         CodeGenerator.generateCodeFromNode = function (node, scope) {
@@ -29,6 +31,7 @@ var TSC;
                     this.generateCodeForWhileStatement(node, scope);
                     break;
                 case "If Statement":
+                    console.log(node);
                     this.generateCodeForIfStatement(node, scope);
                     break;
                 case "Print Statement":
@@ -72,10 +75,14 @@ var TSC;
             this.compareByte(secondTableEntry.getTemp(), "XX");
             var jumpEntry = new TSC.JumpTableItem(this.jumpTable.getCurrentTemp());
             this.jumpTable.addItem(jumpEntry);
+            var start = this.codeTable.getCurrentAddress();
             this.branch(jumpEntry.getTemp());
             this.jumpTable.incrementTemp();
             // Lastly, generate block
             this.generateCodeForBlock(node.children[1], scope);
+            // Update the jump distance for the new entry
+            console.log(this.codeTable.getCurrentAddress() - start + 1);
+            this.jumpTable.setDistanceForItem(jumpEntry, this.codeTable.getCurrentAddress() - start + 1);
         };
         CodeGenerator.generateCodeForPrintStatement = function (node, scope) {
             var tableEntry = this.staticTable.findItemWithIdentifier(node.children[0].getType());
