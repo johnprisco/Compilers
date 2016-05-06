@@ -32,13 +32,18 @@ var TSC;
         StaticTable.prototype.incrementTemp = function () {
             this.suffix++;
         };
+        StaticTable.prototype.getOffset = function () {
+            return this.suffix;
+        };
         return StaticTable;
     })();
     TSC.StaticTable = StaticTable;
     var StaticTableItem = (function () {
-        function StaticTableItem(temp, id, address) {
+        function StaticTableItem(temp, id, scope, address) {
+            this.address = 0;
             this.temp = temp;
             this.id = id;
+            this.scope = scope;
             this.address = address;
         }
         StaticTableItem.prototype.getTemp = function () {

@@ -36,16 +36,22 @@ module TSC {
         public incrementTemp() {
             this.suffix++;
         }
+        
+        public getOffset(): number {
+            return this.suffix;
+        }
     }
     
     export class StaticTableItem {
         private temp: string;
         private id: string;
-        private address: string;
+        private scope: number;
+        private address: number = 0;
         
-        constructor(temp: string, id: string, address: string) {
+        constructor(temp: string, id: string, scope: number, address: number) {
             this.temp = temp;
             this.id = id;
+            this.scope = scope; 
             this.address = address;
         }
         
@@ -65,7 +71,7 @@ module TSC {
             this.id = id;
         }
         
-        public getAddress(): string {
+        public getAddress(): number {
             return this.address;
         }
     }

@@ -18,6 +18,14 @@ module TSC {
             this.table[address] = byte;
             this.currentAddress++;
         }
+        
+        public toString(): string {
+            var output: string = "";
+            for (var i = 0; i < this.table.length; i++) {
+                output += this.table[i] + " ";
+            }
+            return output.trim();
+        }
     }
     
     export class CodeTableItem {

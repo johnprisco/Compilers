@@ -16,9 +16,11 @@ var TSC;
             this.jumpTable = new TSC.JumpTable();
             this.generateCodeFromNode(node, scope);
             this.break();
-            console.log(this.codeTable);
+            // console.log(this.staticTable);
+            console.log(this.codeTable.toString());
         };
         CodeGenerator.generateCodeFromNode = function (node, scope) {
+            // TODO: We need to pass scope appropriately throw each of the calls
             switch (node.getType()) {
                 case "Block":
                     this.generateCodeForBlock(node, scope);
@@ -27,7 +29,7 @@ var TSC;
                     this.generateCodeForWhileStatement(node, scope);
                     break;
                 case "If Statement":
-                    console.log(node);
+                    // console.log(node);
                     this.generateCodeForIfStatement(node, scope);
                     break;
                 case "Print Statement":
@@ -86,12 +88,14 @@ var TSC;
             }
         };
         CodeGenerator.generateCodeForIntDeclaration = function (node, scope) {
+            // console.log("Scope Logging");
+            // console.log(scope);
             // Initialize to zero
             this.loadAccumulatorWithConstant("00");
             this.storeAccumulatorInMemory(this.staticTable.getCurrentTemp(), "XX");
             // Make entry in static table
             // TODO: Fix what to put for address in item
-            var item = new TSC.StaticTableItem(this.staticTable.getCurrentTemp(), node.children[1].getType(), "+0");
+            var item = new TSC.StaticTableItem(this.staticTable.getCurrentTemp(), node.children[1].getType(), scope.getNameAsInt(), this.staticTable.getOffset());
             this.staticTable.addItem(item);
             this.staticTable.incrementTemp();
         };
@@ -174,6 +178,7 @@ var TSC;
         CodeGenerator.systemCall = function () {
             this.codeTable.addByte('FF');
         };
+        CodeGenerator.jumpTableCounter = 0;
         return CodeGenerator;
     })();
     TSC.CodeGenerator = CodeGenerator;

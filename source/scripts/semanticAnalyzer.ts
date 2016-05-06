@@ -23,7 +23,6 @@ module TSC {
             _Logger.logIgnoringVerboseMode("Semantic Analysis complete.");
             // console.log(this.abstractSyntaxTree.getRoot());
             CodeGenerator.generateCode(this.abstractSyntaxTree.getRoot(), this.scopes[0]);
-
         }
 
         public static buildAST(root: Node): void {
@@ -231,7 +230,6 @@ module TSC {
                     _Logger.logError("Type mismatch, expected Int Expression.", typeCheck.getLineNumber(), "Semantic Analyzer");
                     throw new Error("Type mismatch.");
                 } 
-                
                 
                 this.analyzeExpression(cstNode.children[2], astNode, scope);
             }

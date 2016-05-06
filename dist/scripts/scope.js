@@ -10,6 +10,9 @@ var TSC;
         Scope.prototype.getName = function () {
             return this.name.toString();
         };
+        Scope.prototype.getNameAsInt = function () {
+            return this.name;
+        };
         Scope.prototype.setName = function (name) {
             this.name = name;
         };

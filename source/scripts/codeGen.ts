@@ -11,17 +11,20 @@ module TSC {
         private static codeTable: CodeTable;
         private static staticTable: StaticTable;
         private static jumpTable: JumpTable;
-       
+        private static jumpTableCounter: number = 0;
+        
         public static generateCode(node: Node, scope: Scope): void {
             this.staticTable = new StaticTable();
             this.codeTable = new CodeTable();
             this.jumpTable = new JumpTable();
             this.generateCodeFromNode(node, scope);
             this.break();
-            console.log(this.codeTable);
+            // console.log(this.staticTable);
+            console.log(this.codeTable.toString());
         }
         
         public static generateCodeFromNode(node: Node, scope: Scope): void {
+            // TODO: We need to pass scope appropriately throw each of the calls
             switch (node.getType()) {
                 case "Block":
                     this.generateCodeForBlock(node, scope);
@@ -30,7 +33,7 @@ module TSC {
                     this.generateCodeForWhileStatement(node, scope);
                     break;
                 case "If Statement":
-                    console.log(node);
+                    // console.log(node);
                     this.generateCodeForIfStatement(node, scope);
                     break;
                 case "Print Statement":
@@ -57,6 +60,7 @@ module TSC {
         
         public static generateCodeForWhileStatement(node: Node, scope: Scope): void {
             
+            
         }
         
         public static generateCodeForIfStatement(node: Node, scope: Scope): void {
@@ -73,6 +77,7 @@ module TSC {
             
             // Lastly, generateBlock
             this.generateCodeForBlock(node.children[1], scope);
+            
         }
         
         public static generateCodeForPrintStatement(node: Node, scope: Scope): void {
@@ -99,13 +104,15 @@ module TSC {
         }
         
         public static generateCodeForIntDeclaration(node: Node, scope: Scope): void {
+            // console.log("Scope Logging");
+            // console.log(scope);
             // Initialize to zero
             this.loadAccumulatorWithConstant("00");
             this.storeAccumulatorInMemory(this.staticTable.getCurrentTemp(), "XX");
             
             // Make entry in static table
             // TODO: Fix what to put for address in item
-            var item = new StaticTableItem(this.staticTable.getCurrentTemp(), node.children[1].getType(), "+0");
+            var item = new StaticTableItem(this.staticTable.getCurrentTemp(), node.children[1].getType(), scope.getNameAsInt(), this.staticTable.getOffset());
             this.staticTable.addItem(item);
             this.staticTable.incrementTemp();
         }

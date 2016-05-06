@@ -16,6 +16,13 @@ var TSC;
             this.table[address] = byte;
             this.currentAddress++;
         };
+        CodeTable.prototype.toString = function () {
+            var output = "";
+            for (var i = 0; i < this.table.length; i++) {
+                output += this.table[i] + " ";
+            }
+            return output.trim();
+        };
         return CodeTable;
     })();
     TSC.CodeTable = CodeTable;
