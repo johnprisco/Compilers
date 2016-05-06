@@ -75,6 +75,10 @@ var TSC;
                 this.logWarning("Identifier '" + symbols[i].getName() + "' on line " + symbols[i].getLine() + " was not initialized.");
             }
         };
+        Logger.logCodeTable = function (codeTable) {
+            var log = document.getElementById('code-output');
+            log.value = codeTable.toString();
+        };
         return Logger;
     })();
     TSC.Logger = Logger;

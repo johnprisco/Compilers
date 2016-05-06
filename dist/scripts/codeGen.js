@@ -19,7 +19,7 @@ var TSC;
             this.codeTable.zeroOutEmptySlots();
             this.staticTable.removeTempsInCodeTable(this.codeTable);
             this.jumpTable.removeTempsInCodeTable(this.codeTable);
-            console.log(this.codeTable.toString());
+            _Logger.logCodeTable(this.codeTable);
         };
         CodeGenerator.generateCodeFromNode = function (node, scope) {
             // TODO: We need to pass scope appropriately throw each of the calls
@@ -55,7 +55,7 @@ var TSC;
             }
         };
         CodeGenerator.generateCodeForWhileStatement = function (node, scope) {
-            this.generateCodeForBooleanDeclaration(node.children[0], scope);
+            this.generateCodeForBooleanExpression(node.children[0], scope);
             var jumpTemp = this.jumpTable.getNextTemp();
             var jumpItem = new TSC.JumpTableItem(jumpTemp);
             this.jumpTable.addItem(jumpItem);
@@ -123,6 +123,29 @@ var TSC;
         };
         CodeGenerator.generateCodeForBooleanDeclaration = function (node, scope) {
         };
+        CodeGenerator.generateCodeForBooleanExpression = function (node, scope) {
+            console.log(node);
+            switch (node.children[0].getType()) {
+                case "==":
+                    console.log("==");
+                    this.generateCodeForEquivalencyStatement(node, scope);
+                    break;
+                case "!=":
+                    console.log("!=");
+                    break;
+                case "true":
+                    console.log("true");
+                    break;
+                case "false":
+                    this.loadXRegisterWithConstant("01");
+                    this.loadAccumulatorWithConstant("00");
+                    this.storeAccumulatorInMemory("00", "00");
+                    this.compareByte("00", "00");
+                    break;
+                default:
+                    throw new Error("lol broken");
+            }
+        };
         CodeGenerator.generateCodeForAssignmentStatement = function (node, scope) {
             // lookup the ID in the static table. 
             if (node.children[1].getIdentifier()) {
@@ -138,6 +161,8 @@ var TSC;
                 this.loadAccumulatorWithConstant(value);
                 this.storeAccumulatorInMemory(tableEntry.getTemp(), "XX");
             }
+        };
+        CodeGenerator.generateCodeForEquivalencyStatement = function (node, scope) {
         };
         CodeGenerator.loadAccumulatorWithConstant = function (constant) {
             this.codeTable.addByte('A9');
