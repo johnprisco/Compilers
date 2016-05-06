@@ -19,12 +19,24 @@ module TSC {
             this.currentAddress++;
         }
         
+        public getCurrentAddress(): number {
+            return this.currentAddress;
+        }
+        
         public toString(): string {
             var output: string = "";
             for (var i = 0; i < this.table.length; i++) {
                 output += this.table[i] + " ";
             }
             return output.trim();
+        }
+        
+        public zeroOutEmptySlots(): void {
+            for (var i = 0; i < 256; i++) {
+                if (this.table[i] === "") {
+                    this.table[i] = "00";
+                }
+            }
         }
     }
     

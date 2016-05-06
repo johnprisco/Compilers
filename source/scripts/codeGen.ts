@@ -19,7 +19,8 @@ module TSC {
             this.jumpTable = new JumpTable();
             this.generateCodeFromNode(node, scope);
             this.break();
-            // console.log(this.staticTable);
+            this.codeTable.zeroOutEmptySlots();
+            
             console.log(this.codeTable.toString());
         }
         
@@ -33,7 +34,6 @@ module TSC {
                     this.generateCodeForWhileStatement(node, scope);
                     break;
                 case "If Statement":
-                    // console.log(node);
                     this.generateCodeForIfStatement(node, scope);
                     break;
                 case "Print Statement":
@@ -59,8 +59,22 @@ module TSC {
         }
         
         public static generateCodeForWhileStatement(node: Node, scope: Scope): void {
+            this.generateCodeForBooleanDeclaration(node.children[0], scope);
             
+            var jumpTemp = this.jumpTable.getNextTemp();
+            var jumpItem = new JumpTableItem(jumpTemp);
+            this.jumpTable.addItem(jumpItem);
+            // this.branch()
             
+            this.generateCodeForBlock(node.children[1], scope);
+            
+            this.loadAccumulatorWithConstant("00");
+            this.storeAccumulatorInMemory("00", "00");
+            this.loadXRegisterWithConstant("00");
+            this.compareByte("00", "00");
+            // this.branch();
+            
+            // Set the suffix of the jump table item entered above  
         }
         
         public static generateCodeForIfStatement(node: Node, scope: Scope): void {
@@ -75,7 +89,7 @@ module TSC {
             this.branch(jumpEntry.getTemp());
             this.jumpTable.incrementTemp();
             
-            // Lastly, generateBlock
+            // Lastly, generate block
             this.generateCodeForBlock(node.children[1], scope);
             
         }
@@ -118,7 +132,8 @@ module TSC {
         }
         
         public static generateCodeForStringDeclaration(node: Node, scope: Scope): void {
-            
+            var item = new StaticTableItem(this.staticTable.getNextTemp(), node.children[1].getType(), scope.getNameAsInt(), this.staticTable.getOffset() + 1);
+            this.staticTable.addItem(item);
         }
         
         public static generateCodeForBooleanDeclaration(node: Node, scope: Scope): void {

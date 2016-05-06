@@ -16,7 +16,7 @@ var TSC;
             this.jumpTable = new TSC.JumpTable();
             this.generateCodeFromNode(node, scope);
             this.break();
-            // console.log(this.staticTable);
+            this.codeTable.zeroOutEmptySlots();
             console.log(this.codeTable.toString());
         };
         CodeGenerator.generateCodeFromNode = function (node, scope) {
@@ -29,7 +29,6 @@ var TSC;
                     this.generateCodeForWhileStatement(node, scope);
                     break;
                 case "If Statement":
-                    // console.log(node);
                     this.generateCodeForIfStatement(node, scope);
                     break;
                 case "Print Statement":
@@ -53,6 +52,18 @@ var TSC;
             }
         };
         CodeGenerator.generateCodeForWhileStatement = function (node, scope) {
+            this.generateCodeForBooleanDeclaration(node.children[0], scope);
+            var jumpTemp = this.jumpTable.getNextTemp();
+            var jumpItem = new TSC.JumpTableItem(jumpTemp);
+            this.jumpTable.addItem(jumpItem);
+            // this.branch()
+            this.generateCodeForBlock(node.children[1], scope);
+            this.loadAccumulatorWithConstant("00");
+            this.storeAccumulatorInMemory("00", "00");
+            this.loadXRegisterWithConstant("00");
+            this.compareByte("00", "00");
+            // this.branch();
+            // Set the suffix of the jump table item entered above  
         };
         CodeGenerator.generateCodeForIfStatement = function (node, scope) {
             var firstTableEntry = this.staticTable.findItemWithIdentifier(node.children[0].children[0].getType());
@@ -63,7 +74,7 @@ var TSC;
             this.jumpTable.addItem(jumpEntry);
             this.branch(jumpEntry.getTemp());
             this.jumpTable.incrementTemp();
-            // Lastly, generateBlock
+            // Lastly, generate block
             this.generateCodeForBlock(node.children[1], scope);
         };
         CodeGenerator.generateCodeForPrintStatement = function (node, scope) {
@@ -100,6 +111,8 @@ var TSC;
             this.staticTable.incrementTemp();
         };
         CodeGenerator.generateCodeForStringDeclaration = function (node, scope) {
+            var item = new TSC.StaticTableItem(this.staticTable.getNextTemp(), node.children[1].getType(), scope.getNameAsInt(), this.staticTable.getOffset() + 1);
+            this.staticTable.addItem(item);
         };
         CodeGenerator.generateCodeForBooleanDeclaration = function (node, scope) {
         };
