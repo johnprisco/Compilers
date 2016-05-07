@@ -55,23 +55,28 @@ var TSC;
             }
         };
         CodeGenerator.generateCodeForWhileStatement = function (node, scope) {
+            var current = this.codeTable.getCurrentAddress();
             this.generateCodeForBooleanExpression(node.children[0], scope);
             var jumpTemp = this.jumpTable.getNextTemp();
             var jumpItem = new TSC.JumpTableItem(jumpTemp);
             this.jumpTable.addItem(jumpItem);
-            // this.branch()
+            this.branch(TSC.Utils.leftPad(this.codeTable.getCurrentAddress().toString(16), 2));
             this.generateCodeForBlock(node.children[1], scope);
             this.loadAccumulatorWithConstant("00");
             this.storeAccumulatorInMemory("00", "00");
             this.loadXRegisterWithConstant("00");
             this.compareByte("00", "00");
-            // this.branch();
-            // Set the suffix of the jump table item entered above  
+            var toLeftPad = (256 - (this.codeTable.getCurrentAddress() - current + 2));
+            var leftPadded = TSC.Utils.leftPad(toLeftPad.toString(16), 2);
+            this.branch(leftPadded);
         };
         CodeGenerator.generateCodeForIfStatement = function (node, scope) {
+            // Right now this is good for comparing identifier to identifiers
+            // Have to update it to handle all possibilites of if statements         
             var firstTableEntry = this.staticTable.findItemWithIdentifier(node.children[0].children[0].getType());
             this.loadXRegisterFromMemory(firstTableEntry.getTemp(), "XX");
             var secondTableEntry = this.staticTable.findItemWithIdentifier(node.children[0].children[1].getType());
+            console.log(secondTableEntry);
             this.compareByte(secondTableEntry.getTemp(), "XX");
             var jumpEntry = new TSC.JumpTableItem(this.jumpTable.getCurrentTemp());
             this.jumpTable.addItem(jumpEntry);
