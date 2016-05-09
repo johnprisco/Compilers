@@ -4,6 +4,7 @@ var TSC;
         function CodeTable() {
             this.table = [];
             this.currentAddress = 0;
+            this.heapPosition = 255;
             for (var i = 0; i < 256; i++) {
                 this.table[i] = "";
             }
@@ -32,6 +33,18 @@ var TSC;
                     this.table[i] = "00";
                 }
             }
+        };
+        CodeTable.prototype.writeStringToHeap = function (string) {
+            var start;
+            this.addByteAtAddress("00", this.heapPosition.toString());
+            this.heapPosition--;
+            for (var i = string.length - 1; i >= 0; i--) {
+                start = this.heapPosition;
+                var hex = string.charCodeAt(i).toString(16);
+                this.addByteAtAddress(hex, this.heapPosition.toString());
+                this.heapPosition--;
+            }
+            return start;
         };
         return CodeTable;
     })();

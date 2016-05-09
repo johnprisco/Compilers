@@ -83,12 +83,13 @@ module TSC {
         
         public static generateCodeForIfStatement(node: Node, scope: Scope): void {   
             // Right now this is good for comparing identifier to identifiers
-            // Have to update it to handle all possibilites of if statements         
+            // Have to update it to handle all possibilites of if statements   
+            
+            console.log(node);
             var firstTableEntry = this.staticTable.findItemWithIdentifier(node.children[0].children[0].getType());
             this.loadXRegisterFromMemory(firstTableEntry.getTemp(), "XX");
             
             var secondTableEntry = this.staticTable.findItemWithIdentifier(node.children[0].children[1].getType());
-            console.log(secondTableEntry);
             
             this.compareByte(secondTableEntry.getTemp(), "XX");
                 
@@ -144,12 +145,15 @@ module TSC {
         }
         
         public static generateCodeForStringDeclaration(node: Node, scope: Scope): void {
+            
             var item = new StaticTableItem(this.staticTable.getNextTemp(), node.children[1].getType(), scope.getNameAsInt(), this.staticTable.getOffset() + 1);
             this.staticTable.addItem(item);
         }
         
         public static generateCodeForBooleanDeclaration(node: Node, scope: Scope): void {
-            
+            var item = new StaticTableItem(this.staticTable.getCurrentTemp(), node.children[1].getType(), scope.getNameAsInt(), this.staticTable.getOffset());
+            this.staticTable.addItem(item);
+            this.staticTable.incrementTemp();
             
         }
         
@@ -179,18 +183,36 @@ module TSC {
         
         public static generateCodeForAssignmentStatement(node: Node, scope: Scope): void {
             // lookup the ID in the static table. 
+            console.log(node);
             if (node.children[1].getIdentifier()) {
                 // Setting an ID to another ID's value
                 var firstTableEntry = this.staticTable.findItemWithIdentifier(node.children[1].getType());
                 var secondTableEntry = this.staticTable.findItemWithIdentifier(node.children[0].getType())
                 this.loadAccumulatorFromMemory(firstTableEntry.getTemp(), "XX");
                 this.storeAccumulatorInMemory(secondTableEntry.getTemp(), "XX");
-            } else {
+            } else if (node.children[1].getInt()) {
+                // int assignment    
                 var tableEntry = this.staticTable.findItemWithIdentifier(node.children[0].getType());
                 var value = Utils.leftPad(node.children[1].getType(), 2);
-                
+            
                 this.loadAccumulatorWithConstant(value);
-                this.storeAccumulatorInMemory(tableEntry.getTemp(), "XX");
+                this.storeAccumulatorInMemory(tableEntry.getTemp(), "XX"); 
+            } else if (node.children[1].checkBoolean()) {
+                // boolean assignment
+                // i don't know how to do this
+                
+            } else {
+                // string
+                // short cut for now, not the best way to check for this
+                // we need to write the string in to the "heap"
+                // so the end of the code table, entered backwards in hex ascii values
+                // string: node.children[1].getType()
+                var entry = this.staticTable.findItemWithIdentifier(node.children[0].getType());
+
+                var pointer = this.codeTable.writeStringToHeap(node.children[1].getType());
+                this.loadAccumulatorWithConstant(pointer.toString(16).toUpperCase());
+                
+                this.storeAccumulatorInMemory(entry.getTemp(), "XX");
             }
         }
         

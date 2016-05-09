@@ -2,6 +2,7 @@ module TSC {
     export class CodeTable {
         public table: string[] = [];
         private currentAddress: number = 0;
+        private heapPosition: number = 255;
         
         constructor() {
             for (var i = 0; i < 256; i++) {
@@ -37,6 +38,21 @@ module TSC {
                     this.table[i] = "00";
                 }
             }
+        }
+        
+        public writeStringToHeap(string: string): number {
+            var start: number;
+            this.addByteAtAddress("00", this.heapPosition.toString());
+            this.heapPosition--;
+            
+            for (var i = string.length - 1; i >= 0; i--) {
+                start = this.heapPosition;
+                var hex = string.charCodeAt(i).toString(16);
+                this.addByteAtAddress(hex, this.heapPosition.toString());
+                this.heapPosition--;
+            }
+            
+            return start;
         }
     }
     
