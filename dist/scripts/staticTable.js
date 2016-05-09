@@ -60,12 +60,13 @@ var TSC;
     })();
     TSC.StaticTable = StaticTable;
     var StaticTableItem = (function () {
-        function StaticTableItem(temp, id, scope, address) {
+        function StaticTableItem(temp, id, scope, address, type) {
             this.address = 0;
             this.temp = temp;
             this.id = id;
             this.scope = scope;
             this.address = address;
+            this.type = type;
         }
         StaticTableItem.prototype.getTemp = function () {
             return this.temp;
@@ -81,6 +82,9 @@ var TSC;
         };
         StaticTableItem.prototype.getAddress = function () {
             return this.address;
+        };
+        StaticTableItem.prototype.getType = function () {
+            return this.type;
         };
         return StaticTableItem;
     })();

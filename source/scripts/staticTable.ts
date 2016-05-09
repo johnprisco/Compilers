@@ -71,12 +71,14 @@ module TSC {
         private id: string;
         private scope: number;
         private address: number = 0;
+        private type: string;
         
-        constructor(temp: string, id: string, scope: number, address: number) {
+        constructor(temp: string, id: string, scope: number, address: number, type: string) {
             this.temp = temp;
             this.id = id;
             this.scope = scope; 
             this.address = address;
+            this.type = type;
         }
         
         public getTemp(): string {
@@ -97,6 +99,10 @@ module TSC {
         
         public getAddress(): number {
             return this.address;
+        }
+        
+        public getType(): string {
+            return this.type;
         }
     }
 }
