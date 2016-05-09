@@ -31,6 +31,7 @@ module TSC {
         public static generateCodeFromNode(node: Node, scope: Scope): void {
             // TODO: We need to pass scope appropriately throw each of the calls
             _Logger.logMessage("Generating code for " + node.getType());
+            console.log(node);
             switch (node.getType()) {
                 case "Block":
                     this.generateCodeForBlock(node, scope);
@@ -50,7 +51,7 @@ module TSC {
                     break;
                 case "Assignment Statement":
                     this.generateCodeForAssignmentStatement(node, scope);
-                    break;
+                    break; 
                 default:
                     _Logger.logError("Node has unidentified type.", node.getLineNumber(), "Code Generator");
                     throw new Error("Unidentified type of node in Code Gen.");    
@@ -60,6 +61,7 @@ module TSC {
         public static generateCodeForBlock(node: Node, scope: Scope): void {
             // ?? Not sure what to do here, have to look over notes
             for (var i = 0; i < node.children.length; i++) {
+                console.log(node.children[i]);
                 this.generateCodeFromNode(node.children[i], scope);
             }
         }
@@ -68,16 +70,19 @@ module TSC {
             var current = this.codeTable.getCurrentAddress();
             this.generateCodeForBooleanExpression(node.children[0], scope);
             
+            // create the entry in the jump table
             var jumpTemp = this.jumpTable.getNextTemp();
             var jumpItem = new JumpTableItem(jumpTemp);
             this.jumpTable.addItem(jumpItem);
             this.branch(Utils.leftPad(this.codeTable.getCurrentAddress().toString(16), 2));
             
+            // code gen for block within while loop
+            console.log(node);
             this.generateCodeForBlock(node.children[1], scope);
             
             this.loadAccumulatorWithConstant("00");
             this.storeAccumulatorInMemory("00", "00");
-            this.loadXRegisterWithConstant("00");
+            this.loadXRegisterWithConstant("01");
             this.compareByte("00", "00");
             
             var toLeftPad = (256 - (this.codeTable.getCurrentAddress() - current + 2));
@@ -191,12 +196,11 @@ module TSC {
             var item = new StaticTableItem(this.staticTable.getCurrentTemp(), node.children[1].getType(), scope.getNameAsInt(), this.staticTable.getOffset(), "boolean");
             this.staticTable.addItem(item);
             this.staticTable.incrementTemp();
-            
         }
         
         public static generateCodeForBooleanExpression(node: Node, scope: Scope) {
             console.log(node);
-            switch (node.children[0].getType()) {
+            switch (node.getType()) {
                 case "==":
                     console.log("==");
                     this.generateCodeForEquivalencyStatement(node, scope);
@@ -214,7 +218,7 @@ module TSC {
                     this.compareByte("00", "00");
                     break;
                 default:
-                    throw new Error("lol broken");
+                    throw new Error("broken");
             }
         }
         

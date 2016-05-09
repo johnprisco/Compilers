@@ -22,6 +22,9 @@ var TSC;
              */
         };
         Utils.leftPad = function (string, length) {
+            if (string.length === 2) {
+                return string;
+            }
             for (var i = 1; i < length; i++) {
                 string = "0" + string;
             }

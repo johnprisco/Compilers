@@ -27,6 +27,7 @@ var TSC;
         CodeGenerator.generateCodeFromNode = function (node, scope) {
             // TODO: We need to pass scope appropriately throw each of the calls
             _Logger.logMessage("Generating code for " + node.getType());
+            console.log(node);
             switch (node.getType()) {
                 case "Block":
                     this.generateCodeForBlock(node, scope);
@@ -55,20 +56,24 @@ var TSC;
         CodeGenerator.generateCodeForBlock = function (node, scope) {
             // ?? Not sure what to do here, have to look over notes
             for (var i = 0; i < node.children.length; i++) {
+                console.log(node.children[i]);
                 this.generateCodeFromNode(node.children[i], scope);
             }
         };
         CodeGenerator.generateCodeForWhileStatement = function (node, scope) {
             var current = this.codeTable.getCurrentAddress();
             this.generateCodeForBooleanExpression(node.children[0], scope);
+            // create the entry in the jump table
             var jumpTemp = this.jumpTable.getNextTemp();
             var jumpItem = new TSC.JumpTableItem(jumpTemp);
             this.jumpTable.addItem(jumpItem);
             this.branch(TSC.Utils.leftPad(this.codeTable.getCurrentAddress().toString(16), 2));
+            // code gen for block within while loop
+            console.log(node);
             this.generateCodeForBlock(node.children[1], scope);
             this.loadAccumulatorWithConstant("00");
             this.storeAccumulatorInMemory("00", "00");
-            this.loadXRegisterWithConstant("00");
+            this.loadXRegisterWithConstant("01");
             this.compareByte("00", "00");
             var toLeftPad = (256 - (this.codeTable.getCurrentAddress() - current + 2));
             var leftPadded = TSC.Utils.leftPad(toLeftPad.toString(16), 2);
@@ -170,7 +175,7 @@ var TSC;
         };
         CodeGenerator.generateCodeForBooleanExpression = function (node, scope) {
             console.log(node);
-            switch (node.children[0].getType()) {
+            switch (node.getType()) {
                 case "==":
                     console.log("==");
                     this.generateCodeForEquivalencyStatement(node, scope);
@@ -188,7 +193,7 @@ var TSC;
                     this.compareByte("00", "00");
                     break;
                 default:
-                    throw new Error("lol broken");
+                    throw new Error("broken");
             }
         };
         CodeGenerator.generateCodeForAssignmentStatement = function (node, scope) {
