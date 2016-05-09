@@ -91,29 +91,33 @@ module TSC {
         }
         
         public static generateCodeForIfStatement(node: Node, scope: Scope): void {   
-            // Right now this is good for comparing identifier to identifiers
-            // Have to update it to handle all possibilites of if statements   
             
-            console.log(node);
-            var firstTableEntry = this.staticTable.findItemWithIdentifier(node.children[0].children[0].getType());
-            this.loadXRegisterFromMemory(firstTableEntry.getTemp(), "XX");
+            // comparing two identifiers   
+            if (node.children[0].children[0].getIdentifier() && node.children[0].children[1].getIdentifier()) {
+                console.log(node);
+                var firstTableEntry = this.staticTable.findItemWithIdentifier(node.children[0].children[0].getType());
+                this.loadXRegisterFromMemory(firstTableEntry.getTemp(), "XX");
             
-            var secondTableEntry = this.staticTable.findItemWithIdentifier(node.children[0].children[1].getType());
+                var secondTableEntry = this.staticTable.findItemWithIdentifier(node.children[0].children[1].getType());
             
-            this.compareByte(secondTableEntry.getTemp(), "XX");
+                this.compareByte(secondTableEntry.getTemp(), "XX");
                 
-            var jumpEntry = new JumpTableItem(this.jumpTable.getCurrentTemp());
-            this.jumpTable.addItem(jumpEntry);
-            var start = this.codeTable.getCurrentAddress();
-            this.branch(jumpEntry.getTemp());
-            this.jumpTable.incrementTemp();
+                var jumpEntry = new JumpTableItem(this.jumpTable.getCurrentTemp());
+                this.jumpTable.addItem(jumpEntry);
+                var start = this.codeTable.getCurrentAddress();
+                this.branch(jumpEntry.getTemp());
+                this.jumpTable.incrementTemp();
             
-            // Lastly, generate block
-            this.generateCodeForBlock(node.children[1], scope);
+                // Lastly, generate block
+                this.generateCodeForBlock(node.children[1], scope);
             
-            // Update the jump distance for the new entry
-            console.log(this.codeTable.getCurrentAddress() - start + 1);
-            this.jumpTable.setDistanceForItem(jumpEntry, this.codeTable.getCurrentAddress() - start + 1)
+                // Update the jump distance for the new entry
+                console.log(this.codeTable.getCurrentAddress() - start + 1);
+                this.jumpTable.setDistanceForItem(jumpEntry, this.codeTable.getCurrentAddress() - start + 1)
+            } else if (node.children.length === 1 && node.children[0].getType() === "true") {
+                this.generateCodeForBlock(node.children[1], scope);
+            }
+            
         }
         
         public static generateCodeForPrintStatement(node: Node, scope: Scope): void {
@@ -168,6 +172,7 @@ module TSC {
                     this.generateCodeForStringDeclaration(node, scope);
                     break;
                 default:
+                    _Logger.logError("Variable type undefined.", node.getLineNumber(), "Code Generator");
                     throw new Error("BROKEN");
             }
         }
@@ -218,6 +223,7 @@ module TSC {
                     this.compareByte("00", "00");
                     break;
                 default:
+                    _Logger.logError("Undefined boolean type.", node.getLineNumber(), "Code Generator");
                     throw new Error("broken");
             }
         }
