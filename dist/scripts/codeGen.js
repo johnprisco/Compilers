@@ -94,10 +94,43 @@ var TSC;
             this.jumpTable.setDistanceForItem(jumpEntry, this.codeTable.getCurrentAddress() - start + 1);
         };
         CodeGenerator.generateCodeForPrintStatement = function (node, scope) {
-            var tableEntry = this.staticTable.findItemWithIdentifier(node.children[0].getType());
-            this.loadYRegisterFromMemory(tableEntry.getTemp(), "XX");
-            this.loadXRegisterWithConstant("01");
-            this.systemCall();
+            console.log(node);
+            if (node.children[0].getIdentifier()) {
+                // printing an id's value
+                var tableEntry = this.staticTable.findItemWithIdentifier(node.children[0].getType());
+                this.loadYRegisterFromMemory(tableEntry.getTemp(), "XX");
+                // change x register if we're printing a string or an int
+                if (tableEntry.getType() === "int") {
+                    this.loadXRegisterWithConstant("01");
+                }
+                else {
+                    this.loadXRegisterWithConstant("02");
+                }
+                this.systemCall();
+            }
+            else if (node.children[0].getInt()) {
+                // printing an int
+                this.generateCodeForIntExpression(node.children[0], scope);
+                this.storeAccumulatorInMemory("00", "00");
+                // system call to print int
+                this.loadXRegisterWithConstant("01");
+                this.loadYRegisterFromMemory("00", "00");
+                this.systemCall();
+            }
+            else if (node.children[0].checkBoolean()) {
+            }
+            else {
+                // otherwise, its a string
+                // write it to the heap
+                var heapPosition = this.codeTable.writeStringToHeap(node.children[0].getType());
+                // load accumulator with its position in the heap
+                this.loadAccumulatorWithConstant(heapPosition.toString(16).toUpperCase());
+                this.storeAccumulatorInMemory("00", "00");
+                // system call to print string
+                this.loadXRegisterWithConstant("02");
+                this.loadYRegisterFromMemory("00", "00");
+                this.systemCall();
+            }
         };
         CodeGenerator.generateCodeForVariableDeclaration = function (node, scope) {
             switch (node.children[0].getType()) {
@@ -122,16 +155,16 @@ var TSC;
             this.storeAccumulatorInMemory(this.staticTable.getCurrentTemp(), "XX");
             // Make entry in static table
             // TODO: Fix what to put for address in item
-            var item = new TSC.StaticTableItem(this.staticTable.getCurrentTemp(), node.children[1].getType(), scope.getNameAsInt(), this.staticTable.getOffset());
+            var item = new TSC.StaticTableItem(this.staticTable.getCurrentTemp(), node.children[1].getType(), scope.getNameAsInt(), this.staticTable.getOffset(), "int");
             this.staticTable.addItem(item);
             this.staticTable.incrementTemp();
         };
         CodeGenerator.generateCodeForStringDeclaration = function (node, scope) {
-            var item = new TSC.StaticTableItem(this.staticTable.getNextTemp(), node.children[1].getType(), scope.getNameAsInt(), this.staticTable.getOffset() + 1);
+            var item = new TSC.StaticTableItem(this.staticTable.getNextTemp(), node.children[1].getType(), scope.getNameAsInt(), this.staticTable.getOffset() + 1, "string");
             this.staticTable.addItem(item);
         };
         CodeGenerator.generateCodeForBooleanDeclaration = function (node, scope) {
-            var item = new TSC.StaticTableItem(this.staticTable.getCurrentTemp(), node.children[1].getType(), scope.getNameAsInt(), this.staticTable.getOffset());
+            var item = new TSC.StaticTableItem(this.staticTable.getCurrentTemp(), node.children[1].getType(), scope.getNameAsInt(), this.staticTable.getOffset(), "boolean");
             this.staticTable.addItem(item);
             this.staticTable.incrementTemp();
         };
@@ -190,6 +223,8 @@ var TSC;
             }
         };
         CodeGenerator.generateCodeForEquivalencyStatement = function (node, scope) {
+        };
+        CodeGenerator.generateCodeForIntExpression = function (node, scope) {
         };
         CodeGenerator.loadAccumulatorWithConstant = function (constant) {
             this.codeTable.addByte('A9');
