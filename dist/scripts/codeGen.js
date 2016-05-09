@@ -5,12 +5,14 @@
 ///<reference path='node.ts' />
 ///<reference path='globals.ts' />
 ///<reference path='utils.ts' />
+///<reference path='logger.ts' />
 var TSC;
 (function (TSC) {
     var CodeGenerator = (function () {
         function CodeGenerator() {
         }
         CodeGenerator.generateCode = function (node, scope) {
+            _Logger.logIgnoringVerboseMode("Beginning Code Generation.");
             this.staticTable = new TSC.StaticTable();
             this.codeTable = new TSC.CodeTable();
             this.jumpTable = new TSC.JumpTable();
@@ -20,9 +22,11 @@ var TSC;
             this.staticTable.removeTempsInCodeTable(this.codeTable);
             this.jumpTable.removeTempsInCodeTable(this.codeTable);
             _Logger.logCodeTable(this.codeTable);
+            _Logger.logIgnoringVerboseMode("Code Generation complete.");
         };
         CodeGenerator.generateCodeFromNode = function (node, scope) {
             // TODO: We need to pass scope appropriately throw each of the calls
+            _Logger.logMessage("Generating code for " + node.getType());
             switch (node.getType()) {
                 case "Block":
                     this.generateCodeForBlock(node, scope);

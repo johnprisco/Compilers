@@ -5,6 +5,7 @@
 ///<reference path='node.ts' />
 ///<reference path='globals.ts' />
 ///<reference path='utils.ts' />
+///<reference path='logger.ts' />
 
 module TSC {
     export class CodeGenerator {
@@ -14,6 +15,7 @@ module TSC {
         private static jumpTableCounter: number = 0;
         
         public static generateCode(node: Node, scope: Scope): void {
+            _Logger.logIgnoringVerboseMode("Beginning Code Generation.");
             this.staticTable = new StaticTable();
             this.codeTable = new CodeTable();
             this.jumpTable = new JumpTable();
@@ -23,10 +25,12 @@ module TSC {
             this.staticTable.removeTempsInCodeTable(this.codeTable);
             this.jumpTable.removeTempsInCodeTable(this.codeTable);
             _Logger.logCodeTable(this.codeTable);
+            _Logger.logIgnoringVerboseMode("Code Generation complete.");
         }
         
         public static generateCodeFromNode(node: Node, scope: Scope): void {
             // TODO: We need to pass scope appropriately throw each of the calls
+            _Logger.logMessage("Generating code for " + node.getType());
             switch (node.getType()) {
                 case "Block":
                     this.generateCodeForBlock(node, scope);
