@@ -1,3 +1,9 @@
+///<reference path='tree.ts' />
+///<reference path='scope.ts' />
+///<reference path='globals.ts' />
+///<reference path='node.ts' />
+///<reference path='symbol.ts' />
+///<reference path='codeGen.ts' />
 var TSC;
 (function (TSC) {
     var SemanticAnalyzer = (function () {
@@ -13,6 +19,7 @@ var TSC;
             _Logger.logSymbolTable(this.scopes);
             _Logger.logIgnoringVerboseMode("Semantic Analysis complete.");
             // console.log(this.abstractSyntaxTree.getRoot());
+            TSC.CodeGenerator.generateCode(this.abstractSyntaxTree.getRoot(), this.scopes[0]);
         };
         SemanticAnalyzer.buildAST = function (root) {
             this.analyzeProgram(root);

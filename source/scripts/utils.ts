@@ -1,3 +1,6 @@
+///<reference path='globals.ts' />
+///<reference path='tree.ts' />
+
 /* --------  
    Utils.ts
 
@@ -20,6 +23,13 @@ module TSC {
              - "" is nothing, which is what we replace the whitespace with.
              */
 
+        }
+        
+        public static leftPad(string: string, length: number): string {
+            for (var i = 1; i < length; i++) {
+                string = "0" + string;
+            }
+            return string;
         }
 
         public static rot13(str)     // An easy-to understand implementation of the famous and common Rot13 obfuscator.

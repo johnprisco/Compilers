@@ -87,5 +87,10 @@ module TSC {
                 this.logWarning("Identifier '" + symbols[i].getName() + "' on line " + symbols[i].getLine() + " was not initialized.");
             }
         }
+        
+        public static logCodeTable(codeTable: CodeTable) {
+            var log = <HTMLTextAreaElement> document.getElementById('code-output');
+            log.value = codeTable.toString();
+        }
     }
 }

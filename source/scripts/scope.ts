@@ -12,6 +12,10 @@ module TSC {
         public getName(): string {
             return this.name.toString();
         }
+        
+        public getNameAsInt(): number {
+            return this.name;
+        }
 
         public setName(name: number): void {
             this.name = name;

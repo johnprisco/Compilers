@@ -1,3 +1,5 @@
+///<reference path='globals.ts' />
+///<reference path='tree.ts' />
 /* --------
    Utils.ts
 
@@ -18,6 +20,12 @@ var TSC;
              - "g" makes is global, so we get all the whitespace.
              - "" is nothing, which is what we replace the whitespace with.
              */
+        };
+        Utils.leftPad = function (string, length) {
+            for (var i = 1; i < length; i++) {
+                string = "0" + string;
+            }
+            return string;
         };
         Utils.rot13 = function (str) {
             var retVal = ""; // trouble explaining it in the future.  There's a lot to be said for obvious code.
